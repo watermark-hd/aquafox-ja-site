@@ -1,0 +1,82 @@
+#!/bin/bash
+# Aquafox 日本語化パック配布サイト — VPS初期セットアップスクリプト
+# policy-log-jp とは完全に別ユーザー・別ディレクトリ・別ポートで動くので、
+# 既存の policy-log サービスや nginx 設定には一切触れません。
+# 使い方: VPSにファイルをアップロード後、rootで実行
+#   sudo bash /var/www/aquafox-ja/deploy/setup.sh
+
+set -e  # エラーで即停止
+
+APP_DIR="/var/www/aquafox-ja"
+APP_USER="aquafoxja"
+LOG_DIR="/var/log/aquafox-ja"
+
+echo "======================================"
+echo "  Aquafox 日本語化パック配布サイト セットアップ開始"
+echo "======================================"
+echo ""
+
+# ── Step 1: アプリ用ユーザー作成 ─────────
+echo "[1/5] アプリ用ユーザー ($APP_USER) を作成..."
+if id "$APP_USER" &>/dev/null; then
+    echo "      $APP_USER は既に存在します（スキップ）"
+else
+    useradd -r -s /bin/bash -d $APP_DIR $APP_USER
+    echo "      完了"
+fi
+echo ""
+
+# ── Step 2: ディレクトリ権限設定 ─────────
+echo "[2/5] ディレクトリ権限を設定..."
+mkdir -p $LOG_DIR
+chown -R $APP_USER:$APP_USER $APP_DIR
+chown -R $APP_USER:$APP_USER $LOG_DIR
+chmod 755 $APP_DIR
+echo "      完了"
+echo ""
+
+# ── Step 3: Python仮想環境＋パッケージ ───
+echo "[3/5] Pythonパッケージをインストール..."
+su - $APP_USER -s /bin/bash -c "
+    cd $APP_DIR
+    python3 -m venv venv
+    venv/bin/pip install -q --upgrade pip
+    venv/bin/pip install -q -r requirements.txt
+"
+echo "      完了"
+echo ""
+
+# ── Step 4: systemdサービス登録 ──────────
+echo "[4/5] アプリをサービスとして登録..."
+cp $APP_DIR/deploy/aquafox-ja.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable aquafox-ja
+systemctl start aquafox-ja
+echo "      完了 (systemctl status aquafox-ja で確認できます)"
+echo ""
+
+# ── Step 5: nginx設定（ポート8080・IPアクセス用） ──
+echo "[5/5] nginxを設定..."
+cp $APP_DIR/deploy/nginx-aquafox-ja.conf /etc/nginx/sites-available/aquafox-ja
+ln -sf /etc/nginx/sites-available/aquafox-ja /etc/nginx/sites-enabled/aquafox-ja
+nginx -t
+systemctl restart nginx
+echo "      完了"
+echo ""
+
+echo "======================================"
+echo "  セットアップ完了！"
+echo "======================================"
+echo ""
+echo "【動作確認】 http://<サーバーのIPアドレス>:8080/ にアクセス"
+echo ""
+echo "  systemctl status aquafox-ja   # アプリの状態"
+echo "  systemctl status nginx        # nginxの状態"
+echo "  tail -f $LOG_DIR/error.log   # エラーログ"
+echo ""
+echo "【ドメインが決まったら】"
+echo "  1. deploy/nginx-aquafox-ja.conf の listen を 8080 → 80 に変更し、"
+echo "     server_name を実ドメインに変更"
+echo "  2. /etc/nginx/sites-available/aquafox-ja を上書きして nginx -t && systemctl restart nginx"
+echo "  3. certbot --nginx -d <ドメイン> でSSL証明書を取得"
+echo ""

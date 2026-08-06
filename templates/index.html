@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Aquafox 日本語化パック</title>
+<style>
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "MS PGothic", sans-serif;
+    background: #f5f5f0;
+    color: #222;
+    margin: 0;
+    padding: 0;
+    line-height: 1.7;
+  }
+  .wrap {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 24px 16px 60px 16px;
+  }
+  h1 {
+    font-size: 24px;
+    border-bottom: 3px solid #4a7a4a;
+    padding-bottom: 8px;
+  }
+  h2 {
+    font-size: 18px;
+    margin-top: 32px;
+    border-left: 6px solid #4a7a4a;
+    padding-left: 8px;
+  }
+  .download-box {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .download-button {
+    display: inline-block;
+    background: #4a7a4a;
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px solid #3a613a;
+  }
+  .download-button:hover {
+    background: #3a613a;
+  }
+  .meta {
+    color: #666;
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  ol, ul {
+    padding-left: 24px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  code {
+    background: #eee;
+    padding: 1px 5px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 12px 0;
+  }
+  table, th, td {
+    border: 1px solid #ccc;
+  }
+  th, td {
+    padding: 6px 10px;
+    text-align: left;
+  }
+  .credit {
+    font-size: 13px;
+    color: #555;
+  }
+  footer {
+    margin-top: 50px;
+    font-size: 12px;
+    color: #888;
+    border-top: 1px solid #ccc;
+    padding-top: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Aquafox 日本語化パック</h1>
+
+  <p>
+    PowerPC Mac 向けブラウザ「Aquafox」（TenFourFox の後継フォーク）を日本語表示にするための
+    言語パックです。Firefox 45.9.0esr の公式 ja 言語パックをベースに、Aquafox 独自の追加項目
+    （約80箇所）を翻訳して組み込んであります。
+  </p>
+
+  <div class="download-box">
+    <a class="download-button" href="/download">ja-aquafox.xpi をダウンロード</a>
+    <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+  </div>
+
+  <h2>対応バージョン</h2>
+  <table>
+    <tr><th>Aquafox</th><td>45.43.1</td></tr>
+    <tr><th>ベースにした langpack</th><td>Firefox 45.9.0esr 公式 ja</td></tr>
+    <tr><th>動作確認環境</th><td>iBook G4 (PowerBook6,5) / Mac OS X 10.4.11 (Tiger)</td></tr>
+  </table>
+
+  <h2>インストール手順</h2>
+  <ol>
+    <li>上のボタンから <code>ja-aquafox.xpi</code> をダウンロードします。</li>
+    <li>
+      Finder で以下のフォルダを開きます（「移動」メニュー →「フォルダへ移動...」で下記パスを貼り付けると早いです）。
+      <br><code>~/Library/Application Support/Aquafox/Profiles/</code>
+    </li>
+    <li>
+      中にあるフォルダ（<code>xxxxxxxx.default</code> のような名前）を開き、<code>extensions</code>
+      フォルダを開きます（無ければ新規作成してください）。
+    </li>
+    <li>
+      ダウンロードした <code>ja-aquafox.xpi</code> を、
+      <code>langpack-ja@firefox.mozilla.org.xpi</code> という名前に変更してから、
+      その <code>extensions</code> フォルダに入れます。
+    </li>
+    <li>Aquafox を起動し、メニューバーの「Aquafox」→「Preferences」→「詳細」→「全般」から
+      <code>about:config</code> を開き、<code>general.useragent.locale</code> を
+      <code>ja</code> に設定します（無ければ新規作成してください）。
+    </li>
+    <li>Aquafox を再起動すると日本語表示になります。</li>
+  </ol>
+
+  <h2>謝辞・ライセンス</h2>
+  <p class="credit">
+    このパックは Mozilla Japanese L10N Community による Firefox 公式 ja 言語パック（MPL 2.0）
+    を土台にしています。Aquafox / TenFourFox の開発・保守にあたられている Cameron Kaiser 氏を
+    はじめとする開発者・コントリビューターの皆様に感謝します。
+  </p>
+
+  <footer>
+    個人プロジェクトとして公開しています。不具合報告・改善提案は歓迎します。
+  </footer>
+
+</div>
+</body>
+</html>

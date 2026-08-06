@@ -1,0 +1,20 @@
+[Unit]
+Description=Aquafox 日本語化パック配布サイト
+After=network.target
+
+[Service]
+User=aquafoxja
+Group=aquafoxja
+WorkingDirectory=/var/www/aquafox-ja
+Environment="PATH=/var/www/aquafox-ja/venv/bin"
+ExecStart=/var/www/aquafox-ja/venv/bin/gunicorn \
+    --workers 2 \
+    --bind unix:/var/www/aquafox-ja/aquafox-ja.sock \
+    --access-logfile /var/log/aquafox-ja/access.log \
+    --error-logfile /var/log/aquafox-ja/error.log \
+    app:app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
