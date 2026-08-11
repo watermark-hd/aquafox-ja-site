@@ -1,121 +1,232 @@
+:root {
+  --aqua: #0a84c4;
+  --aqua-dark: #086a9e;
+  --aqua-light: #e6f4fb;
+  --ink: #1c2733;
+  --ink-soft: #566270;
+  --line: #dfe6ec;
+  --bg: #f4f8fb;
+  --card-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "MS PGothic", sans-serif;
-  background: #f5f5f0;
-  color: #222;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
   margin: 0;
   padding: 0;
   line-height: 1.7;
 }
+
 .wrap {
-  max-width: 700px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 24px 16px 60px 16px;
+  padding: 32px 20px 64px 20px;
 }
+
 .site-header {
-  margin-bottom: 16px;
+  margin-bottom: 28px;
 }
+
 .site-title {
-  font-size: 15px;
-  color: #4a7a4a;
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--aqua-dark);
   text-decoration: none;
-  font-weight: bold;
+  letter-spacing: 0.02em;
 }
+
+.site-tagline {
+  margin: 6px 0 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
 .back-link {
   display: inline-block;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   font-size: 13px;
+  color: var(--aqua-dark);
+  text-decoration: none;
 }
+.back-link:hover {
+  text-decoration: underline;
+}
+
 h1 {
-  font-size: 24px;
-  border-bottom: 3px solid #4a7a4a;
-  padding-bottom: 8px;
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
 }
+
 h2 {
-  font-size: 18px;
-  margin-top: 32px;
-  border-left: 6px solid #4a7a4a;
-  padding-left: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  margin-top: 36px;
+  padding-left: 10px;
+  border-left: 4px solid var(--aqua);
 }
+
+.platform-badge {
+  display: inline-block;
+  background: var(--aqua-light);
+  color: var(--aqua-dark);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin: 6px 0 18px 0;
+}
+
 .download-box {
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
   margin: 20px 0;
   text-align: center;
+  box-shadow: 0 2px 10px rgba(20, 60, 90, 0.05);
 }
+
 .download-button {
   display: inline-block;
-  background: #4a7a4a;
+  background: linear-gradient(135deg, var(--aqua), var(--aqua-dark));
   color: #fff;
   text-decoration: none;
-  padding: 14px 32px;
+  padding: 14px 36px;
   font-size: 16px;
-  font-weight: bold;
-  border: 2px solid #3a613a;
+  font-weight: 700;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(10, 132, 196, 0.3);
 }
 .download-button:hover {
-  background: #3a613a;
+  filter: brightness(1.05);
 }
+
+.coming-soon-badge {
+  display: inline-block;
+  background: #eee;
+  color: #777;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 999px;
+}
+
 .meta {
-  color: #666;
+  color: var(--ink-soft);
   font-size: 13px;
-  margin-top: 10px;
+  margin-top: 12px;
 }
+
 ol, ul {
   padding-left: 24px;
 }
 li {
   margin-bottom: 8px;
 }
+
 code {
-  background: #eee;
-  padding: 1px 5px;
+  background: var(--aqua-light);
+  color: var(--aqua-dark);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.92em;
 }
+
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 12px 0;
+  font-size: 14px;
 }
 table, th, td {
-  border: 1px solid #ccc;
+  border: 1px solid var(--line);
 }
 th, td {
-  padding: 6px 10px;
+  padding: 8px 12px;
   text-align: left;
 }
+th {
+  background: var(--aqua-light);
+  color: var(--aqua-dark);
+  width: 40%;
+}
+
 .credit {
   font-size: 13px;
-  color: #555;
+  color: var(--ink-soft);
 }
+
 footer {
-  margin-top: 50px;
+  margin-top: 56px;
   font-size: 12px;
-  color: #888;
-  border-top: 1px solid #ccc;
-  padding-top: 12px;
+  color: #9aa5b1;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
 }
 
 /* トップページのアプリ一覧 */
 .app-list {
   list-style: none;
   padding-left: 0;
+  display: grid;
+  gap: 14px;
 }
+
 .app-card {
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 16px 20px;
-  margin-bottom: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 22px;
+  box-shadow: 0 2px 10px rgba(20, 60, 90, 0.05);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
+.app-card:hover {
+  box-shadow: 0 6px 18px rgba(20, 60, 90, 0.1);
+  transform: translateY(-1px);
+}
+
 .app-card-title {
   font-size: 18px;
-  font-weight: bold;
-  color: #3a613a;
+  font-weight: 800;
+  color: var(--ink);
   text-decoration: none;
 }
 .app-card-title:hover {
-  text-decoration: underline;
+  color: var(--aqua-dark);
 }
+
+.app-card-platform {
+  display: inline-block;
+  background: var(--aqua-light);
+  color: var(--aqua-dark);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
 .app-card-tagline {
-  margin: 8px 0 4px 0;
-  color: #444;
+  margin: 10px 0 4px 0;
+  color: var(--ink-soft);
+}
+
+.app-card-status {
+  display: inline-block;
+  background: #eee;
+  color: #888;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  margin-left: 8px;
+  vertical-align: middle;
 }

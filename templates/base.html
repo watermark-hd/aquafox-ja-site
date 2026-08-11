@@ -2,14 +2,15 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>{% block title %}PowerPC Mac 向けアプリ配布{% endblock %}</title>
+<title>{% block title %}レトロMacアプリ配布{% endblock %}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 <div class="wrap">
 
   <header class="site-header">
-    <a href="{{ url_for('top') }}" class="site-title">PowerPC Mac 向けアプリ配布</a>
+    <a href="{{ url_for('top') }}" class="site-title">レトロMacアプリ配布</a>
+    <p class="site-tagline">PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリを配布しています。</p>
   </header>
 
   {% block content %}{% endblock %}

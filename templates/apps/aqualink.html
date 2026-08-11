@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}AquaLink{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top') }}">&laquo; アプリ一覧に戻る</a>
+
+  <h1>AquaLink</h1>
+  <div><span class="platform-badge">{{ app.platform }}</span></div>
+
+  <p>
+    PowerPC Mac G4 (Mac OS X Tiger) を、現行Macのファイル共有(SMB3)につないだり、
+    逆にG4自体を現行Macから見えるNASとして使えるようにする、個人開発のファイルブラウザです。
+    Tiger標準のFinderでは接続できない現行のSMB3共有に、WebDAV経由で通常のボリュームとして
+    マウントできるようにします。
+  </p>
+
+  <div class="download-box">
+    <span class="coming-soon-badge">準備中</span>
+    <div class="meta">配布用ファイルを準備中です。公開までしばらくお待ちください。</div>
+  </div>
+
+  <h2>主な機能</h2>
+  <ul>
+    <li>smb3:// URLとパスワードでの接続（NTLMSSP認証）</li>
+    <li>ディレクトリ一覧表示（日本語ファイル名を含め文字化けなし）</li>
+    <li>Finderへの接続（<code>/Volumes</code>にマウントしてデスクトップにアイコン表示）</li>
+    <li>Finder上での直接ドラッグ＆ドロップによるコピー</li>
+    <li>逆方向：G4自体を複数フォルダ共有のNASとして現行Mac・Windowsに公開</li>
+    <li>設定とキーチェーン保存によるログイン時の自動共有再開</li>
+  </ul>
+
+  <h2>対応環境</h2>
+  <table>
+    <tr><th>動作環境</th><td>PowerPC Mac / Mac OS X 10.4.11 (Tiger)</td></tr>
+    <tr><th>動作確認機種</th><td>iBook G4 (PowerBook6,5)</td></tr>
+  </table>
+
+{% endblock %}

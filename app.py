@@ -74,7 +74,7 @@ def app_detail(slug):
 
 @app.route("/download/<slug>")
 def download(slug):
-    if slug not in APPS_BY_SLUG:
+    if slug not in APPS_BY_SLUG or not APPS_BY_SLUG[slug]["filename"]:
         abort(404)
     db = get_db()
     db.execute(
