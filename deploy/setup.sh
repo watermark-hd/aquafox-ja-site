@@ -1,7 +1,9 @@
 #!/bin/bash
 # Aquafox 日本語化パック配布サイト — VPS初期セットアップスクリプト
-# policy-log-jp とは完全に別ユーザー・別ディレクトリ・別ポートで動くので、
-# 既存の policy-log サービスや nginx 設定には一切触れません。
+# policy-log-jp とは完全に別ユーザー・別ディレクトリ・別プロセス（gunicorn/systemdサービス）で
+# 動きます。nginxはoldmac.policy-log.jpというserver_nameで振り分ける別ファイル
+# （/etc/nginx/sites-available/aquafox-ja）を追加するだけで、既存の policy-log の
+# nginx設定ファイルやsystemdサービスには一切触れません。
 # 使い方: VPSにファイルをアップロード後、rootで実行
 #   sudo bash /var/www/aquafox-ja/deploy/setup.sh
 
@@ -55,7 +57,9 @@ systemctl start aquafox-ja
 echo "      完了 (systemctl status aquafox-ja で確認できます)"
 echo ""
 
-# ── Step 5: nginx設定（ポート8080・IPアクセス用） ──
+# ── Step 5: nginx設定（oldmac.policy-log.jp サブドメイン用） ──
+# name-based virtual hostなので、policy-log.jp本体が同じ80番ポートで
+# 動いていてもserver_nameで振り分けられ、本体側の設定ファイルには触れない。
 echo "[5/5] nginxを設定..."
 cp $APP_DIR/deploy/nginx-aquafox-ja.conf /etc/nginx/sites-available/aquafox-ja
 ln -sf /etc/nginx/sites-available/aquafox-ja /etc/nginx/sites-enabled/aquafox-ja
@@ -68,15 +72,15 @@ echo "======================================"
 echo "  セットアップ完了！"
 echo "======================================"
 echo ""
-echo "【動作確認】 http://<サーバーのIPアドレス>:8080/ にアクセス"
+echo "【動作確認】 http://oldmac.policy-log.jp/ にアクセス"
+echo "  ※事前にさくらのDNSで oldmac.policy-log.jp のAレコード(このVPSのIP)を"
+echo "    追加し、反映されている必要があります。"
 echo ""
 echo "  systemctl status aquafox-ja   # アプリの状態"
 echo "  systemctl status nginx        # nginxの状態"
 echo "  tail -f $LOG_DIR/error.log   # エラーログ"
 echo ""
-echo "【ドメインが決まったら】"
-echo "  1. deploy/nginx-aquafox-ja.conf の listen を 8080 → 80 に変更し、"
-echo "     server_name を実ドメインに変更"
-echo "  2. /etc/nginx/sites-available/aquafox-ja を上書きして nginx -t && systemctl restart nginx"
-echo "  3. certbot --nginx -d <ドメイン> でSSL証明書を取得"
+echo "【SSL化】"
+echo "  DNS反映を確認できたら以下を実行してHTTPS化する:"
+echo "    certbot --nginx -d oldmac.policy-log.jp"
 echo ""
