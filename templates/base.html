@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}PowerPC Mac 向けアプリ配布{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <a href="{{ url_for('top') }}" class="site-title">PowerPC Mac 向けアプリ配布</a>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    個人プロジェクトとして公開しています。不具合報告・改善提案は歓迎します。
+  </footer>
+
+</div>
+</body>
+</html>

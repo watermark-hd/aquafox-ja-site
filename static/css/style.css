@@ -1,0 +1,121 @@
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "MS PGothic", sans-serif;
+  background: #f5f5f0;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px 16px 60px 16px;
+}
+.site-header {
+  margin-bottom: 16px;
+}
+.site-title {
+  font-size: 15px;
+  color: #4a7a4a;
+  text-decoration: none;
+  font-weight: bold;
+}
+.back-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+h1 {
+  font-size: 24px;
+  border-bottom: 3px solid #4a7a4a;
+  padding-bottom: 8px;
+}
+h2 {
+  font-size: 18px;
+  margin-top: 32px;
+  border-left: 6px solid #4a7a4a;
+  padding-left: 8px;
+}
+.download-box {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+.download-button {
+  display: inline-block;
+  background: #4a7a4a;
+  color: #fff;
+  text-decoration: none;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid #3a613a;
+}
+.download-button:hover {
+  background: #3a613a;
+}
+.meta {
+  color: #666;
+  font-size: 13px;
+  margin-top: 10px;
+}
+ol, ul {
+  padding-left: 24px;
+}
+li {
+  margin-bottom: 8px;
+}
+code {
+  background: #eee;
+  padding: 1px 5px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+table, th, td {
+  border: 1px solid #ccc;
+}
+th, td {
+  padding: 6px 10px;
+  text-align: left;
+}
+.credit {
+  font-size: 13px;
+  color: #555;
+}
+footer {
+  margin-top: 50px;
+  font-size: 12px;
+  color: #888;
+  border-top: 1px solid #ccc;
+  padding-top: 12px;
+}
+
+/* トップページのアプリ一覧 */
+.app-list {
+  list-style: none;
+  padding-left: 0;
+}
+.app-card {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+.app-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #3a613a;
+  text-decoration: none;
+}
+.app-card-title:hover {
+  text-decoration: underline;
+}
+.app-card-tagline {
+  margin: 8px 0 4px 0;
+  color: #444;
+}

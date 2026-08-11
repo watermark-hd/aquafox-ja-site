@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}PowerPC Mac 向けアプリ配布{% endblock %}
+
+{% block content %}
+
+  <h1>PowerPC Mac 向けアプリ配布</h1>
+
+  <p>
+    PowerPC搭載Mac（Mac OS X Tiger など）で使えるアプリを配布しています。
+    下の一覧からアプリを選んでください。
+  </p>
+
+  <ul class="app-list">
+    {% for app in apps %}
+    <li class="app-card">
+      <a class="app-card-title" href="{{ url_for('app_detail', slug=app.slug) }}">{{ app.name }}</a>
+      <p class="app-card-tagline">{{ app.tagline }}</p>
+      <div class="meta">これまでのダウンロード数: {{ download_counts[app.slug] }}</div>
+    </li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

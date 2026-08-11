@@ -2,12 +2,13 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
-from flask import Flask, render_template, send_from_directory, g
+from flask import Flask, render_template, send_from_directory, g, abort
+
+from apps import APPS, APPS_BY_SLUG
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "database.db"
 XPI_DIR = BASE_DIR / "static" / "downloads"
-XPI_FILENAME = "aquafox-ja.xpi"
 
 app = Flask(__name__)
 
@@ -31,6 +32,7 @@ def init_db():
         """
         CREATE TABLE IF NOT EXISTS downloads (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            app_slug TEXT NOT NULL,
             downloaded_at TEXT NOT NULL
         )
         """
@@ -42,22 +44,45 @@ def init_db():
 init_db()
 
 
-@app.route("/")
-def index():
+def get_download_counts():
     db = get_db()
-    count = db.execute("SELECT COUNT(*) FROM downloads").fetchone()[0]
-    return render_template("index.html", download_count=count)
+    rows = db.execute(
+        "SELECT app_slug, COUNT(*) FROM downloads GROUP BY app_slug"
+    ).fetchall()
+    counts = {app["slug"]: 0 for app in APPS}
+    counts.update(dict(rows))
+    return counts
 
 
-@app.route("/download")
-def download():
+@app.route("/")
+def top():
+    return render_template(
+        "top.html", apps=APPS, download_counts=get_download_counts()
+    )
+
+
+@app.route("/apps/<slug>")
+def app_detail(slug):
+    if slug not in APPS_BY_SLUG:
+        abort(404)
+    return render_template(
+        f"apps/{slug}.html",
+        app=APPS_BY_SLUG[slug],
+        download_count=get_download_counts()[slug],
+    )
+
+
+@app.route("/download/<slug>")
+def download(slug):
+    if slug not in APPS_BY_SLUG:
+        abort(404)
     db = get_db()
     db.execute(
-        "INSERT INTO downloads (downloaded_at) VALUES (?)",
-        (datetime.utcnow().isoformat(),),
+        "INSERT INTO downloads (app_slug, downloaded_at) VALUES (?, ?)",
+        (slug, datetime.utcnow().isoformat()),
     )
     db.commit()
-    return send_from_directory(XPI_DIR, XPI_FILENAME, as_attachment=True)
+    return send_from_directory(XPI_DIR, APPS_BY_SLUG[slug]["filename"], as_attachment=True)
 
 
 if __name__ == "__main__":
