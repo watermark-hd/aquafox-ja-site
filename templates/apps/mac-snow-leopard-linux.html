@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Mac OSX Snow Leopard風 Linux{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>Mac OSX Snow Leopard風 Linux</h1>
+  <div><span class="platform-badge">Linux</span></div>
+
+  {% if lang == 'en' %}
+    <p>
+      A Linux distribution based on MX Linux, featuring a user interface inspired by Mac OS X 10.4 through 10.6.
+      This project aims to recreate the clean, elegant simplicity of that era's Mac experience on modern Linux.
+    </p>
+
+    <h2>About This Project</h2>
+    <ul>
+      <li><strong>Base:</strong> MX Linux</li>
+      <li><strong>UI Design:</strong> Inspired by Mac OS X 10.4 – 10.6 (Tiger, Leopard, Snow Leopard era)</li>
+      <li><strong>Philosophy:</strong> Simplicity and elegance, with minimal visual clutter</li>
+      <li><strong>Target Audience:</strong> Users who appreciate classic Mac aesthetics</li>
+    </ul>
+
+    <h2>Vision</h2>
+    <p>
+      This distribution captures the distinctive look and feel of Mac OS X during its most iconic era.
+      Going beyond just the interface, we may develop this into a complete, customized Linux distribution.
+    </p>
+
+    <h2>What's Included</h2>
+    <ul>
+      <li>Classic Mac-inspired desktop interface</li>
+      <li>Curated application selections for productivity and creativity</li>
+      <li>Clean, organized file system with Mac-like navigation</li>
+      <li>Faithful recreation of classic Mac OS X visual design</li>
+    </ul>
+
+    <h2>Status</h2>
+    <p>
+      <span class="status-badge coming-soon">Coming Soon</span>
+      This project is currently in development. A public release is planned in the near future.
+    </p>
+
+    <h2>Availability</h2>
+    <p>
+      This distribution will be made publicly available as a downloadable ISO or complete distribution package.
+    </p>
+  {% else %}
+    <p>
+      MX Linux をベースにした、Mac OS X 10.4～10.6 時代のシンプルで優雅なユーザーインターフェイスを再現したLinuxディストリビューションです。
+      あの時代の Mac 体験の美しさと簡潔性を現代のLinuxで再現することを目指しています。
+    </p>
+
+    <h2>プロジェクト概要</h2>
+    <ul>
+      <li><strong>ベース：</strong>MX Linux</li>
+      <li><strong>UI デザイン：</strong>Mac OS X 10.4～10.6（Tiger、Leopard、Snow Leopard時代）にインスパイアされた設計</li>
+      <li><strong>デザイン哲学：</strong>シンプルさと優雅さ、最小限のビジュアルノイズ</li>
+      <li><strong>対象ユーザー：</strong>クラシック Mac 美学を高く評価するユーザー</li>
+    </ul>
+
+    <h2>ビジョン</h2>
+    <p>
+      このディストリビューションは、Mac OS X の最も象徴的な時代のルックアンドフィールを捉えています。
+      インターフェイスだけでなく、完全にカスタマイズされた Linux ディストリビューションとして開発される予定です。
+    </p>
+
+    <h2>含まれる要素</h2>
+    <ul>
+      <li>クラシック Mac にインスパイアされたデスクトップインターフェイス</li>
+      <li>生産性と創造性のための厳選されたアプリケーション</li>
+      <li>Mac のようなナビゲーション機能を備えたクリーンで整理されたファイルシステム</li>
+      <li>クラシック Mac OS X ビジュアルデザインの忠実な再現</li>
+    </ul>
+
+    <h2>状態</h2>
+    <p>
+      <span class="status-badge coming-soon">準備中</span>
+      このプロジェクトは現在開発中です。近い将来に公開予定です。
+    </p>
+
+    <h2>公開予定</h2>
+    <p>
+      このディストリビューションはダウンロード可能な ISO またはディストリビューションパッケージとして一般公開される予定です。
+    </p>
+  {% endif %}
+
+{% endblock %}

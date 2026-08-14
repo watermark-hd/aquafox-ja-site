@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  <a class="back-link" href="{{ url_for('top') }}">&laquo; アプリ一覧に戻る</a>
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">&laquo; アプリ一覧に戻る</a>
 
   <h1>Aquafox 日本語化パック</h1>
   <div><span class="platform-badge">{{ app.platform }}</span></div>
@@ -16,7 +16,7 @@
   </p>
 
   <div class="download-box">
-    <a class="download-button" href="{{ url_for('download', slug=app.slug) }}">ja-aquafox.xpi をダウンロード</a>
+    <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ja-aquafox.xpi をダウンロード</a>
     <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
   </div>
 

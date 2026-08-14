@@ -1,22 +1,41 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{% if lang == 'en' %}en{% else %}ja{% endif %}">
 <head>
 <meta charset="utf-8">
-<title>{% block title %}レトロMacアプリ配布{% endblock %}</title>
+<title>{% block title %}{% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}{% endblock %}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 <div class="wrap">
 
   <header class="site-header">
-    <a href="{{ url_for('top') }}" class="site-title">レトロMacアプリ配布</a>
-    <p class="site-tagline">PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリを配布しています。</p>
+    <div class="site-header-top">
+      <a href="{{ url_for('top', lang=lang) }}" class="site-title">
+        {% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}
+      </a>
+      <div class="lang-switcher">
+        <a href="{{ url_for('top', lang='ja') }}" class="lang-link {% if lang == 'ja' %}active{% endif %}">日本語</a>
+        <span class="lang-sep">/</span>
+        <a href="{{ url_for('top', lang='en') }}" class="lang-link {% if lang == 'en' %}active{% endif %}">English</a>
+      </div>
+    </div>
+    <p class="site-tagline">
+      {% if lang == 'en' %}
+        Distributing classic Mac applications from PowerPC Mac to Apple Silicon, bringing retro Mac experiences to modern systems.
+      {% else %}
+        PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリを配布しています。
+      {% endif %}
+    </p>
   </header>
 
   {% block content %}{% endblock %}
 
   <footer>
-    個人プロジェクトとして公開しています。不具合報告・改善提案は歓迎します。
+    {% if lang == 'en' %}
+      Published as a personal project. Bug reports and improvement suggestions are welcome.
+    {% else %}
+      個人プロジェクトとして公開しています。不具合報告・改善提案は歓迎します。
+    {% endif %}
   </footer>
 
 </div>

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Policy-log-jp{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>Policy-log-jp</h1>
+  <div><span class="platform-badge">{% if lang == 'en' %}Website{% else %}ウェブサイト{% endif %}</span></div>
+
+  {% if lang == 'en' %}
+    <p>
+      A policy portal that tracks the flow of policies invisible in the news in chronological order.
+      This site enables you to trace when bills were submitted, who submitted them, where they were discussed,
+      and how they were enacted. We are committed to using only primary sources and maintaining objectivity.
+    </p>
+
+    <h2>Features</h2>
+    <ul>
+      <li><strong>Chronological Tracking:</strong> Follow the complete timeline from bill submission to enactment</li>
+      <li><strong>Primary Sources Only:</strong> All information sourced directly from official government documents</li>
+      <li><strong>Unbiased Reporting:</strong> Strictly neutral perspective without editorial bias</li>
+      <li><strong>Transparent Documentation:</strong> Every bill linked to its official source materials</li>
+    </ul>
+
+    <h2>Purpose</h2>
+    <p>
+      Most news coverage focuses on legislative outcomes, missing the detailed policy developments that shape laws.
+      Policy-log-jp fills this gap by providing a complete, chronological archive of the legislative process.
+    </p>
+
+    <h2>Status</h2>
+    <p>
+      <span class="status-badge coming-soon">Coming Soon</span>
+      This site is currently under development and will be publicly available soon.
+    </p>
+  {% else %}
+    <p>
+      ニュースでは見えない政策の流れを時系列で追う政策ポータルです。
+      法案が「いつ提出され・誰が提出し・どこで議論され・どう成立したか」を時系列で追跡できます。
+      一次資料のみを使用し、偏向しないことを徹底したサイトです。
+    </p>
+
+    <h2>特徴</h2>
+    <ul>
+      <li><strong>時系列追跡：</strong>法案提出から成立まで、完全なタイムラインを追跡</li>
+      <li><strong>一次資料のみ使用：</strong>公式政府文書から直接情報を取得</li>
+      <li><strong>中立的報道：</strong>編集的バイアスのない厳格に中立な視点</li>
+      <li><strong>透明な文書化：</strong>すべての法案を公式情報源にリンク</li>
+    </ul>
+
+    <h2>目的</h2>
+    <p>
+      ニュース報道は立法結果に焦点を当てることが多く、法律を形作る詳細な政策展開を見落としています。
+      Policy-log-jpはこのギャップを埋めることで、立法プロセスの完全な時系列アーカイブを提供します。
+    </p>
+
+    <h2>状態</h2>
+    <p>
+      <span class="status-badge coming-soon">準備中</span>
+      このサイトは現在開発中であり、近日中に公開される予定です。
+    </p>
+  {% endif %}
+
+{% endblock %}

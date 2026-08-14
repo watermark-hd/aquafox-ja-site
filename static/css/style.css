@@ -32,6 +32,13 @@ body {
   margin-bottom: 28px;
 }
 
+.site-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 .site-title {
   display: inline-block;
   font-size: 20px;
@@ -229,4 +236,87 @@ footer {
   border-radius: 999px;
   margin-left: 8px;
   vertical-align: middle;
+}
+
+/* 言語切り替えボタン */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-link {
+  font-size: 13px;
+  color: var(--aqua-dark);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.lang-link:hover {
+  background: var(--aqua-light);
+}
+.lang-link.active {
+  background: var(--aqua);
+  color: white;
+}
+
+.lang-sep {
+  color: var(--line);
+}
+
+/* セクション */
+.apps-section,
+.projects-section,
+.ad-section {
+  margin-top: 40px;
+}
+
+/* 広告枠 */
+.ad-section {
+  margin-top: 60px;
+}
+
+.ad-placeholder {
+  background: linear-gradient(135deg, #f9f9f9, #f0f0f0);
+  border: 2px dashed var(--line);
+  border-radius: 12px;
+  padding: 48px 32px;
+  text-align: center;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ad-placeholder-text {
+  color: var(--ink-soft);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.ad-placeholder-small {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 8px;
+  color: #bbb;
+}
+
+/* ステータスバッジ */
+.status-badge {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+.status-badge.coming-soon {
+  background: #fffaed;
+  color: #d49a38;
+  border: 1px solid #f0e6d2;
 }

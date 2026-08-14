@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
-from flask import Flask, render_template, send_from_directory, g, abort
+from flask import Flask, render_template, send_from_directory, g, abort, redirect, url_for
 
 from apps import APPS, APPS_BY_SLUG
 
@@ -55,25 +55,37 @@ def get_download_counts():
 
 
 @app.route("/")
-def top():
+def index():
+    return redirect(url_for('top', lang='ja'))
+
+
+@app.route("/<lang>/")
+def top(lang):
+    if lang not in ['ja', 'en']:
+        abort(404)
     return render_template(
-        "top.html", apps=APPS, download_counts=get_download_counts()
+        "top.html", lang=lang, apps=APPS, download_counts=get_download_counts()
     )
 
 
-@app.route("/apps/<slug>")
-def app_detail(slug):
+@app.route("/<lang>/apps/<slug>")
+def app_detail(lang, slug):
+    if lang not in ['ja', 'en']:
+        abort(404)
     if slug not in APPS_BY_SLUG:
         abort(404)
     return render_template(
         f"apps/{slug}.html",
+        lang=lang,
         app=APPS_BY_SLUG[slug],
         download_count=get_download_counts()[slug],
     )
 
 
-@app.route("/download/<slug>")
-def download(slug):
+@app.route("/<lang>/download/<slug>")
+def download(lang, slug):
+    if lang not in ['ja', 'en']:
+        abort(404)
     if slug not in APPS_BY_SLUG or not APPS_BY_SLUG[slug]["filename"]:
         abort(404)
     db = get_db()

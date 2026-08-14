@@ -1,25 +1,66 @@
 {% extends "base.html" %}
 
-{% block title %}レトロMacアプリ配布{% endblock %}
+{% block title %}{% if lang == 'en' %}Applications{% else %}アプリ一覧{% endif %}{% endblock %}
 
 {% block content %}
 
-  <h1>アプリ一覧</h1>
+  <h1>{% if lang == 'en' %}Applications{% else %}アプリ一覧{% endif %}</h1>
 
-  <ul class="app-list">
-    {% for app in apps %}
-    <li class="app-card">
-      <a class="app-card-title" href="{{ url_for('app_detail', slug=app.slug) }}">{{ app.name }}</a>
-      <span class="app-card-platform">{{ app.platform }}</span>
-      {% if not app.filename %}
-      <span class="app-card-status">準備中</span>
-      {% endif %}
-      <p class="app-card-tagline">{{ app.tagline }}</p>
-      {% if app.filename %}
-      <div class="meta">これまでのダウンロード数: {{ download_counts[app.slug] }}</div>
-      {% endif %}
-    </li>
-    {% endfor %}
-  </ul>
+  <!-- Applications Section -->
+  <section class="apps-section">
+    <h2>{% if lang == 'en' %}Applications{% else %}アプリケーション{% endif %}</h2>
+    <ul class="app-list">
+      {% for app in apps %}
+        {% if app.category == 'app' %}
+        <li class="app-card">
+          <a class="app-card-title" href="{{ url_for('app_detail', lang=lang, slug=app.slug) }}">{{ app.name }}</a>
+          <span class="app-card-platform">{{ app.platform }}</span>
+          {% if not app.filename %}
+          <span class="app-card-status">{% if lang == 'en' %}Coming Soon{% else %}準備中{% endif %}</span>
+          {% endif %}
+          <p class="app-card-tagline">{{ app.tagline }}</p>
+          {% if app.filename %}
+          <div class="meta">{% if lang == 'en' %}Downloads:{% else %}これまでのダウンロード数:{% endif %} {{ download_counts[app.slug] }}</div>
+          {% endif %}
+        </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="projects-section">
+    <h2>{% if lang == 'en' %}Projects{% else %}プロジェクト{% endif %}</h2>
+    <ul class="app-list">
+      {% for app in apps %}
+        {% if app.category == 'project' %}
+        <li class="app-card">
+          <a class="app-card-title" href="{{ url_for('app_detail', lang=lang, slug=app.slug) }}">{{ app.name }}</a>
+          <span class="app-card-platform">{{ app.platform }}</span>
+          {% if not app.filename %}
+          <span class="app-card-status">{% if lang == 'en' %}Coming Soon{% else %}準備中{% endif %}</span>
+          {% endif %}
+          <p class="app-card-tagline">{{ app.tagline }}</p>
+        </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+
+  <!-- Advertisement Section -->
+  <section class="ad-section">
+    <h2>{% if lang == 'en' %}Advertising Space{% else %}広告枠{% endif %}</h2>
+    <div class="ad-placeholder">
+      <p class="ad-placeholder-text">
+        {% if lang == 'en' %}
+          Advertisement space available<br>
+          <span class="ad-placeholder-small">(Coming soon)</span>
+        {% else %}
+          広告掲載予定地<br>
+          <span class="ad-placeholder-small">（近日公開）</span>
+        {% endif %}
+      </p>
+    </div>
+  </section>
 
 {% endblock %}

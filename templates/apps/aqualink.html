@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  <a class="back-link" href="{{ url_for('top') }}">&laquo; アプリ一覧に戻る</a>
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">&laquo; アプリ一覧に戻る</a>
 
   <h1>AquaLink</h1>
   <div><span class="platform-badge">{{ app.platform }}</span></div>
