@@ -1,58 +1,109 @@
 {% extends "base.html" %}
 
-{% block title %}AquaFinder{% endblock %}
+{% block title %}{% if lang == 'en' %}AquaFinder{% else %}AquaFinder{% endif %}{% endblock %}
 
 {% block content %}
 
-  <a class="back-link" href="{{ url_for('top', lang=lang) }}">&laquo; アプリ一覧に戻る</a>
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
 
   <h1>AquaFinder</h1>
   <div><span class="platform-badge">{{ app.platform }}</span></div>
 
-  <p>
-    Mac OS X 10.4〜10.6（Tiger〜Snow Leopard）時代のFinderの雰囲気を再現した、個人開発の
-    ファイラーアプリです。Apple社および実際のFinderとは無関係の非公式・非商用プロジェクトです。
-  </p>
+  {% if lang == 'en' %}
+    <p>
+      A personal project that recreates the feel of the Finder from Mac OS X 10.4–10.6 (Tiger–Snow Leopard),
+      designed to bring back the classic file-manager experience on modern macOS systems.
+      This is an unofficial, non-commercial project unrelated to Apple or the original Finder.
+    </p>
 
-  <div class="download-box">
-    <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">AquaFinder.dmg をダウンロード</a>
-    <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
-  </div>
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download AquaFinder.dmg</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+    </div>
 
-  <h2>主な機能</h2>
-  <ul>
-    <li>アイコン表示・リスト表示・カラム表示</li>
-    <li>複数ウィンドウ対応、ファイルのコピー＆ペースト（⌘C / ⌘V）</li>
-    <li>リスト表示でフォルダのサイズを自動計算して表示</li>
-    <li>テーマ切り替え：10.6風グラファイト／10.4風ブラッシュドメタル</li>
-    <li>文字サイズ・行の高さの調整（環境設定）</li>
-    <li>日本語・英語ローカライズ対応</li>
-    <li>ラベルカラー、Get Info、Quick Look など classic Finder の主要機能</li>
-  </ul>
+    <h2>Main Features</h2>
+    <ul>
+      <li>Icon view, list view, and column view</li>
+      <li>Multiple windows and file copy &amp; paste (⌘C / ⌘V)</li>
+      <li>Automatic folder size calculation in list view</li>
+      <li>Theme switching: 10.6-style graphite / 10.4-style brushed metal</li>
+      <li>Font size and row height adjustments in settings</li>
+      <li>Japanese and English localization</li>
+      <li>Classic Finder features such as labels, Get Info, and Quick Look</li>
+    </ul>
 
-  <h2>対応バージョン</h2>
-  <table>
-    <tr><th>バージョン</th><td>0.1</td></tr>
-    <tr><th>動作環境</th><td>macOS 10.15 (Catalina) 以降</td></tr>
-    <tr><th>対応アーキテクチャ</th><td>Apple Silicon（M1以降）・Intel Mac 両対応（Universal Binary）</td></tr>
-  </table>
+    <h2>Supported Versions</h2>
+    <table>
+      <tr><th>Version</th><td>0.23</td></tr>
+      <tr><th>Supported OS</th><td>macOS 10.15 (Catalina) and later</td></tr>
+      <tr><th>Supported architecture</th><td>Apple Silicon (M1 and later) and Intel Mac (Universal Binary)</td></tr>
+    </table>
 
-  <h2>インストール手順</h2>
-  <ol>
-    <li>上のボタンから <code>AquaFinder.dmg</code> をダウンロードします。</li>
-    <li>DMGを開き、<code>AquaFinder.app</code> を <code>Applications</code> フォルダにドラッグします。</li>
-    <li>
-      初回起動時、Appleに登録された開発者による署名ではないため「開発元が未確認のため開けません」
-      という警告が出ます。その場合は次のいずれかの方法で開いてください。
-      <ul>
-        <li><code>AquaFinder.app</code> を右クリック（またはControl+クリック）→「開く」を選択し、表示されるダイアログで「開く」を選ぶ</li>
-        <li>もしくは、システム設定 →「プライバシーとセキュリティ」を開き、AquaFinderに関するメッセージの横にある「このまま開く」をクリックする</li>
-      </ul>
-      一度許可すれば、以降は通常どおり起動できます。
-    </li>
-  </ol>
+    <h2>Installation</h2>
+    <ol>
+      <li>Download <code>AquaFinder.dmg</code> from the button above.</li>
+      <li>Open the DMG and drag <code>AquaFinder.app</code> into the <code>Applications</code> folder.</li>
+      <li>
+        On first launch, you may see a warning saying the app is from an unidentified developer.
+        To open it, choose either of the following methods:
+        <ul>
+          <li>Right-click (or Control-click) <code>AquaFinder.app</code> and choose <strong>Open</strong>, then click <strong>Open</strong> in the dialog.</li>
+          <li>Open System Settings → Privacy &amp; Security and click <strong>Open Anyway</strong> next to the AquaFinder message.</li>
+        </ul>
+        Once approved, it can be launched normally afterward.
+      </li>
+    </ol>
 
-  <h2>ライセンス</h2>
-  <p class="credit">MIT License で公開しています。</p>
+    <h2>License</h2>
+    <p class="credit">Published under the MIT License.</p>
+  {% else %}
+    <p>
+      Mac OS X 10.4〜10.6（Tiger〜Snow Leopard）時代のFinderの雰囲気を再現した、個人開発の
+      ファイラーアプリです。Apple社および実際のFinderとは無関係の非公式・非商用プロジェクトです。
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">AquaFinder.dmg をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+    </div>
+
+    <h2>主な機能</h2>
+    <ul>
+      <li>アイコン表示・リスト表示・カラム表示</li>
+      <li>複数ウィンドウ対応、ファイルのコピー＆ペースト（⌘C / ⌘V）</li>
+      <li>リスト表示でフォルダのサイズを自動計算して表示</li>
+      <li>テーマ切り替え：10.6風グラファイト／10.4風ブラッシュドメタル</li>
+      <li>文字サイズ・行の高さの調整（環境設定）</li>
+      <li>日本語・英語ローカライズ対応</li>
+      <li>ラベルカラー、Get Info、Quick Look など classic Finder の主要機能</li>
+    </ul>
+
+    <h2>対応バージョン</h2>
+    <table>
+      <tr><th>バージョン</th><td>0.23</td></tr>
+      <tr><th>動作環境</th><td>macOS 10.15 (Catalina) 以降</td></tr>
+      <tr><th>対応アーキテクチャ</th><td>Apple Silicon（M1以降）・Intel Mac 両対応（Universal Binary）</td></tr>
+    </table>
+
+    <h2>インストール手順</h2>
+    <ol>
+      <li>上のボタンから <code>AquaFinder.dmg</code> をダウンロードします。</li>
+      <li>DMGを開き、<code>AquaFinder.app</code> を <code>Applications</code> フォルダにドラッグします。</li>
+      <li>
+        初回起動時、Appleに登録された開発者による署名ではないため「開発元が未確認のため開けません」
+        という警告が出ます。その場合は次のいずれかの方法で開いてください。
+        <ul>
+          <li><code>AquaFinder.app</code> を右クリック（またはControl+クリック）→「開く」を選択し、表示されるダイアログで「開く」を選ぶ</li>
+          <li>もしくは、システム設定 →「プライバシーとセキュリティ」を開き、AquaFinderに関するメッセージの横にある「このまま開く」をクリックする</li>
+        </ul>
+        一度許可すれば、以降は通常どおり起動できます。
+      </li>
+    </ol>
+
+    <h2>ライセンス</h2>
+    <p class="credit">MIT License で公開しています。</p>
+  {% endif %}
 
 {% endblock %}
