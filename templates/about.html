@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{% if lang == 'en' %}About{% else %}このサイトについて{% endif %}{% endblock %}
+{% block meta_description %}{% if lang == 'en' %}Learn about our mission to keep PowerPC-era Macs and classic Mac experiences useful through modern applications and tools.{% else %}PowerPC時代のMacからApple Siliconまで、使えるMacを長く活かすためのアプリとツールを配布する、このサイトの理念と目的をご紹介します。{% endif %}{% endblock %}
+
+{% block content %}
+
+  <div class="about-content">
+    {% if lang == 'en' %}
+      <h1>About This Site</h1>
+      
+      <h2>Mission</h2>
+      <p>
+        This site is dedicated to distributing classic Mac applications and tools that bridge the gap between 
+        older PowerPC-era Macs and modern Apple Silicon systems. We believe that sustainable computing means 
+        getting the most out of the technology we already have, rather than constantly replacing it.
+      </p>
+
+      <h2>Why This Project?</h2>
+      <p>
+        Over decades, Apple has created remarkable machines and interfaces. Rather than let older Macs become 
+        electronic waste, we've collected tools and applications that keep these systems useful and relevant today.
+      </p>
+      <p>
+        Our philosophy is simple: <strong>True sustainability is using what we have.</strong>
+      </p>
+
+      <h2>What We Offer</h2>
+      <ul>
+        <li><strong>Language packs</strong> for classic browsers (e.g., Aquafox)</li>
+        <li><strong>Modern file managers</strong> that recreate classic Mac aesthetics</li>
+        <li><strong>Networking tools</strong> to connect legacy systems to current infrastructure</li>
+        <li><strong>Linux distributions</strong> inspired by classic Mac OS X design</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>
+        Have feedback, bug reports, or suggestions? We'd love to hear from you.
+      </p>
+      <p>
+        Email: <a href="mailto:tomo820@gmail.com">tomo820@gmail.com</a>
+      </p>
+
+    {% else %}
+      <h1>このサイトについて</h1>
+      
+      <h2>目的</h2>
+      <p>
+        このサイトは、PowerPC時代の古いMacから現在のApple Siliconまで、時代を超えたMacの体験を活かすための
+        アプリケーションやツールを配布しています。私たちは、常に新しいものに買い替えるのではなく、
+        すでに持っている技術を最大限に活用することが、本当の意味での持続可能性だと考えています。
+      </p>
+
+      <h2>なぜこのプロジェクト?</h2>
+      <p>
+        何十年にもわたって、Appleは素晴らしいマシンとインターフェイスを作ってきました。
+        古いMacを電子ゴミにするのではなく、これらのシステムを今日でも有用で関連性のあるものにするツールや
+        アプリケーションを集めました。
+      </p>
+      <p>
+        私たちの哲学はシンプルです：<strong>究極のエコは使い続けること。</strong>
+      </p>
+
+      <h2>配布内容</h2>
+      <ul>
+        <li><strong>言語パック</strong>（例：Aquafoxの日本語化）</li>
+        <li><strong>モダンなファイルマネージャー</strong>（クラシックMacの美学を再現）</li>
+        <li><strong>ネットワークツール</strong>（レガシーシステムと現行インフラの接続）</li>
+        <li><strong>Linuxディストリビューション</strong>（クラシックMac OS Xのデザインにインスパイアされた）</li>
+      </ul>
+
+      <h2>お問い合わせ</h2>
+      <p>
+        フィードバック、不具合報告、改善提案などがあれば、お気軽にお問い合わせください。
+      </p>
+      <p>
+        メール: <a href="mailto:tomo820@gmail.com">tomo820@gmail.com</a>
+      </p>
+
+    {% endif %}
+  </div>
+
+{% endblock %}

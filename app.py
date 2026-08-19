@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
-from flask import Flask, render_template, send_from_directory, g, abort, redirect, url_for
+from flask import Flask, Response, render_template, send_from_directory, g, abort, request
 
 from apps import APPS, APPS_BY_SLUG
 
@@ -11,6 +11,23 @@ DB_PATH = BASE_DIR / "database.db"
 XPI_DIR = BASE_DIR / "static" / "downloads"
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
+SITE_URL = "https://oldmac.policy-log.jp"
+
+
+@app.context_processor
+def inject_site_metadata():
+    """Provide a single preferred URL for canonical and social metadata."""
+    if request.path == "/":
+        path = "/ja/"
+    elif request.path.rstrip("/") == "/about":
+        path = "/ja/about/"
+    elif request.path.startswith("/apps/"):
+        path = f"/ja{request.path}"
+        path = path if path.endswith("/") else f"{path}/"
+    else:
+        path = request.path if request.path.endswith("/") else f"{request.path}/"
+    return {"canonical_url": f"{SITE_URL}{path}"}
 
 
 def get_db():
@@ -52,27 +69,27 @@ def get_download_counts():
     counts = {app["slug"]: 0 for app in APPS}
     counts.update(dict(rows))
     return counts
+SUPPORTED_LANGS = {"ja", "en"}
 
 
-@app.route("/")
-def index():
-    return redirect(url_for('top', lang='ja'))
-
-
-@app.route("/<lang>/")
-def top(lang):
-    if lang not in ['ja', 'en']:
+@app.route("/<lang>/", strict_slashes=False)
+@app.route("/<lang>", strict_slashes=False)
+@app.route("/", defaults={"lang": "ja"}, strict_slashes=False)
+def top(lang="ja"):
+    if lang not in SUPPORTED_LANGS:
         abort(404)
     return render_template(
-        "top.html", lang=lang, apps=APPS, download_counts=get_download_counts()
+        "top.html",
+        lang=lang,
+        apps=APPS,
+        download_counts=get_download_counts(),
     )
 
 
-@app.route("/<lang>/apps/<slug>")
+@app.route("/apps/<slug>", defaults={"lang": "ja"}, strict_slashes=False)
+@app.route("/<lang>/apps/<slug>", strict_slashes=False)
 def app_detail(lang, slug):
-    if lang not in ['ja', 'en']:
-        abort(404)
-    if slug not in APPS_BY_SLUG:
+    if lang not in SUPPORTED_LANGS or slug not in APPS_BY_SLUG:
         abort(404)
     return render_template(
         f"apps/{slug}.html",
@@ -82,9 +99,10 @@ def app_detail(lang, slug):
     )
 
 
-@app.route("/<lang>/download/<slug>")
+@app.route("/download/<slug>", defaults={"lang": "ja"}, strict_slashes=False)
+@app.route("/<lang>/download/<slug>", strict_slashes=False)
 def download(lang, slug):
-    if lang not in ['ja', 'en']:
+    if lang not in SUPPORTED_LANGS:
         abort(404)
     if slug not in APPS_BY_SLUG or not APPS_BY_SLUG[slug]["filename"]:
         abort(404)
@@ -95,6 +113,41 @@ def download(lang, slug):
     )
     db.commit()
     return send_from_directory(XPI_DIR, APPS_BY_SLUG[slug]["filename"], as_attachment=True)
+
+
+@app.route("/<lang>/about", strict_slashes=False)
+@app.route("/about", defaults={"lang": "ja"}, strict_slashes=False)
+def about(lang="ja"):
+    if lang not in SUPPORTED_LANGS:
+        abort(404)
+    return render_template("about.html", lang=lang)
+
+
+@app.route("/robots.txt")
+def robots():
+    return Response(
+        f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n",
+        mimetype="text/plain",
+    )
+
+
+@app.route("/googlebf17354c49a90927.html")
+def google_site_verification():
+    return send_from_directory(BASE_DIR, "googlebf17354c49a90927.html")
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    """List indexable pages for search engines; exclude unpublished projects."""
+    paths = [
+        "/ja/", "/en/", "/ja/about/", "/en/about/",
+        "/ja/apps/aquafox-ja/", "/en/apps/aquafox-ja/",
+        "/ja/apps/aquafinder/", "/en/apps/aquafinder/",
+        "/ja/apps/aqualink/", "/en/apps/aqualink/",
+    ]
+    entries = "".join(f"  <url><loc>{SITE_URL}{path}</loc></url>\n" for path in paths)
+    xml = f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{entries}</urlset>\n'
+    return Response(xml, mimetype="application/xml")
 
 
 if __name__ == "__main__":

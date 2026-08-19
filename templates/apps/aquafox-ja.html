@@ -1,60 +1,98 @@
 {% extends "base.html" %}
 
-{% block title %}Aquafox 日本語化パック{% endblock %}
+{% block title %}{% if lang == 'en' %}Aquafox Japanese Localization Pack{% else %}Aquafox 日本語化パック{% endif %}{% endblock %}
 
 {% block content %}
 
-  <a class="back-link" href="{{ url_for('top', lang=lang) }}">&laquo; アプリ一覧に戻る</a>
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
 
-  <h1>Aquafox 日本語化パック</h1>
+  <h1>{% if lang == 'en' %}Aquafox Japanese Localization Pack{% else %}Aquafox 日本語化パック{% endif %}</h1>
   <div><span class="platform-badge">{{ app.platform }}</span></div>
 
-  <p>
-    PowerPC Mac 向けブラウザ「Aquafox」（TenFourFox の後継フォーク）を日本語表示にするための
-    言語パックです。Firefox 45.9.0esr の公式 ja 言語パックをベースに、Aquafox 独自の追加項目
-    （約80箇所）を翻訳して組み込んであります。
-  </p>
+  {% if lang == 'en' %}
+    <p>
+      A language pack that adds Japanese UI support to Aquafox, the PowerPC Mac browser derived from TenFourFox.
+      This pack is based on Firefox 45.9.0esr's official Japanese language pack and includes roughly 80 additional
+      Aquafox-specific translations.
+    </p>
 
-  <div class="download-box">
-    <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ja-aquafox.xpi をダウンロード</a>
-    <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
-  </div>
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download ja-aquafox.xpi</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+    </div>
 
-  <h2>対応バージョン</h2>
-  <table>
-    <tr><th>Aquafox</th><td>45.43.1</td></tr>
-    <tr><th>ベースにした langpack</th><td>Firefox 45.9.0esr 公式 ja</td></tr>
-    <tr><th>動作確認環境</th><td>iBook G4 (PowerBook6,5) / Mac OS X 10.4.11 (Tiger)</td></tr>
-  </table>
+    <h2>Supported Versions</h2>
+    <table>
+      <tr><th>Aquafox</th><td>45.43.1</td></tr>
+      <tr><th>Base language pack</th><td>Firefox 45.9.0esr official ja</td></tr>
+      <tr><th>Verified environment</th><td>iBook G4 (PowerBook6,5) / Mac OS X 10.4.11 (Tiger)</td></tr>
+    </table>
 
-  <h2>インストール手順</h2>
-  <ol>
-    <li>上のボタンから <code>ja-aquafox.xpi</code> をダウンロードします。</li>
-    <li>
-      Finder で以下のフォルダを開きます（「移動」メニュー →「フォルダへ移動...」で下記パスを貼り付けると早いです）。
-      <br><code>~/Library/Application Support/Aquafox/Profiles/</code>
-    </li>
-    <li>
-      中にあるフォルダ（<code>xxxxxxxx.default</code> のような名前）を開き、<code>extensions</code>
-      フォルダを開きます（無ければ新規作成してください）。
-    </li>
-    <li>
-      ダウンロードした <code>ja-aquafox.xpi</code> を、
-      <code>langpack-ja@firefox.mozilla.org.xpi</code> という名前に変更してから、
-      その <code>extensions</code> フォルダに入れます。
-    </li>
-    <li>Aquafox を起動し、メニューバーの「Aquafox」→「Preferences」→「詳細」→「全般」から
-      <code>about:config</code> を開き、<code>general.useragent.locale</code> を
-      <code>ja</code> に設定します（無ければ新規作成してください）。
-    </li>
-    <li>Aquafox を再起動すると日本語表示になります。</li>
-  </ol>
+    <h2>Installation Steps</h2>
+    <ol>
+      <li>Download <code>ja-aquafox.xpi</code> from the button above.</li>
+      <li>Open the following folder in Finder (from the menu: Go → Go to Folder..., then paste the path below): <br><code>~/Library/Application Support/Aquafox/Profiles/</code></li>
+      <li>Open the profile folder inside (named something like <code>xxxxxxxx.default</code>) and then open the <code>extensions</code> folder. Create it if it does not exist.</li>
+      <li>Rename the downloaded <code>ja-aquafox.xpi</code> to <code>langpack-ja@firefox.mozilla.org.xpi</code> and place it in that <code>extensions</code> folder.</li>
+      <li>Launch Aquafox, open <code>about:config</code> via the menu: Aquafox → Preferences → Advanced → General, then set <code>general.useragent.locale</code> to <code>ja</code>. Create it if it is missing.</li>
+      <li>Restart Aquafox and the interface will appear in Japanese.</li>
+    </ol>
 
-  <h2>謝辞・ライセンス</h2>
-  <p class="credit">
-    このパックは Mozilla Japanese L10N Community による Firefox 公式 ja 言語パック（MPL 2.0）
-    を土台にしています。Aquafox / TenFourFox の開発・保守にあたられている Cameron Kaiser 氏を
-    はじめとする開発者・コントリビューターの皆様に感謝します。
-  </p>
+    <h2>Acknowledgements / License</h2>
+    <p class="credit">
+      This pack is based on the Firefox official Japanese language pack from the Mozilla Japanese L10N Community (MPL 2.0).
+      We sincerely thank Cameron Kaiser and the developers and contributors who maintain Aquafox / TenFourFox.
+    </p>
+  {% else %}
+    <p>
+      PowerPC Mac 向けブラウザ「Aquafox」（TenFourFox の後継フォーク）を日本語表示にするための
+      言語パックです。Firefox 45.9.0esr の公式 ja 言語パックをベースに、Aquafox 独自の追加項目
+      （約80箇所）を翻訳して組み込んであります。
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ja-aquafox.xpi をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+    </div>
+
+    <h2>対応バージョン</h2>
+    <table>
+      <tr><th>Aquafox</th><td>45.43.1</td></tr>
+      <tr><th>ベースにした langpack</th><td>Firefox 45.9.0esr 公式 ja</td></tr>
+      <tr><th>動作確認環境</th><td>iBook G4 (PowerBook6,5) / Mac OS X 10.4.11 (Tiger)</td></tr>
+    </table>
+
+    <h2>インストール手順</h2>
+    <ol>
+      <li>上のボタンから <code>ja-aquafox.xpi</code> をダウンロードします。</li>
+      <li>
+        Finder で以下のフォルダを開きます（「移動」メニュー →「フォルダへ移動...」で下記パスを貼り付けると早いです）。
+        <br><code>~/Library/Application Support/Aquafox/Profiles/</code>
+      </li>
+      <li>
+        中にあるフォルダ（<code>xxxxxxxx.default</code> のような名前）を開き、<code>extensions</code>
+        フォルダを開きます（無ければ新規作成してください）。
+      </li>
+      <li>
+        ダウンロードした <code>ja-aquafox.xpi</code> を、
+        <code>langpack-ja@firefox.mozilla.org.xpi</code> という名前に変更してから、
+        その <code>extensions</code> フォルダに入れます。
+      </li>
+      <li>Aquafox を起動し、メニューバーの「Aquafox」→「Preferences」→「詳細」→「全般」から
+        <code>about:config</code> を開き、<code>general.useragent.locale</code> を
+        <code>ja</code> に設定します（無ければ新規作成してください）。
+      </li>
+      <li>Aquafox を再起動すると日本語表示になります。</li>
+    </ol>
+
+    <h2>謝辞・ライセンス</h2>
+    <p class="credit">
+      このパックは Mozilla Japanese L10N Community による Firefox 公式 ja 言語パック（MPL 2.0）
+      を土台にしています。Aquafox / TenFourFox の開発・保守にあたられている Cameron Kaiser 氏を
+      はじめとする開発者・コントリビューターの皆様に感謝します。
+    </p>
+  {% endif %}
 
 {% endblock %}

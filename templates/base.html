@@ -2,7 +2,15 @@
 <html lang="{% if lang == 'en' %}en{% else %}ja{% endif %}">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}{% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Classic Mac applications and tools for PowerPC Macs through Apple Silicon.{% else %}PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリとツールを配布しています。{% endif %}{% endblock %}">
+<link rel="canonical" href="{{ canonical_url }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}">
+<meta property="og:title" content="{{ self.title() | striptags | trim }}">
+<meta property="og:description" content="{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Classic Mac applications and tools for PowerPC Macs through Apple Silicon.{% else %}PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリとツールを配布しています。{% endif %}">
+<meta property="og:url" content="{{ canonical_url }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -22,8 +30,10 @@
     <p class="site-tagline">
       {% if lang == 'en' %}
         Distributing classic Mac applications from PowerPC Mac to Apple Silicon, bringing retro Mac experiences to modern systems.
+        Why throw away a Mac that still works? True sustainability is using what we have.
       {% else %}
         PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリを配布しています。
+        なぜまだ使えるMacを捨てるのか。究極のエコは使い続けること。
       {% endif %}
     </p>
   </header>
@@ -31,11 +41,22 @@
   {% block content %}{% endblock %}
 
   <footer>
-    {% if lang == 'en' %}
-      Published as a personal project. Bug reports and improvement suggestions are welcome.
-    {% else %}
-      個人プロジェクトとして公開しています。不具合報告・改善提案は歓迎します。
-    {% endif %}
+    <div class="footer-content">
+      <p>
+        {% if lang == 'en' %}
+          Published as a personal project. Bug reports and improvement suggestions are welcome.
+        {% else %}
+          個人プロジェクトとして公開しています。不具合報告・改善提案は歓迎します。
+        {% endif %}
+      </p>
+      <p>
+        <a href="mailto:tomo820@gmail.com">tomo820@gmail.com</a>
+        &nbsp;|
+        <a href="{{ url_for('about', lang=lang) }}">
+          {% if lang == 'en' %}About{% else %}このサイトについて{% endif %}
+        </a>
+      </p>
+    </div>
   </footer>
 
 </div>

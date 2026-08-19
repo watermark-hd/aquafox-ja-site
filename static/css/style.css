@@ -238,6 +238,26 @@ footer {
   vertical-align: middle;
 }
 
+.app-card-status.source-status {
+  background: var(--aqua-light);
+  color: var(--aqua-dark);
+}
+
+.source-button {
+  display: inline-block;
+  background: transparent;
+  color: var(--aqua-dark);
+  text-decoration: none;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  border: 2px solid var(--aqua);
+  border-radius: 999px;
+}
+.source-button:hover {
+  background: var(--aqua-light);
+}
+
 /* 言語切り替えボタン */
 .lang-switcher {
   display: flex;
