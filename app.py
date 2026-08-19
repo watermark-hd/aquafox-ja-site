@@ -128,6 +128,14 @@ def about(lang="ja"):
     return render_template("about.html", lang=lang)
 
 
+@app.route("/<lang>/articles/why-old-macs", strict_slashes=False)
+@app.route("/articles/why-old-macs", defaults={"lang": "ja"}, strict_slashes=False)
+def article_why_old_macs(lang="ja"):
+    if lang not in SUPPORTED_LANGS:
+        abort(404)
+    return render_template("articles/why-old-macs.html", lang=lang)
+
+
 @app.route("/robots.txt")
 def robots():
     return Response(
@@ -149,6 +157,7 @@ def sitemap():
         "/ja/apps/aquafox-ja/", "/en/apps/aquafox-ja/",
         "/ja/apps/aquafinder/", "/en/apps/aquafinder/",
         "/ja/apps/aqualink/", "/en/apps/aqualink/",
+        "/ja/articles/why-old-macs/", "/en/articles/why-old-macs/",
     ]
     entries = "".join(f"  <url><loc>{SITE_URL}{path}</loc></url>\n" for path in paths)
     xml = f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{entries}</urlset>\n'

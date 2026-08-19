@@ -30,6 +30,17 @@
     </ul>
   </section>
 
+  <!-- Articles Section -->
+  <section class="articles-section">
+    <h2>{% if lang == 'en' %}Articles{% else %}読み物{% endif %}</h2>
+    <ul class="app-list">
+      <li class="app-card">
+        <a class="app-card-title" href="{{ url_for('article_why_old_macs', lang=lang) }}">{% if lang == 'en' %}Why Keep Using an Old PowerPC Mac in 2026{% else %}なぜ今、古いPowerPC Macを使い続けるのか{% endif %}</a>
+        <p class="app-card-tagline">{% if lang == 'en' %}What breaks on today's networks, and how to bring an old Mac back to life.{% else %}現代のネットワークで困りがちなポイントと、使い続けるための工夫をまとめました。{% endif %}</p>
+      </li>
+    </ul>
+  </section>
+
   <!-- Projects Section -->
   <section class="projects-section">
     <h2>{% if lang == 'en' %}Projects{% else %}プロジェクト{% endif %}</h2>
