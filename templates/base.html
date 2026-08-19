@@ -6,12 +6,34 @@
 <title>{% block title %}{% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Classic Mac applications and tools for PowerPC Macs through Apple Silicon.{% else %}PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリとツールを配布しています。{% endif %}{% endblock %}">
 <link rel="canonical" href="{{ canonical_url }}">
+<link rel="alternate" hreflang="ja" href="{{ alternate_ja_url }}">
+<link rel="alternate" hreflang="en" href="{{ alternate_en_url }}">
+<link rel="alternate" hreflang="x-default" href="{{ alternate_ja_url }}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}">
 <meta property="og:title" content="{{ self.title() | striptags | trim }}">
 <meta property="og:description" content="{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Classic Mac applications and tools for PowerPC Macs through Apple Silicon.{% else %}PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリとツールを配布しています。{% endif %}">
 <meta property="og:url" content="{{ canonical_url }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% if app is defined and app.filename %}
+<script type="application/ld+json">
+{{ {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": (app.name_en if lang == 'en' else app.name),
+  "description": (app.tagline_en if lang == 'en' else app.tagline),
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": app.platform,
+  "url": canonical_url,
+  "downloadUrl": url_for('download', lang=lang, slug=app.slug, _external=True),
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY"
+  }
+} | tojson }}
+</script>
+{% endif %}
 </head>
 <body>
 <div class="wrap">

@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
-from flask import Flask, Response, render_template, send_from_directory, g, abort, request
+from flask import Flask, Response, render_template, send_from_directory, g, abort, request, url_for
 
 from apps import APPS, APPS_BY_SLUG
 
@@ -15,19 +15,24 @@ app.url_map.strict_slashes = False
 SITE_URL = "https://oldmac.policy-log.jp"
 
 
+def _lang_path(lang, endpoint, view_args):
+    path = url_for(endpoint, lang=lang, **view_args)
+    return path if path.endswith("/") else f"{path}/"
+
+
 @app.context_processor
 def inject_site_metadata():
-    """Provide a single preferred URL for canonical and social metadata."""
-    if request.path == "/":
-        path = "/ja/"
-    elif request.path.rstrip("/") == "/about":
-        path = "/ja/about/"
-    elif request.path.startswith("/apps/"):
-        path = f"/ja{request.path}"
-        path = path if path.endswith("/") else f"{path}/"
-    else:
-        path = request.path if request.path.endswith("/") else f"{request.path}/"
-    return {"canonical_url": f"{SITE_URL}{path}"}
+    """Provide canonical/hreflang URLs derived from the current route, not the raw path."""
+    view_args = dict(request.view_args or {})
+    current_lang = view_args.pop("lang", "ja")
+    endpoint = request.endpoint
+    ja_url = f"{SITE_URL}{_lang_path('ja', endpoint, view_args)}"
+    en_url = f"{SITE_URL}{_lang_path('en', endpoint, view_args)}"
+    return {
+        "canonical_url": ja_url if current_lang == "ja" else en_url,
+        "alternate_ja_url": ja_url,
+        "alternate_en_url": en_url,
+    }
 
 
 def get_db():
