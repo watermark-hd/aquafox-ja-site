@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BRSP0BYB4D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BRSP0BYB4D');
+</script>
 <title>{% block title %}{% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Classic Mac applications and tools for PowerPC Macs through Apple Silicon.{% else %}PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリとツールを配布しています。{% endif %}{% endblock %}">
 <link rel="canonical" href="{{ canonical_url }}">
