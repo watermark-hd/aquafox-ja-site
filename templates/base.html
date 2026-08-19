@@ -18,9 +18,17 @@
 
   <header class="site-header">
     <div class="site-header-top">
+      {% if request.endpoint == 'top' %}
+      <h1 class="site-title">
+        <a href="{{ url_for('top', lang=lang) }}">
+          {% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}
+        </a>
+      </h1>
+      {% else %}
       <a href="{{ url_for('top', lang=lang) }}" class="site-title">
         {% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}
       </a>
+      {% endif %}
       <div class="lang-switcher">
         <a href="{{ url_for('top', lang='ja') }}" class="lang-link {% if lang == 'ja' %}active{% endif %}">日本語</a>
         <span class="lang-sep">/</span>
