@@ -13,59 +13,88 @@
 
   {% if lang == 'en' %}
     <p>
-      A personal file browser that connects a PowerPC Mac G4 running Mac OS X Tiger to modern SMB3 file shares,
-      or exposes the G4 itself as a NAS-like storage target from current Macs. It allows Tiger's standard Finder to access
-      modern SMB3 shares via WebDAV-mounted volumes as if they were normal disks.
+      A personal project that lets 20-year-old PowerPC Macs (iBook, Power Mac; Mac OS X Tiger/Leopard)
+      keep working on today's networks.
     </p>
+    <ul>
+      <li>Connect to modern NAS devices, Windows PCs, and Macs, and drag &amp; drop files between them &mdash; something PPC Macs have never been able to do before.</li>
+      <li>You can also expose the PPC Mac itself as a simple NAS, so current Macs and Windows PCs can connect to it as a shared folder.</li>
+    </ul>
 
     <div class="download-box">
-      <a class="source-button" href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">View Source on GitHub</a>
-      <div class="meta">A prebuilt app bundle for easier installation is in preparation and will be published here soon.</div>
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download AquaLink.zip</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+      <div class="meta" style="margin-top:16px;">
+        <a class="source-button" href="{{ url_for('static', filename='downloads/AquaLink-windows-setup.zip') }}">Download AquaLink-windows-setup.zip</a>
+      </div>
+      <div class="meta">Only needed if you'll use the Mac's NAS feature from Windows. Keep both zip files together in the same folder.</div>
     </div>
 
-    <h2>Main Features</h2>
+    <h2>What to Download</h2>
     <ul>
-      <li>Connect using smb3:// URLs and passwords (NTLMSSP authentication)</li>
-      <li>Directory listing without garbled Japanese filenames</li>
-      <li>Connect to Finder via <code>/Volumes</code> mount and show as desktop icons</li>
-      <li>Direct drag-and-drop copying from Finder</li>
-      <li>Reverse mode: expose the G4 itself as a multi-folder NAS for current Mac and Windows systems</li>
-      <li>Auto reconnect of shared folders on login using saved settings and keychain</li>
+      <li><code>AquaLink.zip</code> &mdash; the app itself. Copy it onto the PowerPC Mac (Tiger/Leopard) you want to use.</li>
+      <li><code>AquaLink-windows-setup.zip</code> &mdash; helper files for connecting to the Mac's sharing feature from Windows. Keep both zip files together in the same folder; don't separate their contents.</li>
     </ul>
+
+    <h2>How to Use (Quick Start)</h2>
+    <ol>
+      <li>Unzip <code>AquaLink.zip</code> and launch <code>AquaLink.app</code> on the target PPC Mac.</li>
+      <li>If you're only connecting Mac-to-Mac or to a modern NAS, that's all you need.</li>
+      <li>To use the Mac itself as a NAS from Windows, follow AquaLink's <strong>Share This Mac (NAS Mode)</strong> &rarr; <strong>Windows Connection Guide</strong>, and run <code>connect-aqualink.bat</code> from <code>AquaLink-windows-setup.zip</code>.</li>
+    </ol>
 
     <h2>Supported Environments</h2>
     <table>
       <tr><th>Environment</th><td>PowerPC Mac / Mac OS X 10.4.11 (Tiger)</td></tr>
       <tr><th>Verified hardware</th><td>iBook G4 (PowerBook6,5)</td></tr>
     </table>
+
+    <p class="credit">
+      A personal hobby project provided with no warranty.
+      See <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a> for detailed technical information and source code.
+    </p>
   {% else %}
     <p>
-      PowerPC Mac G4 (Mac OS X Tiger) を、現行Macのファイル共有(SMB3)につないだり、
-      逆にG4自体を現行Macから見えるNASとして使えるようにする、個人開発のファイルブラウザです。
-      Tiger標準のFinderでは接続できない現行のSMB3共有に、WebDAV経由で通常のボリュームとして
-      マウントできるようにします。
+      20年前のPowerPC Mac（iBook・PowerMac、Mac OS X Tiger/Leopard）を、今のネットワーク環境でも
+      使えるようにする自作アプリです。
     </p>
+    <ul>
+      <li>現代のNAS・Windows・Macに接続して、ファイルをドラッグ＆ドロップでやり取りできます（今までPPC Macにはこの機能がありませんでした）</li>
+      <li>逆に、このMac自体を簡易NASとして公開することもできます。現代のMac・Windowsから、共有フォルダとして接続できます</li>
+    </ul>
 
     <div class="download-box">
-      <a class="source-button" href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a>
-      <div class="meta">インストールしやすいビルド済みアプリは準備中です。公開までしばらくお待ちください。</div>
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">AquaLink.zip をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+      <div class="meta" style="margin-top:16px;">
+        <a class="source-button" href="{{ url_for('static', filename='downloads/AquaLink-windows-setup.zip') }}">AquaLink-windows-setup.zip をダウンロード</a>
+      </div>
+      <div class="meta">WindowsからこのMacの共有機能を使う場合のみ必要です。2つのZIPファイルは同じフォルダに置いたまま使ってください。</div>
     </div>
 
-    <h2>主な機能</h2>
+    <h2>ダウンロードするもの</h2>
     <ul>
-      <li>smb3:// URLとパスワードでの接続（NTLMSSP認証）</li>
-      <li>ディレクトリ一覧表示（日本語ファイル名を含め文字化けなし）</li>
-      <li>Finderへの接続（<code>/Volumes</code>にマウントしてデスクトップにアイコン表示）</li>
-      <li>Finder上での直接ドラッグ＆ドロップによるコピー</li>
-      <li>逆方向：G4自体を複数フォルダ共有のNASとして現行Mac・Windowsに公開</li>
-      <li>設定とキーチェーン保存によるログイン時の自動共有再開</li>
+      <li><code>AquaLink.zip</code> &mdash; アプリ本体。動かしたいPowerPC Mac（Tiger/Leopard）に入れてください</li>
+      <li><code>AquaLink-windows-setup.zip</code> &mdash; Windowsから共有機能に接続するための補助ファイル。この2つは中身を分離せず、同じフォルダに置いたまま使ってください</li>
     </ul>
+
+    <h2>使い方（かんたん）</h2>
+    <ol>
+      <li><code>AquaLink.zip</code> を解凍し、<code>AquaLink.app</code> を対象のPPC Macで起動</li>
+      <li>Mac同士・現代のNASに繋ぐだけなら、これで完了です</li>
+      <li>iBook側をNAS化してWindowsから使いたい場合は、AquaLinkの「このMacを共有（NAS化）」→「Windows用接続ガイド」の案内に沿って、<code>AquaLink-windows-setup.zip</code>内の<code>connect-aqualink.bat</code>を実行してください</li>
+    </ol>
 
     <h2>対応環境</h2>
     <table>
       <tr><th>動作環境</th><td>PowerPC Mac / Mac OS X 10.4.11 (Tiger)</td></tr>
       <tr><th>動作確認機種</th><td>iBook G4 (PowerBook6,5)</td></tr>
     </table>
+
+    <p class="credit">
+      個人の趣味プロジェクトにつき無保証です。
+      詳しい技術情報・ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>をご覧ください。
+    </p>
   {% endif %}
 
 {% endblock %}

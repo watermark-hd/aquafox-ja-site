@@ -30,7 +30,7 @@ APPS = [
         "tagline": "PowerPC Mac G4をNAS化する、SMB3対応ファイルブラウザ",
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
-        "filename": None,
+        "filename": "AquaLink.zip",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
     },
