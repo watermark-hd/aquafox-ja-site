@@ -11,6 +11,11 @@
   gtag('js', new Date());
   gtag('config', 'G-BRSP0BYB4D');
 </script>
+<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32.png') }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16.png') }}">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
 <title>{% block title %}{% if lang == 'en' %}Retro Mac Applications{% else %}レトロMacアプリ配布{% endif %}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Classic Mac applications and tools for PowerPC Macs through Apple Silicon.{% else %}PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリとツールを配布しています。{% endif %}{% endblock %}">
 <link rel="canonical" href="{{ canonical_url }}">
