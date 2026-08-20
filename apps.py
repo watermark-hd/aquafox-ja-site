@@ -38,6 +38,11 @@ APPS = [
         "changelog": [
             {
                 "date": "2026-08-20",
+                "note": "UIを英語対応(日本語/英語切り替え)",
+                "note_en": "Added English UI support (switchable between Japanese and English)",
+            },
+            {
+                "date": "2026-08-20",
                 "note": "メニューバーが開かなくなる不具合を修正",
                 "note_en": "Fixed an issue where the menu bar would fail to open",
             },
