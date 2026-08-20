@@ -89,6 +89,17 @@ h1 {
   margin: 0 0 6px 0;
 }
 
+.article-lede {
+  font-size: 17px;
+  font-style: italic;
+  color: var(--aqua-dark);
+  margin: 4px 0 24px 0;
+}
+
+.article-breathe {
+  margin-top: 2.6em;
+}
+
 h2 {
   font-size: 17px;
   font-weight: 700;

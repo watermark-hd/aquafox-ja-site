@@ -11,12 +11,14 @@
 
   {% if lang == 'en' %}
     <h1>Why Keep Using an Old PowerPC Mac in 2026</h1>
+    <p class="article-lede">We know how good Apple Silicon is. That's not the point here.</p>
 
     <p>
       A PowerPC Mac running Tiger or Leopard is now over 20 years old &mdash; and in most cases, it still boots,
       still runs its original software, and still has a keyboard and screen that feel genuinely pleasant to use.
       Throwing that away just because it can't browse a modern website comfortably feels like a waste. This page
-      is a short guide to what actually breaks on an old Mac today, and what you can still do about it.
+      is where we thought through what actually gets in the way on an old Mac today, and what you can still do
+      about it.
     </p>
 
     <h2>What Actually Stops Working</h2>
@@ -27,12 +29,12 @@
       which Tiger's Finder simply doesn't understand, so pulling files on or off the machine becomes its own project.
     </p>
 
-    <h2>What This Site Can Help With</h2>
+    <h2>What This Site Can Do</h2>
     <ul>
       <li>
         <a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a>, a TenFourFox-based
-        browser for PowerPC Macs, gets a Japanese-language pack here &mdash; useful if you're running it with a
-        Japanese-speaking family member or just prefer a Japanese UI.
+        browser for PowerPC Macs, gets a Japanese-language pack here &mdash; app terminology often reads
+        differently from textbook English, so plenty of people would rather use it with a Japanese interface.
       </li>
       <li>
         <a href="{{ url_for('app_detail', lang=lang, slug='aqualink') }}">AquaLink</a> is built specifically to
@@ -40,10 +42,10 @@
         itself into a simple NAS that modern Macs and Windows PCs can connect to.
       </li>
       <li>
-        If you just miss the feel of the old Finder on a machine you use every day now,
+        If you used to live in the old Mac OS X-era Finder every day,
         <a href="{{ url_for('app_detail', lang=lang, slug='aquafinder') }}">AquaFinder</a> recreates it on
-        current macOS &mdash; not for the PowerPC Mac itself, but a nice companion if this era of Mac OS X is
-        what drew you here.
+        current macOS. It's not for the PowerPC Mac itself, but if this era of Mac OS X speaks to you, you'll
+        probably enjoy it.
       </li>
     </ul>
 
@@ -60,7 +62,7 @@
         this is exactly the gap AquaLink is meant to close.</li>
     </ul>
 
-    <p>
+    <p class="article-breathe">
       None of this requires you to be a retrocomputing enthusiast. If a PowerPC Mac is sitting in a closet and
       still powers on, it's very likely still capable of being genuinely useful &mdash; it just needs a couple of
       the right bridges to today's network. That's what this site tries to provide.
@@ -68,12 +70,13 @@
 
   {% else %}
     <h1>なぜ今、古いPowerPC Macを使い続けるのか</h1>
+    <p class="article-lede">Apple silicon の素晴らしさは知っているけれども。</p>
 
     <p>
       Tiger や Leopard を積んだPowerPC Macは、もう20年選手です。それでも多くの機体は今も普通に起動し、
       当時のソフトも動き、キーボードや画面の感触は今でも心地よいものです。「今のWebサイトが快適に見られない」
       というだけの理由で手放してしまうのは、もったいない話です。このページでは、古いMacで実際に何が
-      困りごとになるのか、そしてそれにどう対処できるのかを、できるだけ具体的にまとめました。
+      困りごとになるのか、そしてそれにどう対処できるのかを、いろいろ考えました。
     </p>
 
     <h2>実際に困るのは「ハードウェア」より「ネットワーク」</h2>
@@ -85,12 +88,12 @@
       それだけで一苦労になります。
     </p>
 
-    <h2>このサイトで手当てできること</h2>
+    <h2>このサイトでできること</h2>
     <ul>
       <li>
         PowerPC Mac向けブラウザ「<a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a>」
-        （TenFourFoxベース）の日本語化パックを配布しています。日本語UIで使いたい方、ご家族と一緒に
-        使う機体には特に便利です。
+        （TenFourFoxベース）の日本語化パックを配布しています。アプリの専門用語は学校で習った英語と違った
+        表現が多く、日本語UIで使いたい方には多いはずです。
       </li>
       <li>
         <a href="{{ url_for('app_detail', lang=lang, slug='aqualink') }}">AquaLink</a>は、まさにこのSMB3の壁を
@@ -98,7 +101,7 @@
         現行Mac・Windowsから見えるようにすることもできます。
       </li>
       <li>
-        古いMac OS X時代のFinderの雰囲気が恋しいだけなら、
+        古いMac OS X時代のFinderでバリバリ使い込んだ人には、
         <a href="{{ url_for('app_detail', lang=lang, slug='aquafinder') }}">AquaFinder</a>が現行macOS上で
         それを再現します。こちらはPowerPC Mac本体向けではありませんが、この時代のMacに惹かれる方には
         きっと楽しめるはずです。
@@ -118,7 +121,7 @@
         作ったのがAquaLinkです。</li>
     </ul>
 
-    <p>
+    <p class="article-breathe">
       レトロコンピューティングに詳しい必要はありません。押し入れにPowerPC Macが眠っていて、まだ電源が
       入るなら、それはまだ十分に「使えるMac」である可能性が高いです。あとは今のネットワークとの間に、
       いくつかの橋を架けるだけ。このサイトはその橋を提供しています。
