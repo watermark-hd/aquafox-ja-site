@@ -56,12 +56,14 @@
       {% if request.endpoint == 'top' %}
       <h1 class="site-title">
         <a href="{{ url_for('top', lang=lang) }}">
-          {% if lang == 'en' %}Thriving on Time-Tested Tech{% else %}枯れた技術で生きていく{% endif %}
+          <span class="site-title-kicker">{% if lang == 'en' %}Thriving on Time-Tested Tech{% else %}枯れた技術で生きていく{% endif %}</span>
+          <span class="site-title-main">{% if lang == 'en' %}The Still-Got-It Mac Club{% else %}まだイケるMac部{% endif %}</span>
         </a>
       </h1>
       {% else %}
       <a href="{{ url_for('top', lang=lang) }}" class="site-title">
-        {% if lang == 'en' %}Thriving on Time-Tested Tech{% else %}枯れた技術で生きていく{% endif %}
+        <span class="site-title-kicker">{% if lang == 'en' %}Thriving on Time-Tested Tech{% else %}枯れた技術で生きていく{% endif %}</span>
+        <span class="site-title-main">{% if lang == 'en' %}The Still-Got-It Mac Club{% else %}まだイケるMac部{% endif %}</span>
       </a>
       {% endif %}
       <div class="lang-switcher">
@@ -70,7 +72,6 @@
         <a href="{{ url_for('top', lang='en') }}" class="lang-link {% if lang == 'en' %}active{% endif %}">English</a>
       </div>
     </div>
-    <p class="site-subtitle">{% if lang == 'en' %}The Still-Got-It Mac Club{% else %}まだイケるMac部{% endif %}</p>
     <p class="site-tagline">
       {% if lang == 'en' %}
         Distributing classic Mac applications from PowerPC Mac to Apple Silicon, bringing retro Mac experiences to modern systems.
