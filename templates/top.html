@@ -20,7 +20,10 @@
           {% endif %}
           <p class="app-card-tagline">{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}</p>
           {% if app.filename %}
-          <div class="meta">{% if lang == 'en' %}Downloads:{% else %}これまでのダウンロード数:{% endif %} {{ download_counts[app.slug] }}</div>
+          <div class="meta">
+            {% if lang == 'en' %}Downloads:{% else %}これまでのダウンロード数:{% endif %} {{ download_counts[app.slug] }}
+            {% if updated_ats[app.slug] %}・ {% if lang == 'en' %}Updated{% else %}最終更新{% endif %}: {{ updated_ats[app.slug] }}{% endif %}
+          </div>
           {% endif %}
         </li>
         {% endif %}

@@ -74,6 +74,19 @@ def get_download_counts():
     counts = {app["slug"]: 0 for app in APPS}
     counts.update(dict(rows))
     return counts
+
+
+def get_updated_at(filename):
+    """Derive a "last updated" date straight from the distributed file's mtime,
+    so it can't drift out of sync the way a hand-maintained date field would."""
+    if not filename:
+        return None
+    path = XPI_DIR / filename
+    if not path.exists():
+        return None
+    return datetime.fromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%d")
+
+
 SUPPORTED_LANGS = {"ja", "en"}
 
 
@@ -88,6 +101,7 @@ def top(lang="ja"):
         lang=lang,
         apps=APPS,
         download_counts=get_download_counts(),
+        updated_ats={a["slug"]: get_updated_at(a["filename"]) for a in APPS},
     )
 
 
@@ -101,6 +115,7 @@ def app_detail(lang, slug):
         lang=lang,
         app=APPS_BY_SLUG[slug],
         download_count=get_download_counts()[slug],
+        updated_at=get_updated_at(APPS_BY_SLUG[slug]["filename"]),
     )
 
 

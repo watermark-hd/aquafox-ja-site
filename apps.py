@@ -2,6 +2,8 @@
 # templates/apps/<slug>.html を用意し、filenameがあればstatic/downloads/に配布ファイルを置く。
 # filenameがNoneのアプリは「準備中」扱いになり、ダウンロードボタンは表示されない。
 # github_urlがあれば「準備中」バッジの代わりにソース公開中のバッジとリンクを表示する。
+# 最終更新日は配布ファイルのmtimeから自動算出するため、ここには書かない。
+# changelogは手書きの更新履歴（新しい順）。無くても動くので、更新時に書ければ追記する。
 APPS = [
     {
         "slug": "aquafox-ja",
@@ -33,6 +35,13 @@ APPS = [
         "filename": "AquaLink.zip",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
+        "changelog": [
+            {
+                "date": "2026-08-20",
+                "note": "メニューバーが開かなくなる不具合を修正",
+                "note_en": "Fixed an issue where the menu bar would fail to open",
+            },
+        ],
     },
     {
         "slug": "mac-snow-leopard-linux",
