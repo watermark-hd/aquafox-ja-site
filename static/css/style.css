@@ -53,6 +53,14 @@ body {
   text-decoration: none;
 }
 
+.site-subtitle {
+  margin: 4px 0 0 0;
+  color: var(--aqua-dark);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 .site-tagline {
   margin: 8px 0 0 0;
   color: var(--ink-soft);
