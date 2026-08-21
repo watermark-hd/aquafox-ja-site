@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}{% if lang == 'en' %}PPC Claude Agent{% else %}PPC Claude Agent{% endif %}{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>PPC Claude Agent</h1>
+  <div><span class="platform-badge">{{ app.platform }}</span></div>
+
+  {% if lang == 'en' %}
+    <p>
+      A personal project that keeps a 20-year-old PowerPC Mac useful as a real AI coding assistant.
+      The official Claude Code CLI needs Node.js 18+, which can't run on Tiger's old PowerPC hardware,
+      so this is a self-contained agent written in Perl that talks to the Anthropic API directly over curl &mdash;
+      no Node.js, no compiling on your side required.
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download ppc-claude-agent.zip</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}</div>{% endif %}
+    </div>
+
+    {% if app.changelog %}
+    <h2>Changelog</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>What's Inside</h2>
+    <ul>
+      <li><code>curl</code> &mdash; a prebuilt, TLS 1.2/1.3-capable curl for PowerPC/Tiger (the stock curl on Tiger can't reach today's HTTPS servers)</li>
+      <li><code>cacert.pem</code> &mdash; a current CA certificate bundle</li>
+      <li><code>claude-agent.pl</code> &mdash; the agent itself, a single Perl file with zero external CPAN dependencies</li>
+      <li><code>Install.command</code> &mdash; the installer you double-click</li>
+    </ul>
+
+    <h2>Main Features</h2>
+    <ul>
+      <li>Runs on Tiger's stock Perl 5.8.6 alone &mdash; no build tools needed on the target Mac</li>
+      <li>Implements four tools: <code>read_file</code> / <code>write_file</code> / <code>list_dir</code> / <code>run_shell</code></li>
+      <li>File writes and shell commands prompt for confirmation before running, to avoid accidents</li>
+      <li>HTTP is handled by shelling out to the bundled curl, keeping TLS entirely out of the Perl code</li>
+      <li>Replies automatically switch between Japanese, English, and other languages to match whatever you type &mdash; no client-side language setting needed</li>
+    </ul>
+
+    <h2>Installation</h2>
+    <ol>
+      <li>Unzip <code>ppc-claude-agent.zip</code> and copy the whole folder onto your PowerPC Mac (USB stick, file sharing, etc.).</li>
+      <li>Double-click <code>Install.command</code>. A Terminal window opens.</li>
+      <li>Follow the prompts. You'll need an Anthropic API key &mdash; the installer explains how to get one.</li>
+      <li>When it says "Setup complete!", open a new Terminal window and type <code>claude</code> to start.</li>
+    </ol>
+    <p>No compiling, no MacPorts, no Xcode required.</p>
+
+    <h2>About the API Key (billing)</h2>
+    <p>
+      This project (the agent and installer) is free to use, but actually talking to Claude requires your own
+      Anthropic API key, billed pay-as-you-go at <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>
+      &mdash; a different site and a different billing system from a claude.ai subscription. No API key is embedded
+      in the code anywhere; <code>claude-agent.pl</code> only reads it from an environment variable, so sharing
+      this project never exposes anyone's key or billing to anyone else. The installer walks you through creating
+      a key and adding a small amount of credit.
+    </p>
+
+    <h2>Supported Environments</h2>
+    <table>
+      <tr><th>Environment</th><td>PowerPC Mac / Mac OS X 10.4 (Tiger)</td></tr>
+      <tr><th>Verified hardware</th><td>iBook G4 (PowerBook6,5)</td></tr>
+      <tr><th>Notes</th><td>The bundled curl was built without CPU-specific optimizations, so other PowerPC Tiger machines should work too, though not every model has been tested.</td></tr>
+    </table>
+
+    <p class="credit">
+      A personal hobby project provided with no warranty. If curl doesn't run on your machine, the full
+      project (build scripts included) shows how to build the TLS toolchain from source instead.
+    </p>
+  {% else %}
+    <p>
+      20年前のPowerPC Macを、実用的なAIコーディングアシスタントとして活かすための自作プロジェクトです。
+      公式のClaude Code CLIはNode.js 18+が前提で、Tiger時代の古いPowerPC環境では動かせません。そこで、
+      curl経由でAnthropic APIを直接叩く自己完結型の軽量エージェントをPerlで実装しています。Node.jsも、
+      利用者側でのコンパイルも不要です。
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ppc-claude-agent.zip をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}</div>{% endif %}
+    </div>
+
+    {% if app.changelog %}
+    <h2>更新履歴</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>同梱内容</h2>
+    <ul>
+      <li><code>curl</code> &mdash; PowerPC/Tiger向けにビルド済みの、TLS 1.2/1.3対応curl（Tiger標準のcurlは現在のHTTPSサーバーに接続できません）</li>
+      <li><code>cacert.pem</code> &mdash; 最新のCA証明書バンドル</li>
+      <li><code>claude-agent.pl</code> &mdash; エージェント本体。単一のPerlファイルで、外部CPANモジュール依存はゼロ</li>
+      <li><code>Install.command</code> &mdash; ダブルクリックするインストーラー</li>
+    </ul>
+
+    <h2>主な機能</h2>
+    <ul>
+      <li>Tiger標準のPerl 5.8.6だけで動作。対象のMac側でビルドツールは一切不要</li>
+      <li>4つのツールを実装: <code>read_file</code> / <code>write_file</code> / <code>list_dir</code> / <code>run_shell</code></li>
+      <li>ファイル書き込みとシェル実行は、誤操作防止のため実行前に確認プロンプトを表示</li>
+      <li>HTTP通信は同梱のcurlをサブプロセスとして呼び出す方式で、TLS実装をPerl側に持たせない設計</li>
+      <li>入力した言語（日本語・英語など）に合わせて自動的に返答言語が切り替わる。クライアント側での言語設定は不要</li>
+    </ul>
+
+    <h2>インストール手順</h2>
+    <ol>
+      <li><code>ppc-claude-agent.zip</code> を解凍し、フォルダごと対象のPowerPC Macにコピー（USBメモリやファイル共有などで）</li>
+      <li><code>Install.command</code> をダブルクリック。ターミナルが開きます</li>
+      <li>案内に沿って進めます（Anthropic APIキーが必要です。取得方法もインストーラーが説明します）</li>
+      <li>「セットアップ完了！」と表示されたら、新しいターミナルウィンドウを開いて <code>claude</code> と入力してください</li>
+    </ol>
+    <p>コンパイルもMacPortsもXcodeも不要です。</p>
+
+    <h2>APIキーについて（課金）</h2>
+    <p>
+      このプロジェクト（エージェント本体とインストーラー）自体は自由に使えますが、実際にClaudeと
+      会話するには、利用者ひとりひとりが自分のAnthropic APIキーを発行する必要があります。課金は
+      <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>
+      での従量課金制で、claude.aiのサブスクリプションとは別のサイト・別の課金体系です。コードにAPIキーは
+      一切含まれておらず、<code>claude-agent.pl</code>は環境変数からキーを読むだけなので、配布者のキーや
+      請求先が他人に渡ることはありません。インストーラーがキーの発行とクレジットのチャージまで案内します。
+    </p>
+
+    <h2>対応環境</h2>
+    <table>
+      <tr><th>動作環境</th><td>PowerPC Mac / Mac OS X 10.4 (Tiger)</td></tr>
+      <tr><th>動作確認機種</th><td>iBook G4 (PowerBook6,5)</td></tr>
+      <tr><th>備考</th><td>同梱のcurlはCPU固有の最適化なしでビルドされているため、他のPowerPC Tiger機でも動く可能性が高いですが、全機種での検証は行っていません。</td></tr>
+    </table>
+
+    <p class="credit">
+      個人の趣味プロジェクトにつき無保証です。お使いの機種でcurlが動作しない場合は、プロジェクト本体に
+      含まれるビルドスクリプトを使ってソースからTLSツールチェーンをビルドする手順もあります。
+    </p>
+  {% endif %}
+
+{% endblock %}

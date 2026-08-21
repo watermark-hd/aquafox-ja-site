@@ -49,6 +49,16 @@ APPS = [
         ],
     },
     {
+        "slug": "ppc-claude-agent",
+        "name": "PPC Claude Agent",
+        "name_en": "PPC Claude Agent",
+        "tagline": "PowerPC Mac (Tiger)のターミナルからClaudeと会話できる、Perl製の自己完結型AIエージェント",
+        "tagline_en": "A self-contained Perl agent that lets you talk to Claude from the Terminal on a PowerPC Mac (Tiger).",
+        "platform": "PowerPC Mac (Tiger) 向け",
+        "filename": "ppc-claude-agent.zip",
+        "category": "app",
+    },
+    {
         "slug": "mac-snow-leopard-linux",
         "name": "Mac OSX Snow Leopard風 Linux",
         "name_en": "Mac OS X Snow Leopard-inspired Linux",
