@@ -60,6 +60,31 @@ APPS = [
         "changelog": [
             {
                 "date": "2026-08-22",
+                "note": "IME経由の日本語入力に0x16のゴミバイトが混入し文字化けする不具合を修正",
+                "note_en": "Fixed Japanese IME input getting corrupted by a stray 0x16 byte",
+            },
+            {
+                "date": "2026-08-22",
+                "note": "Install.commandの「Enterキーで閉じます」という実態と異なる表示を修正",
+                "note_en": "Fixed Install.command's misleading \"Press Enter to close this window\" message",
+            },
+            {
+                "date": "2026-08-22",
+                "note": "特定の入力の直後にEnterキーが認識されないことがある不具合を修正",
+                "note_en": "Fixed Enter sometimes being silently swallowed right after certain input",
+            },
+            {
+                "date": "2026-08-22",
+                "note": "日本語などの入力時、1文字ごとに改行され行編集ができない不具合を修正",
+                "note_en": "Fixed every keystroke pushing the terminal down a new line instead of editing in place",
+            },
+            {
+                "date": "2026-08-22",
+                "note": "日本語入力時に画面が「◆」で埋まる文字化けを修正",
+                "note_en": "Fixed Japanese input filling the screen with garbled \"◆\" characters",
+            },
+            {
+                "date": "2026-08-22",
                 "note": "インストーラー再実行時にAnthropic APIキーの再入力を求められる不具合を修正",
                 "note_en": "Fixed the installer prompting to re-enter the Anthropic API key when re-run for an upgrade",
             },
