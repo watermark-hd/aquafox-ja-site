@@ -57,6 +57,18 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "ppc-claude-agent.zip",
         "category": "app",
+        "changelog": [
+            {
+                "date": "2026-08-22",
+                "note": "インストーラー再実行時にAnthropic APIキーの再入力を求められる不具合を修正",
+                "note_en": "Fixed the installer prompting to re-enter the Anthropic API key when re-run for an upgrade",
+            },
+            {
+                "date": "2026-08-22",
+                "note": "矢印キー入力でカーソル移動の代わりに文字が挿入されてしまう不具合を修正",
+                "note_en": "Fixed arrow keys inserting garbage characters instead of moving the cursor",
+            },
+        ],
     },
     {
         "slug": "mac-snow-leopard-linux",
