@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}{% if lang == 'en' %}exFAT for Tiger (PowerPC){% else %}exFAT for Tiger (PowerPC){% endif %}{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>exFAT for Tiger (PowerPC)</h1>
+  <div>
+    <span class="platform-badge">{{ app.platform }}</span>
+    <span class="app-card-status source-status">{% if lang == 'en' %}Source Available{% else %}ソース公開中{% endif %}</span>
+  </div>
+
+  {% if lang == 'en' %}
+    <p>
+      A menu bar app and a set of command line tools that let Mac OS X 10.4 Tiger (yes, PowerPC) read and write
+      exFAT drives. exFAT support only arrived in Mac OS X 10.6.5, and current MacFUSE/macFUSE dropped PowerPC
+      support after Leopard, so a Tiger PowerPC Mac in 2026 otherwise has no way to read a modern exFAT flash drive.
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download exfat-tiger-ppc.zip</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></div>
+    </div>
+
+    <h2>What's Inside</h2>
+    <ul>
+      <li><strong>exFAT Menu.app</strong> &mdash; a menu bar utility. Click the "exFAT" item, pick a drive to mount or a mounted one to eject.</li>
+      <li><strong>bin/</strong> &mdash; the underlying command line tools (<code>mount.exfat</code>, <code>fsck.exfat</code>, <code>mkfs.exfat</code>, <code>exfatlabel</code>, <code>dumpexfat</code>, <code>exfatattrib</code>), built from <a href="https://github.com/relan/exfat" target="_blank" rel="noopener noreferrer">relan/exfat</a> with two small patches for this old MacFUSE.</li>
+    </ul>
+
+    <h2>Requirements</h2>
+    <ul>
+      <li>Mac OS X 10.4 Tiger, PowerPC (should also work on Intel Tiger, untested)</li>
+      <li>
+        <a href="https://web.archive.org/web/20120127043005/http://macfuse.googlecode.com/files/MacFUSE-Core-10.4-1.7.0.dmg" target="_blank" rel="noopener noreferrer">MacFUSE Core 10.4-1.7.0</a>
+        installed first &mdash; this is the old Google-era MacFUSE, from the Wayback Machine. The "official" download you'll
+        find today is a newer stub installer that just phones home to a server Google shut down years ago, and won't work.
+      </li>
+    </ul>
+
+    <h2>Installation</h2>
+    <ol>
+      <li>Install MacFUSE Core 10.4-1.7.0 (link above), reboot if it asks.</li>
+      <li>Unzip <code>exfat-tiger-ppc.zip</code> and run <code>install.sh</code> from that folder (it copies the CLI tools into <code>/usr/local/sbin</code>).</li>
+      <li>Drag <code>exFAT Menu.app</code> to <code>/Applications</code> or wherever, then double-click it. It lives in the menu bar only, with no Dock icon.</li>
+    </ol>
+
+    <h2>Using It</h2>
+    <p>
+      Plug in an exFAT drive. Tiger will complain it can't read it &mdash; ignore that dialog, it's Tiger's own broken
+      built-in NTFS driver trying (and failing) to guess the filesystem, not this app.
+    </p>
+    <p>
+      Click "exFAT" in the menu bar &rarr; "Mount: disk_s_ (...)". A folder alias named <code>exFAT (disk_s_)</code>
+      appears on your Desktop &mdash; that's your drive. To remove the drive, use the app's "Eject" entry first,
+      <em>then</em> unplug it, same as any other drive.
+    </p>
+
+    <h2>Supported Environments</h2>
+    <table>
+      <tr><th>Environment</th><td>PowerPC Mac / Mac OS X 10.4 (Tiger)</td></tr>
+      <tr><th>Notes</th><td>Should also work on Intel Tiger, though this hasn't been tested.</td></tr>
+    </table>
+
+    <p class="credit">
+      A personal hobby project provided with no warranty. The CLI tools bundled here are <code>fuse-exfat</code>,
+      licensed GPLv2; the app source and icon are MIT. See the GitHub repository above for full source, license
+      files, and technical notes on the MacFUSE-era quirks this project had to work around.
+    </p>
+  {% else %}
+    <p>
+      Mac OS X 10.4 Tiger（PowerPC）でexFATドライブの読み書き・マウントができるようにするメニューバーアプリと、
+      その下回りのコマンドラインツール一式です。exFAT対応はMac OS X 10.6.5から標準搭載されており、現行の
+      MacFUSE/macFUSEもLeopard以降でPowerPCサポートを打ち切っているため、2026年のTiger PowerPC Macには本来
+      現代のexFATフラッシュドライブを読む手段がありません。
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">exfat-tiger-ppc.zip をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a></div>
+    </div>
+
+    <h2>同梱内容</h2>
+    <ul>
+      <li><strong>exFAT Menu.app</strong> &mdash; メニューバーユーティリティ本体。「exFAT」メニューから、マウントするドライブやアンマウントするドライブを選べます。</li>
+      <li><strong>bin/</strong> &mdash; 下回りのコマンドラインツール（<code>mount.exfat</code> / <code>fsck.exfat</code> / <code>mkfs.exfat</code> / <code>exfatlabel</code> / <code>dumpexfat</code> / <code>exfatattrib</code>）。<a href="https://github.com/relan/exfat" target="_blank" rel="noopener noreferrer">relan/exfat</a> を元に、この古いMacFUSE向けに2つの小さなパッチを当ててビルド。</li>
+    </ul>
+
+    <h2>動作要件</h2>
+    <ul>
+      <li>Mac OS X 10.4 Tiger、PowerPC（Intel Tigerでも動く可能性がありますが未検証です）</li>
+      <li>
+        <a href="https://web.archive.org/web/20120127043005/http://macfuse.googlecode.com/files/MacFUSE-Core-10.4-1.7.0.dmg" target="_blank" rel="noopener noreferrer">MacFUSE Core 10.4-1.7.0</a>
+        を先にインストールしておく必要があります。これはGoogle時代の旧MacFUSEで、Wayback Machineからの入手です。
+        現在配布されている「公式」版は、Googleが数年前に停止したサーバーに問い合わせるだけの新しいスタブ
+        インストーラーになっており、動作しません。
+      </li>
+    </ul>
+
+    <h2>インストール手順</h2>
+    <ol>
+      <li>MacFUSE Core 10.4-1.7.0（上記リンク）をインストールし、求められたら再起動します。</li>
+      <li><code>exfat-tiger-ppc.zip</code> を解凍し、そのフォルダ内で <code>install.sh</code> を実行します（CLIツールを <code>/usr/local/sbin</code> にコピーするだけです）。</li>
+      <li><code>exFAT Menu.app</code> を <code>/Applications</code> など好きな場所にドラッグし、ダブルクリックします。メニューバーにのみ常駐し、Dockアイコンは出ません。</li>
+    </ol>
+
+    <h2>使い方</h2>
+    <p>
+      exFATドライブを挿すと、Tigerが「読み込めません」と文句を言いますが、無視してください。これはこのアプリでは
+      なく、Tiger標準の壊れたNTFSドライバがファイルシステムを誤認識しようとして失敗しているだけです。
+    </p>
+    <p>
+      メニューバーの「exFAT」→「Mount: disk_s_ (...)」をクリックすると、デスクトップに
+      <code>exFAT (disk_s_)</code> という名前のフォルダエイリアスが現れます。それがドライブ本体です。取り外す際は、
+      他のドライブと同様に、先にアプリの「Eject」を実行してから物理的に抜いてください。
+    </p>
+
+    <h2>対応環境</h2>
+    <table>
+      <tr><th>動作環境</th><td>PowerPC Mac / Mac OS X 10.4 (Tiger)</td></tr>
+      <tr><th>備考</th><td>Intel Tigerでも動作する可能性がありますが、検証はしていません。</td></tr>
+    </table>
+
+    <p class="credit">
+      個人の趣味プロジェクトにつき無保証です。同梱のCLIツールは <code>fuse-exfat</code>（GPLv2）、アプリ本体の
+      ソースとアイコンはMITライセンスです。詳しいソースコードやライセンス、MacFUSE時代特有の技術的な工夫の
+      解説は上記のGitHubリポジトリをご覧ください。
+    </p>
+  {% endif %}
+
+{% endblock %}

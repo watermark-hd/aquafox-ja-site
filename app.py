@@ -173,6 +173,7 @@ def sitemap():
         "/ja/apps/aquafinder/", "/en/apps/aquafinder/",
         "/ja/apps/aqualink/", "/en/apps/aqualink/",
         "/ja/apps/ppc-claude-agent/", "/en/apps/ppc-claude-agent/",
+        "/ja/apps/exfat-tiger-ppc/", "/en/apps/exfat-tiger-ppc/",
         "/ja/articles/why-old-macs/", "/en/articles/why-old-macs/",
     ]
     entries = "".join(f"  <url><loc>{SITE_URL}{path}</loc></url>\n" for path in paths)

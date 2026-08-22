@@ -96,6 +96,17 @@ APPS = [
         ],
     },
     {
+        "slug": "exfat-tiger-ppc",
+        "name": "exFAT for Tiger (PowerPC)",
+        "name_en": "exFAT for Tiger (PowerPC)",
+        "tagline": "PowerPC Mac OS X 10.4 (Tiger)でexFATドライブの読み書き・マウントができるようにするメニューバーアプリ",
+        "tagline_en": "A menu bar app that lets PowerPC Mac OS X 10.4 (Tiger) read, write, and mount exFAT drives.",
+        "platform": "PowerPC Mac (Tiger) 向け",
+        "filename": "exfat-tiger-ppc.zip",
+        "github_url": "https://github.com/watermark-hd/exfat-tiger-ppc",
+        "category": "app",
+    },
+    {
         "slug": "mac-snow-leopard-linux",
         "name": "Mac OSX Snow Leopard風 Linux",
         "name_en": "Mac OS X Snow Leopard-inspired Linux",
