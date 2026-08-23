@@ -20,6 +20,9 @@ body {
   margin: 0;
   padding: 0;
   line-height: 1.7;
+  /* モバイルでの自動テキスト拡大により文字サイズの大小関係が崩れるのを防ぐ */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .wrap {
@@ -34,8 +37,10 @@ body {
 
 .site-header-top {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  row-gap: 8px;
   margin-bottom: 10px;
 }
 
@@ -64,6 +69,12 @@ body {
   font-weight: 800;
   color: var(--aqua-dark);
   letter-spacing: 0.02em;
+}
+
+@media (max-width: 480px) {
+  .site-title-kicker {
+    font-size: 14px;
+  }
 }
 
 .site-tagline {
@@ -292,6 +303,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .lang-link {
@@ -301,6 +313,7 @@ footer {
   font-weight: 600;
   padding: 4px 8px;
   border-radius: 4px;
+  white-space: nowrap;
 }
 .lang-link:hover {
   background: var(--aqua-light);
@@ -312,6 +325,7 @@ footer {
 
 .lang-sep {
   color: var(--line);
+  white-space: nowrap;
 }
 
 /* セクション */
