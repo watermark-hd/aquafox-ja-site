@@ -44,6 +44,19 @@ body {
   margin-bottom: 10px;
 }
 
+@media (max-width: 480px) {
+  /* Safariのflexboxが日本語テキストを縦に折り返すバグを避けるため、
+     幅の狭い画面ではタイトルと言語切替を同じ行に並べず縦積みにする */
+  .site-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lang-switcher {
+    margin-top: 4px;
+  }
+}
+
 .site-title {
   display: inline-block;
   margin: 0;
