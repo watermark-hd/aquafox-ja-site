@@ -37,6 +37,11 @@ APPS = [
         "category": "app",
         "changelog": [
             {
+                "date": "2026-08-23",
+                "note": "管理者権限での実行時にumountコマンドが見つからず失敗する不具合を修正（/sbin/umountをフルパスで指定するように変更）",
+                "note_en": "Fixed umount failing under administrator privileges by calling it via its full path (/sbin/umount)",
+            },
+            {
                 "date": "2026-08-20",
                 "note": "UIを英語対応(日本語/英語切り替え)",
                 "note_en": "Added English UI support (switchable between Japanese and English)",
@@ -104,6 +109,17 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "exfat-tiger-ppc.zip",
         "github_url": "https://github.com/watermark-hd/exfat-tiger-ppc",
+        "category": "app",
+    },
+    {
+        "slug": "kodama",
+        "name": "コダマ (Kodama)",
+        "name_en": "Kodama",
+        "tagline": "PowerPC Mac (Tiger) 向け、WebKit不使用の超軽量3ペイン型Webリーダー",
+        "tagline_en": "An ultra-lightweight 3-pane web reader for PowerPC Macs (Tiger), built without WebKit.",
+        "platform": "PowerPC Mac (Tiger) 向け",
+        "filename": "Kodama.dmg",
+        "github_url": "https://github.com/watermark-hd/kodama",
         "category": "app",
     },
     {
