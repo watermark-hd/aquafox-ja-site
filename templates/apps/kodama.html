@@ -40,6 +40,7 @@
       <li>Back/forward history, including a right-click history menu on the Back button.</li>
       <li>Japanese/English UI switch, live at runtime.</li>
       <li>Typing a non-URL string into the address bar falls back to DuckDuckGo's HTML search endpoint.</li>
+      <li>File downloads (.dmg/.zip/.pdf/etc.) are detected from the actual response headers and saved via a normal save dialog, instead of being (mis)rendered as a page.</li>
     </ul>
 
     <h2>Requirements</h2>
@@ -62,7 +63,6 @@
     <h2>Known Limitations</h2>
     <ul>
       <li>No HTML form support (e.g. search boxes on a page) &mdash; the address bar's search fallback is the only workaround for now.</li>
-      <li>No PDF or generic file download support yet.</li>
       <li>Per-site navigation stripping is a simple heuristic, so ads/menus can still leak into the article body depending on how a given site is marked up.</li>
     </ul>
 
@@ -102,6 +102,7 @@
       <li>戻る/進む履歴。戻るボタンを右クリックすると訪問履歴の一覧からも直接ジャンプできます。</li>
       <li>日本語/英語のUI切り替え(実行中にその場で切り替え可能)。</li>
       <li>アドレスバーにURLでない文字列を入力すると、DuckDuckGoのHTML版検索に問い合わせます。</li>
+      <li>ファイルダウンロード(.dmg/.zip/.pdf等)は実際のレスポンスヘッダから判定し、ページとして誤表示せず通常の保存ダイアログで保存します。</li>
     </ul>
 
     <h2>動作要件</h2>
@@ -125,7 +126,6 @@
     <h2>既知の制限</h2>
     <ul>
       <li>HTMLフォーム(検索ボックス等)には対応していません。現状はアドレスバーの検索フォールバックのみが代替手段です。</li>
-      <li>PDFやその他ファイルのダウンロードには未対応です。</li>
       <li>サイトごとのナビゲーション除外は簡易的なヒューリスティックのため、レイアウトによっては広告・メニュー等が本文に混ざることがあります。</li>
     </ul>
 
