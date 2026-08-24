@@ -23,6 +23,7 @@
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download ppc-claude-agent.zip</a>
       <div class="meta">Downloads so far: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}</div>{% endif %}
+      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; if so, grab it from a modern machine and transfer it over instead.</div>
     </div>
 
     {% if app.changelog %}
@@ -93,6 +94,7 @@
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ppc-claude-agent.zip をダウンロード</a>
       <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}</div>{% endif %}
+      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。その場合は現代のMacで取得してから転送してください。</div>
     </div>
 
     {% if app.changelog %}

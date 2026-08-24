@@ -26,6 +26,7 @@
       <div class="meta">Downloads so far: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}</div>{% endif %}
       <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></div>
+      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; use a modern curl via Tigerbrew/MacPorts instead.</div>
     </div>
 
     <h2>What's Inside</h2>
@@ -86,6 +87,7 @@
       <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}</div>{% endif %}
       <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a></div>
+      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。TigerbrewやMacPorts経由の新しいcurlをご利用ください。</div>
     </div>
 
     <h2>同梱内容</h2>

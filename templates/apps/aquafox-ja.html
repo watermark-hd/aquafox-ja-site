@@ -22,6 +22,7 @@
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download ja-aquafox.xpi</a>
       <div class="meta">Downloads so far: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}</div>{% endif %}
+      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; use a modern curl via Tigerbrew/MacPorts instead, or download Aquafox itself first, which handles this fine.</div>
     </div>
 
     {% if app.changelog %}
@@ -66,6 +67,7 @@
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ja-aquafox.xpi をダウンロード</a>
       <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}</div>{% endif %}
+      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。TigerbrewやMacPorts経由の新しいcurl、またはAquafox本体経由でのダウンロードをお試しください。</div>
     </div>
 
     {% if app.changelog %}
