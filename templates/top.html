@@ -56,7 +56,7 @@
           {% endif %}
           <span class="app-card-platform">{{ app.platform }}</span>
           {% if not app.filename and not app.url %}
-          <span class="app-card-status">{% if lang == 'en' %}Coming Soon{% else %}準備中{% endif %}</span>
+          <span class="app-card-status">{% if lang == 'en' %}Concept Stage{% else %}構想中{% endif %}</span>
           {% endif %}
           <p class="app-card-tagline">{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}</p>
         </li>
