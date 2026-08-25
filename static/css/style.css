@@ -223,6 +223,68 @@ th {
   color: var(--ink-soft);
 }
 
+/* 概要／技術情報タブ (JS不使用、ラジオボタン+CSSのみ) */
+h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 26px;
+  color: var(--aqua-dark);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.tab-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tab-label {
+  order: 1;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  margin-right: 4px;
+}
+
+.tab-input:checked + .tab-label {
+  color: var(--aqua-dark);
+  background: var(--aqua-light);
+}
+
+.tab-panel {
+  order: 3;
+  width: 100%;
+  display: none;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 0 10px 10px 10px;
+  padding: 24px;
+}
+
+#tab-overview:checked ~ #panel-overview,
+#tab-tech:checked ~ #panel-tech {
+  display: block;
+}
+
+.tech-note {
+  background: var(--aqua-light);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 14px;
+}
+
 footer {
   margin-top: 56px;
   font-size: 12px;
