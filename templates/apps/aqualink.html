@@ -131,10 +131,7 @@
 
     <h3>Bugs and lessons along the way</h3>
     <div class="tech-note">
-      <strong>Garbled Japanese text.</strong> gcc 4.0.0's Objective-C compiler sometimes just doesn't parse
-      @"日本語"-style literals correctly. Switching to
-      [NSString stringWithUTF8String:"日本語"] &mdash; decoding a raw C byte string as UTF-8
-      explicitly &mdash; fixed it.
+      <strong>Garbled Japanese text.</strong> gcc 4.0.0's Objective-C compiler sometimes just doesn't parse @"日本語"-style literals correctly. Switching to [NSString stringWithUTF8String:"日本語"] &mdash; decoding a raw C byte string as UTF-8 explicitly &mdash; fixed it.
     </div>
     <div class="tech-note">
       <strong>Unmount race that hung the whole Mac.</strong> The original Disconnect button stopped the
@@ -193,8 +190,7 @@
 
     <div id="panel-overview" class="tab-panel">
     <p>
-      20年前のPowerPC Mac（iBook・PowerMac、Mac OS X Tiger/Leopard）を、今のネットワーク環境でも
-      使えるようにする自作アプリです。
+      20年前のPowerPC Mac（iBook・PowerMac、Mac OS X Tiger/Leopard）を、今のネットワーク環境でも使えるようにする自作アプリです。
     </p>
     <ul>
       <li>現代のNAS・Windows・Macに接続して、ファイルをドラッグ＆ドロップでやり取りできます（今までPPC Macにはこの機能がありませんでした）</li>
@@ -241,110 +237,52 @@
     </table>
 
     <p class="credit">
-      個人の趣味プロジェクトにつき無保証です。
-      詳しい技術情報・ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>をご覧ください。
+      個人の趣味プロジェクトにつき無保証です。詳しい技術情報・ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>をご覧ください。
     </p>
     </div>
 
     <div id="panel-tech" class="tab-panel">
     <p>
-      AquaLinkの中身は、SMB2/3をしゃべるCライブラリ
-      <a href="https://github.com/sahlberg/libsmb2" target="_blank" rel="noopener noreferrer">libsmb2</a>
-      です。私が調べた限りだと、PowerPC Mac OS Xで実際に動くSMB2/3クライアントはこれが世界初じゃないかと
-      思います(Appleの純正 smbfs.kext はSMB1止まりで、そもそもPPC Macから今どきのSMB3 NASに
-      繋ぐ手段自体がありませんでした)。ここでは実装のポイントと、ハマったところを紹介します。
+      AquaLinkの中身は、SMB2/3をしゃべるCライブラリ <a href="https://github.com/sahlberg/libsmb2" target="_blank" rel="noopener noreferrer">libsmb2</a> です。私が調べた限りだと、PowerPC Mac OS Xで実際に動くSMB2/3クライアントはこれが世界初じゃないかと思います(Appleの純正 smbfs.kext はSMB1止まりで、そもそもPPC Macから今どきのSMB3 NASに繋ぐ手段自体がありませんでした)。ここでは実装のポイントと、ハマったところを紹介します。
     </p>
 
     <h3>なぜlibsmb2にしたか</h3>
     <p>
-      PPC MacからSMB2/3のNASに繋ぐ手段が、そもそも無かったんです。まず土台になるライブラリを探して、
-      libsmb2がこの世代のハード・古いツールチェーンでもビルドが通る、ほぼ唯一のSMB2/3クライアント
-      ライブラリだったので、これに決めました。
+      PPC MacからSMB2/3のNASに繋ぐ手段が、そもそも無かったんです。まず土台になるライブラリを探して、 libsmb2がこの世代のハード・古いツールチェーンでもビルドが通る、ほぼ唯一のSMB2/3クライアントライブラリだったので、これに決めました。
     </p>
 
     <h3>Tiger(gcc 4.0.0)向けにビルドを通す</h3>
     <p>
-      TigerのSDKにはCommonCryptoフレームワークが無くて、素の __APPLE__ 判定だけだと誤って
-      CommonCrypto版のAES実装を選んでしまい、ビルドが落ちます。なので configure.ac に
-      CommonCrypto/CommonCrypto.h の有無を明示的にチェックするパッチを書きました。あと
-      2つオプションが要りました。 --disable-werror は、古いgcc 4.0.0が今のgccより広い範囲で
-      shadowed declarationを警告してくるので、 -Werror のままだと大量の警告が全部ビルド
-      エラー扱いになってしまうのを防ぐためです。 --without-libkrb5 は、Tigerに
-      GSS.framework や krb5.h が無くて、Kerberos対応を有効にするとヘッダが
-      無くてビルドが止まるのでその回避策。個人のNAS用途なら、内蔵のNTLMSSP認証だけで十分でした。
+      TigerのSDKにはCommonCryptoフレームワークが無くて、素の __APPLE__ 判定だけだと誤って CommonCrypto版のAES実装を選んでしまい、ビルドが落ちます。なので configure.ac に CommonCrypto/CommonCrypto.h の有無を明示的にチェックするパッチを書きました。あと 2つオプションが要りました。 --disable-werror は、古いgcc 4.0.0が今のgccより広い範囲で shadowed declarationを警告してくるので、 -Werror のままだと大量の警告が全部ビルドエラー扱いになってしまうのを防ぐためです。 --without-libkrb5 は、Tigerに GSS.framework や krb5.h が無くて、Kerberos対応を有効にするとヘッダが無くてビルドが止まるのでその回避策。個人のNAS用途なら、内蔵のNTLMSSP認証だけで十分でした。
     </p>
 
     <h3>自己完結のCocoaアプリ</h3>
     <p>
-      UIはnibファイルを使わず、全部コードで組んでます。libsmb2は静的リンクしているので、
-      make install は不要。zipを解凍してそのまま動きます。
+      UIはnibファイルを使わず、全部コードで組んでます。libsmb2は静的リンクしているので、 make install は不要。zipを解凍してそのまま動きます。
     </p>
 
     <h3>NASをFinderの実ボリュームとしてマウントする</h3>
     <p>
-      libsmb2だけだとプログラムからアクセスできるだけで、Finderにアイコンが出るわけじゃないんですよね。
-      そこでAquaLinkは自作の極小HTTP/WebDAVサーバー(生のBSDソケットでOPTIONS/PROPFIND/GET/HEAD/PUT/
-      DELETE/MKCOL/LOCK/UNLOCKに対応)を 127.0.0.1 で立ち上げて、そのループバックアドレスに
-      対して mount_webdav を呼ぶことで実現してます。結果、 /Volumes に普通の
-      ボリュームとして現れて、他のネットワーク共有と同じようにFinderでドラッグ&ドロップできます。
-      もっと素直な方法としてFUSEも考えたんですが、MacFUSE/OSXFUSEはMac OS X 10.4 Tigerを一度も
-      サポートしたことがなくて(PowerPC対応自体も2011年頃には業界的に打ち切られてます)、選択肢に
-      なりませんでした。
+      libsmb2だけだとプログラムからアクセスできるだけで、Finderにアイコンが出るわけじゃないんですよね。そこでAquaLinkは自作の極小HTTP/WebDAVサーバー(生のBSDソケットでOPTIONS/PROPFIND/GET/HEAD/PUT/ DELETE/MKCOL/LOCK/UNLOCKに対応)を 127.0.0.1 で立ち上げて、そのループバックアドレスに対して mount_webdav を呼ぶことで実現してます。結果、 /Volumes に普通のボリュームとして現れて、他のネットワーク共有と同じようにFinderでドラッグ&ドロップできます。もっと素直な方法としてFUSEも考えたんですが、MacFUSE/OSXFUSEはMac OS X 10.4 Tigerを一度もサポートしたことがなくて(PowerPC対応自体も2011年頃には業界的に打ち切られてます)、選択肢になりませんでした。
     </p>
 
     <h3>逆方向: PPC Mac自体をNAS化する</h3>
     <p>
-      これは最初のスコープには入ってなくて、「iBookに入ってる古いRAW写真を、今のMac/Windowsから
-      直接見たい・編集したい」っていう実際の要望を受けて後から足した機能です。
-      LocalWebDAVServer は同じ自作WebDAVサーバーを土台に、libsmb2の呼び出しをPOSIXの
-      ファイルI/O(open/read/write/opendir)に
-      置き換えて、 127.0.0.1 限定じゃなく INADDR_ANY でLAN上の他の機器からも
-      繋げるようにした上で、Basic認証とパストラバーサル(../)対策を足してます。
+      これは最初のスコープには入ってなくて、「iBookに入ってる古いRAW写真を、今のMac/Windowsから直接見たい・編集したい」っていう実際の要望を受けて後から足した機能です。 LocalWebDAVServer は同じ自作WebDAVサーバーを土台に、libsmb2の呼び出しをPOSIXのファイルI/O(open/read/write/opendir)に置き換えて、 127.0.0.1 限定じゃなく INADDR_ANY でLAN上の他の機器からも繋げるようにした上で、Basic認証とパストラバーサル(../)対策を足してます。
     </p>
 
     <h3>ハマった点</h3>
     <div class="tech-note">
-      <strong>日本語の文字化け。</strong> 古いgcc 4.0.0のObjective-Cコンパイラ、 @"日本語"
-      みたいな文字列リテラルをたまに正しく解釈してくれないんです。Cの生バイト列からUTF-8として
-      明示的にデコードする [NSString stringWithUTF8String:"日本語"] に置き換えたら
-      直りました。
+      <strong>日本語の文字化け。</strong> 古いgcc 4.0.0のObjective-Cコンパイラ、 @"日本語" みたいな文字列リテラルをたまに正しく解釈してくれないんです。Cの生バイト列からUTF-8として明示的にデコードする [NSString stringWithUTF8String:"日本語"] に置き換えたら直りました。
     </div>
     <div class="tech-note">
-      <strong>[重大] 取り外し処理の事故でMac全体がハング。</strong> 最初の「取り外す」ボタンは、
-      diskutil unmount が成功したか確認せずにWebDAVサーバーを止めてました。取り外しが
-      実は失敗(またはハング)してたケースだと、OSは「マウント中」のつもりなのに応答するサーバーが
-      いない、っていう壊れた状態になって、 /Volumes 全体へのアクセスがハングしたんです。
-      復旧には、そのポートに何かHTTP応答を返すプロセスを一時的に立てないといけませんでした
-      (kernel側が保留中の応答を待ち続けてたんだと思います)。教訓は、OSの状態を変えるコマンドは、
-      成功したか確認してから次の後始末をする、ということ。直した後は diskutil unmount
-      じゃなく umount(失敗したら -f で再試行)を使って、成功を確認できた
-      ときだけサーバーを止めるようにしました。
+      <strong>[重大] 取り外し処理の事故でMac全体がハング。</strong> 最初の「取り外す」ボタンは、 diskutil unmount が成功したか確認せずにWebDAVサーバーを止めてました。取り外しが実は失敗(またはハング)してたケースだと、OSは「マウント中」のつもりなのに応答するサーバーがいない、っていう壊れた状態になって、 /Volumes 全体へのアクセスがハングしたんです。復旧には、そのポートに何かHTTP応答を返すプロセスを一時的に立てないといけませんでした (kernel側が保留中の応答を待ち続けてたんだと思います)。教訓は、OSの状態を変えるコマンドは、成功したか確認してから次の後始末をする、ということ。直した後は diskutil unmount じゃなく umount(失敗したら -f で再試行)を使って、成功を確認できたときだけサーバーを止めるようにしました。
     </div>
     <div class="tech-note">
-      <strong>自作アイコンフォーマットでの思い込みバグ。</strong> 今の iconutil は
-      PNGベースのアイコン表現しか書き出してくれなくて、Tigerのファインダーはそれを一切読めません。
-      Tiger互換の .icns には生ビットマップの古いチャンク(is32/
-      il32/it32 とか)が必要で、これは自分で組み立てるしかありませんでした。
-      最初に書いたPackBits(RLE)のエンコーダ/デコーダは、制御バイトの意味を思い込みで間違えてた
-      んですが、自分で書いたエンコーダとデコーダのペアで往復検証しても一致しちゃうので、この手の
-      バグは自己検証だけじゃ見つからないんですよね。実機(Tiger)で「白い角丸にノイズ」って症状で
-      初めて気づいて、実績のあるOSSの libicns の実装を見て正しい式を突き止めて、
-      Aquafox自身のアイコンを実際にこの式で復元できることまで確認してから直しました。教訓は、
-      独自フォーマットの自己検証(round-trip)は「自分の思い込みと矛盾しない」ことしか証明しない、
-      ってことです。
+      <strong>自作アイコンフォーマットでの思い込みバグ。</strong> 今の iconutil は PNGベースのアイコン表現しか書き出してくれなくて、Tigerのファインダーはそれを一切読めません。 Tiger互換の .icns には生ビットマップの古いチャンク(is32/ il32/it32 とか)が必要で、これは自分で組み立てるしかありませんでした。最初に書いたPackBits(RLE)のエンコーダ/デコーダは、制御バイトの意味を思い込みで間違えてたんですが、自分で書いたエンコーダとデコーダのペアで往復検証しても一致しちゃうので、この手のバグは自己検証だけじゃ見つからないんですよね。実機(Tiger)で「白い角丸にノイズ」って症状で初めて気づいて、実績のあるOSSの libicns の実装を見て正しい式を突き止めて、 Aquafox自身のアイコンを実際にこの式で復元できることまで確認してから直しました。教訓は、独自フォーマットの自己検証(round-trip)は「自分の思い込みと矛盾しない」ことしか証明しない、ってことです。
     </div>
     <div class="tech-note">
-      <strong>特定環境でのumount権限エラー。</strong> 非公式パッチ当ての10.6.8(Snow Leopard)PPC
-      イメージを使ってる人から、「取り外す」がいつも失敗するっていう報告がありました。調べてみたら、
-      mount_webdav がsetuid rootで動くのでマウント自体がroot所有扱いになってて、
-      一般ユーザー権限だと取り外せなくなってたんです。 NSAppleScript 経由の管理者権限
-      実行と、もっと低レベルな AuthorizationExecuteWithPrivileges の2種類を試したんですが、
-      どっちも同じ Operation not permitted で失敗。一方でターミナルの sudo
-      (GUI認証を通らない別系統の仕組み)は毎回ちゃんと成功してました。2つの違うGUI認証APIが両方
-      同じ失敗をするってことは、このパッチ当てイメージのGUI認証まわり自体が壊れてて、アプリ側を
-      どういじっても直せなさそうだと判断して、この環境については既知の制限として受け入れることに
-      しました。手動で sudo umount -f を実行するのが確実な回避策です。無改造の
-      Tiger/Leopard/Snow Leopardでは、この問題は起きてません。
+      <strong>特定環境でのumount権限エラー。</strong> 非公式パッチ当ての10.6.8(Snow Leopard)PPC イメージを使ってる人から、「取り外す」がいつも失敗するっていう報告がありました。調べてみたら、 mount_webdav がsetuid rootで動くのでマウント自体がroot所有扱いになってて、一般ユーザー権限だと取り外せなくなってたんです。 NSAppleScript 経由の管理者権限実行と、もっと低レベルな AuthorizationExecuteWithPrivileges の2種類を試したんですが、どっちも同じ Operation not permitted で失敗。一方でターミナルの sudo (GUI認証を通らない別系統の仕組み)は毎回ちゃんと成功してました。2つの違うGUI認証APIが両方同じ失敗をするってことは、このパッチ当てイメージのGUI認証まわり自体が壊れてて、アプリ側をどういじっても直せなさそうだと判断して、この環境については既知の制限として受け入れることにしました。手動で sudo umount -f を実行するのが確実な回避策です。無改造の Tiger/Leopard/Snow Leopardでは、この問題は起きてません。
     </div>
 
     <h3>今後</h3>

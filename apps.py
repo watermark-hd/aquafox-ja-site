@@ -61,6 +61,7 @@ APPS = [
         "tagline_en": "A self-contained Perl agent that lets you talk to Claude from the Terminal on a PowerPC Mac (Tiger).",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "ppc-claude-agent.zip",
+        "github_url": "https://github.com/watermark-hd/ppc_claude_cli",
         "category": "app",
         "changelog": [
             {

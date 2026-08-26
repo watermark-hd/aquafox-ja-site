@@ -12,6 +12,13 @@
   <div><span class="platform-badge">{{ app.platform }}</span></div>
 
   {% if lang == 'en' %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">Overview</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">Technical Info</label>
+
+    <div id="panel-overview" class="tab-panel">
     <p>
       A personal project that keeps a 20-year-old PowerPC Mac useful as a real AI coding assistant.
       The official Claude Code CLI needs Node.js 18+, which can't run on Tiger's old PowerPC hardware,
@@ -82,12 +89,102 @@
       A personal hobby project provided with no warranty. If curl doesn't run on your machine, the full
       project (build scripts included) shows how to build the TLS toolchain from source instead.
     </p>
-  {% else %}
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
     <p>
-      20年前のPowerPC Macを、実用的なAIコーディングアシスタントとして活かすための自作プロジェクトです。
-      公式のClaude Code CLIはNode.js 18+が前提で、Tiger時代の古いPowerPC環境では動かせません。そこで、
-      curl経由でAnthropic APIを直接叩く自己完結型の軽量エージェントをPerlで実装しています。Node.jsも、
-      利用者側でのコンパイルも不要です。
+      PPC Claude Agent is basically a single Perl file that talks straight to the Anthropic API over curl.
+      The official Claude Code CLI needs Node.js 18+, and V8 dropped PowerPC support years ago, so this is
+      a completely separate route built from scratch that doesn't touch Node.js at all. Here's what actually
+      got in the way, and how each one got solved.
+    </p>
+
+    <h3>The real wall was TLS 1.2</h3>
+    <p>
+      Anthropic's API requires TLS 1.2 or newer, and Tiger's stock OpenSSL (0.9.7l) doesn't even reach
+      TLS 1.0. Bumping the Python version or whatever doesn't fix that &mdash; OpenSSL and curl themselves
+      need rebuilding from source. And trying to get there via Tigerbrew or MacPorts runs into a
+      chicken-and-egg problem, since fetching packages from GitHub needs TLS 1.2 over HTTPS in the first
+      place. Worked around that by downloading the source tarballs on a modern machine, scp-ing them to
+      the iBook, and doing the actual build right there on the iBook itself. The heavy lifting is still
+      genuinely done by the G4, so the "runs standalone on the G4" goal holds up.
+    </p>
+
+    <h3>The linker kept grabbing the wrong library</h3>
+    <p>
+      Once it came time to build curl, fairly recent symbols like EVP_sha256 kept coming up "undefined,"
+      crashing at runtime with dyld: Symbol not found &mdash; a confusing failure that looks like a TLS
+      problem but isn't. Turned out Darwin's ld was preferring the system's /usr/lib/libssl.dylib (Tiger's
+      old OpenSSL 0.9.7l) over the freshly built one, even with -L pointing at the right place. Adding
+      -Wl,-search_paths_first to LDFLAGS forced it to check the given path first, and that fixed it.
+    </p>
+
+    <h3>A Perl agent with zero external dependencies</h3>
+    <p>
+      claude-agent.pl runs on nothing but Tiger's stock Perl 5.8.6 &mdash; no external CPAN modules at
+      all. JSON encoding/decoding is a small hand-written recursive-descent parser, just enough to handle
+      the Claude API's message format. HTTP is handled entirely by shelling out to the curl binary that
+      got built, so the only two things that actually need compiling are OpenSSL and curl.
+    </p>
+
+    <h3>A pile of terminal-input bugs</h3>
+    <p>Actually using this thing on real hardware turned up one terminal quirk after another.</p>
+    <div class="tech-note">
+      <strong>Arrow keys typed as literal characters.</strong> The first version just read from STDIN,
+      which has no concept of cursor movement, so an arrow key's raw escape sequence (ESC [ C, etc.)
+      landed in the input as text. Fixed by writing a small stty-raw-mode line editor from scratch.
+    </div>
+    <div class="tech-note">
+      <strong>Japanese input filling the screen with "◆".</strong> The line editor read one raw byte at a
+      time and redrew after every byte, so a 3-byte Japanese character would briefly exist as an incomplete
+      sequence that got decoded into a "◆" placeholder &mdash; once per byte. Fixed by waiting for a full
+      character's bytes before adding it to the buffer.
+    </div>
+    <div class="tech-note">
+      <strong>Every keystroke pushing the line down instead of editing in place.</strong> The redraw logic
+      reprinted the entire prompt string on every keystroke, and that string happened to start with a
+      literal newline &mdash; so a real newline got sent to the terminal on every single character typed.
+      Fixed by only including that leading newline the first time the prompt is printed.
+    </div>
+    <div class="tech-note">
+      <strong>Enter occasionally getting swallowed.</strong> The multi-byte continuation-byte handling
+      trusted that whatever came after a UTF-8 lead byte was a real continuation byte, without checking.
+      When the actual input stream had something unexpected in it, whatever came right after &mdash;
+      including an Enter keypress &mdash; got consumed as if it were part of that character. Fixed by
+      validating continuation bytes and pushing back anything that doesn't look right, so it gets read
+      again as its own keystroke.
+    </div>
+    <div class="tech-note">
+      <strong>Terminal.app prefixing 0x16 onto every byte of Japanese input.</strong> This was the actual
+      root cause behind Japanese still being garbled after all the fixes above &mdash; turns out
+      Terminal.app on this iBook sends IME-committed text with a literal 0x16 (the old Unix "LNEXT"
+      signal) in front of every byte. Found it by adding a temporary debug-logging mode and capturing the
+      real byte stream from an actual session. Fixed by stripping each 0x16 and treating the following
+      byte as the real one.
+    </div>
+
+    <h3>What's next / a note on distributing this</h3>
+    <p>
+      The agent itself is free to share, but actually using it requires each person to get their own
+      Anthropic API key, billed for their own usage. No API key is ever embedded in the code, so sharing
+      this never exposes anyone's billing to anyone else.
+    </p>
+
+    <p class="credit">
+      Full source code is on <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+    </div>
+  </div>
+  {% else %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">概要</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">技術情報</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      20年前のPowerPC Macを、実用的なAIコーディングアシスタントとして活かすための自作プロジェクトです。公式のClaude Code CLIはNode.js 18+が前提で、Tiger時代の古いPowerPC環境では動かせません。そこで、 curl経由でAnthropic APIを直接叩く自己完結型の軽量エージェントをPerlで実装しています。Node.jsも、利用者側でのコンパイルも不要です。
     </p>
 
     <div class="download-box">
@@ -134,12 +231,7 @@
 
     <h2>APIキーについて（課金）</h2>
     <p>
-      このプロジェクト（エージェント本体とインストーラー）自体は自由に使えますが、実際にClaudeと
-      会話するには、利用者ひとりひとりが自分のAnthropic APIキーを発行する必要があります。課金は
-      <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>
-      での従量課金制で、claude.aiのサブスクリプションとは別のサイト・別の課金体系です。コードにAPIキーは
-      一切含まれておらず、<code>claude-agent.pl</code>は環境変数からキーを読むだけなので、配布者のキーや
-      請求先が他人に渡ることはありません。インストーラーがキーの発行とクレジットのチャージまで案内します。
+      このプロジェクト（エージェント本体とインストーラー）自体は自由に使えますが、実際にClaudeと会話するには、利用者ひとりひとりが自分のAnthropic APIキーを発行する必要があります。課金は <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a> での従量課金制で、claude.aiのサブスクリプションとは別のサイト・別の課金体系です。コードにAPIキーは一切含まれておらず、<code>claude-agent.pl</code>は環境変数からキーを読むだけなので、配布者のキーや請求先が他人に渡ることはありません。インストーラーがキーの発行とクレジットのチャージまで案内します。
     </p>
 
     <h2>対応環境</h2>
@@ -150,9 +242,58 @@
     </table>
 
     <p class="credit">
-      個人の趣味プロジェクトにつき無保証です。お使いの機種でcurlが動作しない場合は、プロジェクト本体に
-      含まれるビルドスクリプトを使ってソースからTLSツールチェーンをビルドする手順もあります。
+      個人の趣味プロジェクトにつき無保証です。お使いの機種でcurlが動作しない場合は、プロジェクト本体に含まれるビルドスクリプトを使ってソースからTLSツールチェーンをビルドする手順もあります。
     </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      PPC Claude Agentの中身は、curl経由でAnthropic APIを直接叩くだけの、単一ファイルのPerlスクリプトです。公式のClaude Code CLIはNode.js 18+が前提で、PowerPCを切り捨てたV8の上では動かないので、 Node.jsを使わない別ルートを一から作った形です。ここでは実際にぶつかった壁と、その乗り越え方を紹介します。
+    </p>
+
+    <h3>本当の壁はTLS 1.2だった</h3>
+    <p>
+      AnthropicのAPIはTLS 1.2以上が必須ですが、Tiger標準のOpenSSLは0.9.7l系でTLS 1.0にも届きません。 Pythonのバージョンをどうこうしても解決せず、OpenSSLとcurl自体をソースからビルドし直す必要がありました。しかもTigerbrewやMacPorts経由でパッケージを取ろうとしても、その取得自体がTLS 1.2 必須のHTTPS接続を要求するので、「新しいcurlを入れるために新しいcurlが要る」という鶏卵問題にぶつかります。これを避けるため、ソースのtarballは別のモダンな端末でダウンロードしてscpでiBookに転送し、実際のビルドはiBook本体(PowerPC/G4)でやる、という形にしました。一番重い処理はちゃんと G4がやっているので、「G4単体で動かす」という目標は保てています。
+    </p>
+
+    <h3>リンカが勝手に古いライブラリを掴む</h3>
+    <p>
+      curlをビルドする段になって、EVP_sha256のような比較的新しいシンボルが軒並み「未定義」になり、実行時にdyld: Symbol not foundで落ちる、という紛らわしい不具合に当たりました。原因はTLSではなく、 DarwinのldがLでの指定より先にシステム標準の/usr/lib/libssl.dylib(Tiger添付のOpenSSL 0.9.7l)を掴んでしまっていたこと。LDFLAGSに-Wl,-search_paths_firstを足して、指定したパスをシステムパスより先に探すよう強制して解決しました。
+    </p>
+
+    <h3>外部依存ゼロのPerlエージェント</h3>
+    <p>
+      claude-agent.plはTiger標準のPerl 5.8.6だけで動く単一ファイルで、外部CPANモジュールへの依存はゼロです。JSON encode/decodeも、Claude APIのメッセージ構造に必要な分だけの再帰下降パーサーを自前で書いています。HTTP通信はPerl側に持たせず、ビルドしたcurlをサブプロセスとして呼び出す形にしていて、これでビルドが必要な部分をOpenSSLとcurlの2つだけに閉じ込めています。
+    </p>
+
+    <h3>端末入力まわりで踏んだバグの数々</h3>
+    <p>実機で実際に使ってもらいながら、ターミナル入力周りのバグを何度も踏みました。</p>
+    <div class="tech-note">
+      <strong>矢印キーが文字として入力される。</strong> 最初はSTDINでそのまま読んでいたため、カーソル移動の概念がなく、矢印キーの生エスケープシーケンス(ESC [ C など)がそのまま文字として入力されてしまっていました。stty rawモードの簡易行編集を自前で実装して解決。
+    </div>
+    <div class="tech-note">
+      <strong>日本語入力で画面が「◆」だらけになる。</strong> 行編集機能が入力を1バイトずつ読んで毎回再描画していたため、日本語(1文字3バイト)の途中の不完全なバイト列を「◆」に変換してしまっていました。1文字分のバイトが揃ってからバッファに追加するように直しました。
+    </div>
+    <div class="tech-note">
+      <strong>1文字打つごとに改行されて行編集にならない。</strong> 再描画のたびにプロンプト文字列をまるごと再出力していたのですが、そのプロンプト文字列自体が先頭に改行を含んでいたため、打つたびに本物の改行が送られ続けていました。プロンプトの先頭改行を、最初の1回だけ出すように直しました。
+    </div>
+    <div class="tech-note">
+      <strong>Enterが時々無視される。</strong> マルチバイト文字の続きバイトを検証せずに決め打ちで読み進めていたため、実際の入力に想定外のバイトが混ざっていると、直後に来たEnterごと「続きバイト」として飲み込んでしまうことがありました。続きバイトが本当にその形式かどうか検証し、違えば読み戻して単独のキー入力として扱うように修正。
+    </div>
+    <div class="tech-note">
+      <strong>Terminal.appが日本語の各バイトの前に0x16を付けてくる。</strong> ここまでの修正を経てもなお日本語が化けていた根本原因で、実機のTerminal.appがIME確定テキストを送るとき、各バイトの前に LNEXT(0x16)を付与してくることが分かりました。デバッグログを一時的に仕込んで実際のバイト列を確認し、0x16を読み飛ばして次のバイトを本来のデータとして扱うよう修正しています。
+    </div>
+
+    <h3>今後 / 配布にあたって</h3>
+    <p>
+      このエージェント自体は自由に配布できますが、実際に動かすには利用者ごとにAnthropicのAPIキーが必要で、課金もそれぞれの利用分だけです。コードにAPIキーは埋め込まれていないので、配布者の請求先が他人に渡ることはありません。
+    </p>
+
+    <p class="credit">
+      ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+    </p>
+    </div>
+  </div>
   {% endif %}
 
 {% endblock %}

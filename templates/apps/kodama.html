@@ -15,6 +15,13 @@
   </div>
 
   {% if lang == 'en' %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">Overview</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">Technical Info</label>
+
+    <div id="panel-overview" class="tab-panel">
     <p>
       An ultra-lightweight 3-pane web reader for PowerPC Macs (G3/G4/G5) running Mac OS X 10.4 Tiger.
       Modern web pages are full of JavaScript, ads, and huge images that hardware from the mid-2000s
@@ -76,13 +83,102 @@
       A personal hobby project provided with no warranty, MIT licensed.
       See <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a> for source code and technical details.
     </p>
-  {% else %}
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
     <p>
-      Mac OS X 10.4 Tiger を搭載したPowerPC Mac (G3/G4/G5) 向けの、超軽量3ペイン型Webリーダーです。
-      現代のWebページはJavaScript・広告・巨大な画像だらけで、2000年代半ばのハードウェアではまともに
-      開けません。コダマはそれらを一切読み込まず、libxml2でHTMLを解析して「見出し・本文・画像リンク」
-      だけを抽出し、OS標準のCocoaコンポーネントに直接描画します。JavaScriptもCSSも実行しないため、
-      G3 450MHz機でも軽快に動作することを目標にしています。
+      Kodama is basically just a lightweight parser that turns raw HTML into structure using libxml2.
+      No WebKit, no JavaScript, no CSS engine at all. The goal from day one was staying usable on a
+      450MHz G3. Here's how it actually came together, and some of the real-site landmines along the way.
+    </p>
+
+    <h3>Why not WebKit</h3>
+    <p>
+      Modern web pages are full of JS, ads, and huge images that a G3-era CPU just can't render. So Kodama
+      skips WebKit entirely &mdash; it parses HTML with libxml2, pulls out just the headings, body text,
+      and image links, and draws them with plain Cocoa components. No JS, no CSS to execute, so there's
+      nothing there to be slow.
+    </p>
+
+    <h3>Hitting Tiger's limits over and over</h3>
+    <p>
+      Even in the first pass at the parser, real-hardware testing turned up one old-environment wall after
+      another. The libxml2 that ships here (2.6.16) doesn't even have the HTML_PARSE_RECOVER constant.
+      Foundation on 10.4 doesn't have componentsSeparatedByCharactersInSet:, so that had to be rewritten
+      around NSScanner instead. The most annoying one was gcc 4.0.0's Objective-C string literals &mdash;
+      an @"..." literal containing multi-byte characters like Japanese just doesn't encode correctly and
+      comes out garbled. Ran into that enough times that a small macro, PWRJPStr, was born &mdash; it
+      builds strings from a plain C literal via stringWithUTF8String: instead, and every UI string uses it
+      from then on.
+    </p>
+
+    <h3>Async networking before blocks or GCD existed</h3>
+    <p>
+      Tiger has neither GCD nor blocks, so even calling curl asynchronously took some doing. CurlTaskRunner
+      waits on both NSTaskDidTerminateNotification and NSFileHandleReadCompletionNotification at once and
+      reports back through a delegate &mdash; the old-school way. On real hardware it pulled off actual
+      HTTPS fetches using a portable curl from Tigerbrew (7.58.0 + OpenSSL 1.0.2l), which is what proved
+      the core idea of the whole project: dodging the TLS 1.2/1.3 handshake problem was actually possible.
+    </p>
+
+    <h3>Building the "hidden third pane"</h3>
+    <p>
+      The right pane (image preview) sits at zero width by default and only opens when you click an image
+      link. Except Tiger's NSSplitView (10.4) doesn't have setPosition:ofDividerAtIndex:, so the modern
+      approach was off the table. Had to fall back to the old way: calculating subview frames by hand
+      inside splitView:resizeSubviewsWithOldSize: to collapse and expand it.
+    </p>
+
+    <h3>An endless fight with real websites</h3>
+    <p>This is probably where most of the actual time went.</p>
+    <div class="tech-note">
+      <strong>Garbled Shift_JIS.</strong> libxml2 2.6.16's automatic encoding detection turned out to be
+      unreliable &mdash; real sites declaring charset=shift_jis (like ITmedia) came out garbled. Fixed it
+      by no longer handing NULL to htmlReadMemory and letting it guess; instead, Kodama reads the meta
+      charset declaration near the top of the HTML itself and passes the encoding explicitly.
+    </div>
+    <div class="tech-note">
+      <strong>JavaScript leaking into the article body.</strong> The same libxml2 doesn't treat everything
+      inside a script tag as raw text the way the HTML5 spec says it should &mdash; a tag-like string
+      inside a JS template literal (seen on FNN News, for example) fooled it into thinking it had exited
+      the script tag, and the raw JS code ended up rendered as body text. Fixed by stripping out
+      script/style contents at the raw-byte level before the parser ever sees them.
+    </div>
+    <div class="tech-note">
+      <strong>Global nav menus leaking into the article.</strong> On sites like FNN News, a div-based
+      global menu (class="m-gnav" and similar) would show up whole at the top of the article body since
+      it's not an actual nav tag. Added a heuristic that excludes elements whose class/id contains telltale
+      words &mdash; but deliberately avoided generic words like "nav" or "header," since those show up in
+      legitimate article class names too and would cause false positives. Stuck to specific, low-false-positive
+      words instead: gnav, globalnav, breadcrumb, pankuzu, drawer, hamburger.
+    </div>
+
+    <h3>Traps in the Japanese/English switch</h3>
+    <div class="tech-note">
+      Someone reported that switching to English left the window title stuck on "コダマ" and the Edit menu items still in Japanese. Turned out part of the window title was hardcoded to that literal string instead of going through the localization system, and the Edit menu items were built as plain local variables that never got added to the list of things the switch updates &mdash; just an oversight from when they were first added. Fixed both, confirmed on real hardware. One thing that can't be switched at runtime at all: the app name shown at the far left of the menu bar comes straight from CFBundleName, which macOS controls itself. Since that's unreadable to non-Japanese speakers no matter what, it's set to the Latin "Kodama" from the start &mdash; the "コダマ" identity still lives on in the window title, the About panel, and this site.
+    </div>
+
+    <h3>What's next</h3>
+    <p>
+      No HTML form support yet (search boxes, etc.) &mdash; the address bar's DuckDuckGo fallback is the
+      only workaround for now, still thinking about the right way to handle it.
+    </p>
+
+    <p class="credit">
+      Full source code is on <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+    </div>
+  </div>
+  {% else %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">概要</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">技術情報</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      Mac OS X 10.4 Tiger を搭載したPowerPC Mac (G3/G4/G5) 向けの、超軽量3ペイン型Webリーダーです。現代のWebページはJavaScript・広告・巨大な画像だらけで、2000年代半ばのハードウェアではまともに開けません。コダマはそれらを一切読み込まず、libxml2でHTMLを解析して「見出し・本文・画像リンク」だけを抽出し、OS標準のCocoaコンポーネントに直接描画します。JavaScriptもCSSも実行しないため、 G3 450MHz機でも軽快に動作することを目標にしています。
     </p>
 
     <div class="download-box">
@@ -136,9 +232,62 @@
     </table>
 
     <p class="credit">
-      個人の趣味プロジェクトにつき無保証、MITライセンスです。
-      詳しいソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>をご覧ください。
+      個人の趣味プロジェクトにつき無保証、MITライセンスです。詳しいソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>をご覧ください。
     </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      コダマの中身は、libxml2でHTMLを構造化するだけの軽量パーサーです。WebKitは使わず、JavaScriptも CSSも一切実行しません。目標は最初からG3 450MHzでも実用的に動くこと。ここでは実装のポイントと、実際のサイトで踏んだ地雷を紹介します。
+    </p>
+
+    <h3>なぜWebKitを使わないか</h3>
+    <p>
+      今どきのWebページはJS・広告・巨大な画像だらけで、G3世代のCPUではまともに描画できません。だからコダマは最初からWebKitを捨てて、libxml2でHTMLをパースし、見出し・本文・画像リンクだけを抜き出して Cocoaの標準部品に直接描画する設計にしました。JSもCSSも動かさないので、そもそも重くなりようがない、という考え方です。
+    </p>
+
+    <h3>Tigerの制約に何度もぶつかった</h3>
+    <p>
+      最初のパーサー(HTMLParserEngine)を作った段階から、実機検証だけでいくつも古い環境特有の壁に当たりました。使っているlibxml2(2.6.16)にはHTML_PARSE_RECOVER定数が無い、Foundation(10.4)には componentsSeparatedByCharactersInSet:が無くてNSScannerベースで書き直す必要がある、といった具合です。一番厄介だったのはgcc 4.0.0のObjective-C文字列リテラル(@"...")で、日本語などのマルチバイト文字を含む@""リテラルが正しくエンコードされず文字化けするというバグ。何度も踏んだので、Cの生リテラル+stringWithUTF8String:経由で文字列を作るPWRJPStrというマクロを用意して、以降のUI文字列は全部これ経由にしました。
+    </p>
+
+    <h3>blocksもGCDも無い時代の非同期通信</h3>
+    <p>
+      TigerにはGCDもblocksも無いので、curlを非同期で呼ぶだけでも一苦労でした。 NSTaskDidTerminateNotificationとNSFileHandleReadCompletionNotificationを両方待ち合わせる形で CurlTaskRunnerというクラスを実装し、結果はdelegateで通知する昔ながらの作りにしています。実機では Tigerbrew経由のポータブルcurl(7.58.0+OpenSSL 1.0.2l)でHTTPS取得に成功し、TLS1.2/1.3のハンドシェイク回避というこのアプリの核心部分を実証できました。
+    </p>
+
+    <h3>「隠れ3ペイン」の実装</h3>
+    <p>
+      右ペイン(画像プレビュー)は普段は幅0で隠れていて、画像リンクをクリックした時だけ広がる作りです。ところがTiger(10.4)のNSSplitViewにはsetPosition:ofDividerAtIndex:というメソッドが無く、今どきのやり方が使えません。splitView:resizeSubviewsWithOldSize:の中でサブビューのframeを自分で計算する、昔ながらのやり方で折りたたみ/展開を実装しています。
+    </p>
+
+    <h3>実サイトとの終わらないいたちごっこ</h3>
+    <p>ここが一番時間を食ったところかもしれません。</p>
+    <div class="tech-note">
+      <strong>Shift_JISの文字化け。</strong> libxml2(2.6.16)のエンコーディング自動検出があてにならず、 charset=shift_jisを宣言している実サイト(ITmedia等)で文字化けが起きました。htmlReadMemoryにNULLを渡して自動検出任せにするのをやめ、HTML先頭のmeta charset宣言を自前で読み取って明示的にエンコーディングを渡すように変更して直しました。
+    </div>
+    <div class="tech-note">
+      <strong>JSコードが本文に漏れる。</strong> 同じlibxml2がscriptタグの中身をHTML5仕様通りの生テキストとして扱ってくれず、JSのテンプレートリテラルの中に書かれたタグっぽい文字列(FNNニュース等で発生)を見て「scriptの外に出た」と誤認識し、JSコードがそのまま本文として表示されてしまう不具合がありました。パーサーに渡す前の生バイト列の段階でscript/styleの中身を確実に取り除く前処理を追加して解消しています。
+    </div>
+    <div class="tech-note">
+      <strong>グローバルメニューが本文に混入。</strong> FNNニュースのような実サイトで、divで組まれたグローバルメニュー(class="m-gnav"等)が実際のnavタグではないため本文冒頭に丸ごと入ってきてしまう問題がありました。class/id名に「gnav」のような特徴的な語を含む要素を除外するヒューリスティックを追加しましたが、「nav」や「header」のような一般的すぎる語は記事本文側のクラス名を誤って除外してしまう恐れがあったので避け、誤検知の少ない具体的な語(gnav/globalnav/breadcrumb/pankuzu/drawer/ hamburger)だけに絞っています。
+    </div>
+
+    <h3>日英切り替えの落とし穴</h3>
+    <div class="tech-note">
+      英語に切り替えてもウィンドウタイトルだけ「コダマ」のまま、Editメニューの項目も日本語のまま、という報告がありました。調べたら、ウィンドウタイトルの一部が「コダマ」という文字列を決め打ちで作っていて、言語切り替えの仕組みを経由していなかったのが原因。Editメニューの各項目もローカル変数のまま作っていたため、切り替え対象のリストに単純に入れ忘れていました。両方修正して、実機で全項目が切り替わることを確認しています。ちなみにメニューバー左端のアプリ名は、OSがCFBundleName から強制的に表示する部分で実行中は切り替えられないため、日本語話者以外にも読めるよう最初から「Kodama」というラテン文字表記にしています。「コダマ」というアイデンティティ自体は、ウィンドウタイトルやAboutパネル、この配布サイトの方には残しています。
+    </div>
+
+    <h3>今後</h3>
+    <p>
+      フォーム未対応(検索ボックスなど)は、現状アドレスバーのDuckDuckGo検索フォールバックだけで凌いでいるので、ここは引き続き検討中です。
+    </p>
+
+    <p class="credit">
+      ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+    </p>
+    </div>
+  </div>
   {% endif %}
 
 {% endblock %}
