@@ -37,6 +37,11 @@ APPS = [
         "category": "app",
         "changelog": [
             {
+                "date": "2026-08-28",
+                "note": "SMB3暗号化を必須にするオプションを追加。実装過程で、libsmb2本体のビッグエンディアン環境向けバグ（暗号化ヘッダーのSessionIdがエンディアン変換されていなかった）を発見・修正し、上流に報告した",
+                "note_en": "Added an option to require SMB3 encryption. While implementing it, found and fixed a big-endian bug in libsmb2 itself (the encrypted header's SessionId wasn't byte-swapped for the wire) and reported it upstream.",
+            },
+            {
                 "date": "2026-08-23",
                 "note": "管理者権限での実行時にumountコマンドが見つからず失敗する不具合を修正（/sbin/umountをフルパスで指定するように変更）",
                 "note_en": "Fixed umount failing under administrator privileges by calling it via its full path (/sbin/umount)",
