@@ -12,6 +12,13 @@
   <div><span class="platform-badge">{{ app.platform }}</span></div>
 
   {% if lang == 'en' %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">Overview</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">Technical Info</label>
+
+    <div id="panel-overview" class="tab-panel">
     <p>
       A personal project that recreates the feel of the Finder from Mac OS X 10.4–10.6 (Tiger–Snow Leopard),
       designed to bring back the classic file-manager experience on modern macOS systems.
@@ -68,7 +75,89 @@
 
     <h2>License</h2>
     <p class="credit">Published under the MIT License.</p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      AquaFinder isn't one big app target &mdash; it's split into about a dozen small Swift packages
+      (FSCore, FSUIKit, FSWindow, FSIconView, FSColumnView, FSListView, FSGetInfo, FSSidebar, FSQuickLook,
+      plus the AquaFinderApp shell that ties them together), and there's no storyboard or nib anywhere in it &mdash;
+      every window, toolbar button, and list cell gets built and positioned in code. Turns out getting a modern
+      NSToolbar to actually look and behave like Tiger/Snow Leopard's Finder toolbar means fighting AppKit's
+      own layout system more than I expected going in. Here's some of that.
+    </p>
+
+    <h3>Buttons that live outside NSToolbar</h3>
+    <p>
+      The back/forward and view-mode segmented controls (ClassicSegmentedControl) aren't real NSToolbarItems
+      at all &mdash; they're plain NSViews, floated on top of the toolbar and positioned entirely by hand.
+      That wasn't the first approach; see the crash below for why it changed. The tradeoff of going this
+      route is that everything about their position &mdash; including the window's own minimum width, worked
+      out from the two controls' fixed sizes plus margins plus room for the search field shrunk down to just
+      its icon &mdash; has to be tracked by hand instead of letting AppKit's layout system do it.
+    </p>
+
+    <h3>Icon loading and scrolling</h3>
+    <p>
+      Icons used to be looked up synchronously through Launch Services (not fast) the moment a cell first
+      painted, so opening a folder full of files meant watching icons pop in one at a time. IconCache moved
+      to NSCache and now gets warmed in the background as soon as a folder's listing comes back, rather than
+      waiting to be asked. Quick Look thumbnail requests get cancelled too, the moment their cell is recycled
+      mid-scroll, so flicking fast through a big folder doesn't leave a pile of thumbnail decodes running for
+      cells nothing shows anymore.
+    </p>
+
+    <h3>Bugs and lessons along the way</h3>
+    <div class="tech-note">
+      <strong>A cross-toolbar-item constraint that crashed on every launch.</strong> The original version of
+      the floating buttons tied one of them to the search field living in a different NSToolbarItem, with a
+      regular Auto Layout constraint. That crashed the app on every single launch &mdash; NSToolbarItemViewer
+      flat-out refuses to host a layout engine touched by any constraint referencing a view outside that
+      item's own view, and throws before the window ever gets to appear. Switching to plain floated NSViews
+      positioned by hand, with no cross-item constraints at all, is what actually shipped.
+    </div>
+    <div class="tech-note">
+      <strong>Same gray, different Mac.</strong> The toolbar bezel originally used NSColor(calibratedWhite:),
+      and the exact same drawing code somehow looked a shade different from one Mac to another. calibratedWhite
+      resolves through the display's own calibration / "Generic Gray" color space, so the same number can come
+      out at a different actual brightness depending on the display profile. Switched everything to plain
+      srgbRed/green/blue values instead &mdash; a fixed, absolute space, so what's specified is what gets drawn.
+    </div>
+    <div class="tech-note">
+      <strong>Column view's rename field editor opening empty.</strong> Renaming a file in Column view opened
+      an edit box with nothing in it. Setting a browser cell's image (needed for the file icon) silently flips
+      NSCell's own type to .imageCellType as an Apple-documented side effect, and the rename field editor seeds
+      its starting text from a text-type cell &mdash; so once the cell quietly became an image cell, there was
+      nothing left to seed it with. On top of that, Return-key renames start inside NSBrowser's own private
+      per-column NSMatrix, which never surfaces through any of NSBrowser's public methods, so there wasn't an
+      obvious hook to fix it from outside either. Fixed both inside the cell itself: forcing the type back to
+      .textCellType right after setting the image, and overriding edit(withFrame:in:editor:delegate:event:)
+      &mdash; the one call every rename is guaranteed to pass through, however it gets triggered.
+    </div>
+    <div class="tech-note">
+      <strong>Double-click doing nothing, exactly once.</strong> Launch straight into Icon or List view,
+      double-click a folder before ever switching to Column view, and nothing happened &mdash; no crash, no
+      error, just silence. Column view's setRoot() was calling browser.selectionIndexPath on an NSBrowser
+      whose view (and so its delegate) had never been loaded, since nothing had asked for that view yet. That
+      throws an Objective-C exception Swift code can't catch, and AppKit's own mouse-tracking loop happened to
+      swallow it rather than let the app crash &mdash; so navigate(to:) just quietly stopped partway through.
+      The fix was forcing the browser's view to load before touching it. A real crash would honestly have been
+      easier to track down than one that gets caught and thrown away.
+    </div>
+
+    <p class="credit">
+      Full source code is on <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+    </div>
+  </div>
   {% else %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">概要</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">技術情報</label>
+
+    <div id="panel-overview" class="tab-panel">
     <p>
       Mac OS X 10.4〜10.6（Tiger〜Snow Leopard）時代のFinderの雰囲気を再現した、個人開発の
       ファイラーアプリです。Apple社および実際のFinderとは無関係の非公式・非商用プロジェクトです。
@@ -124,6 +213,83 @@
 
     <h2>ライセンス</h2>
     <p class="credit">MIT License で公開しています。</p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      AquaFinderは一枚の巨大なアプリじゃなくて、FSCore・FSUIKit・FSWindow・FSIconView・FSColumnView・
+      FSListView・FSGetInfo・FSSidebar・FSQuickLookと、それをまとめる AquaFinderApp 本体、10個くらいの
+      小さなSwiftパッケージに分かれてます。Storyboardもnibも一切使ってなくて、ウィンドウもツールバーの
+      ボタンもリストのセルも全部コードで組んでます。今どきの NSToolbar を Tiger〜Snow Leopard時代の
+      Finderのツールバーっぽく見せて動かそうとすると、思ってた以上に AppKit のレイアウトの仕組みと喧嘩する
+      ことになりました。その一部を紹介します。
+    </p>
+
+    <h3>ボタンをNSToolbarItemの外に浮かせている理由</h3>
+    <p>
+      戻る/進むボタンと表示モードボタン（ClassicSegmentedControl）は、実は本物のNSToolbarItemじゃないんです。
+      ただのNSViewをツールバーの上に浮かせて、位置を手動で計算してるだけです。最初はもっと素直なやり方を
+      試してたんですが、それがなぜ変わったかは下のクラッシュの話を見てください。この方式のデメリットは、
+      位置に関わること全部（ウィンドウの最小幅も含めて。2つのボタン自身の固定サイズとマージン、検索フィールドを
+      アイコンだけまで縮めた分の余白から計算してます）を、AppKitのレイアウトエンジンに任せず自分で追いかけないと
+      いけないことです。
+    </p>
+
+    <h3>アイコン読み込みとスクロール</h3>
+    <p>
+      以前はセルが最初に描画されるタイミングでLaunch Services経由（そんなに速くない）で同期的にアイコンを
+      探してたので、ファイルが多いフォルダを開くとアイコンがポツポツ後から出てくるのが見えてました。
+      IconCacheをNSCacheに移して、フォルダの一覧が返ってきた時点でバックグラウンドで先読みするようにして
+      あります。Quick Lookのサムネイル読み込みも、スクロール中にセルが再利用されたタイミングでキャンセル
+      するようにしたので、大きいフォルダを素早くスクロールしても、もう画面に出てないセルのためのサムネイル
+      デコードが溜まり続けることはなくなりました。
+    </p>
+
+    <h3>ハマった点</h3>
+    <div class="tech-note">
+      <strong>ツールバーをまたぐ制約でクラッシュ。</strong> 最初は、あるツールバーアイテムの中のボタンから、
+      別のツールバーアイテムに入ってる検索フィールドへ、普通のAuto Layoutの制約を直接張ってたんです。これが
+      起動するたびに毎回クラッシュしてました。NSToolbarItemViewer は、そのアイテム自身のviewの外にある
+      viewを参照する制約が一つでも触れているレイアウトエンジンをホストすることを完全に拒否していて、
+      ウィンドウが出てくる前に例外を投げるんですよね。そこで、ツールバーアイテムをまたぐ制約は一切使わず、
+      ただのNSViewを浮かせて手動で位置を計算する今の方式に変えました。
+    </div>
+    <div class="tech-note">
+      <strong>同じグレーなのにMacによって見え方が違う。</strong> ツールバーの縁取りに最初は
+      NSColor(calibratedWhite:) を使ってたんですが、まったく同じ描画コードなのにMacによって微妙に
+      明るさが違って見えてたんです。calibratedWhite はディスプレイ自身のキャリブレーション／Generic Gray
+      という色空間を経由して解決されるので、同じ数値でもディスプレイのプロファイル次第で実際の明るさが
+      変わっちゃうんですよね。全部 srgbRed/green/blue の指定に変えました。これは固定された絶対色空間なので、
+      指定した値がそのまま描画されます。
+    </div>
+    <div class="tech-note">
+      <strong>カラム表示のリネームで、編集欄が空っぽになる。</strong> カラム表示でファイル名をリネームしようと
+      すると、中身が空の編集ボックスが開いちゃうバグがありました。原因は、ファイルアイコンを表示するために
+      ブラウザセルの image を設定すると、Appleの仕様通りNSCellの type が黙って .imageCellType に切り替わって
+      しまうことでした。リネームの編集欄はテキストタイプのセルから初期文字列を読み込む仕組みなので、セルが
+      静かに画像セルになった時点で読み込む元が無くなってたんです。おまけに、Returnキーでのリネームは
+      NSBrowser内部の非公開な列ごとの NSMatrix の中で処理されていて、NSBrowserの公開メソッドを一切経由
+      しないので、外側から直しようがなかったんです。両方とも FileBrowserCell 自身の中で直しました。
+      image を設定した直後に type を .textCellType に戻すのと、edit(withFrame:in:editor:delegate:event:) を
+      オーバーライドすることで（これはどんなきっかけでリネームが始まっても必ず通る唯一の場所でした）
+      対応しました。
+    </div>
+    <div class="tech-note">
+      <strong>ダブルクリックが一度だけ無反応になる。</strong> 起動していきなりアイコン表示かリスト表示のまま、
+      一度もカラム表示に切り替えずにフォルダをダブルクリックすると、何も起きないんです。エラーも出ない、
+      ただ無反応。原因は、カラム表示側の setRoot() が、まだ一度も view が読み込まれてない（なので delegate も
+      nilのまま）NSBrowser に対して browser.selectionIndexPath をセットしようとしてたことでした。これは
+      Swiftからは捕まえられないObjective-Cの例外を投げるんですが、たまたま AppKit自身のマウストラッキングの
+      ループがそれを飲み込んでしまって、アプリごとクラッシュする代わりに navigate(to:) が途中で静かに
+      止まる、っていう挙動になってました。直し方は、触る前に browser の view を強制的に読み込ませるだけ。
+      ちゃんとクラッシュしてくれた方が、まだ見つけやすかったです。
+    </div>
+
+    <p class="credit">
+      ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+    </p>
+    </div>
+  </div>
   {% endif %}
 
 {% endblock %}

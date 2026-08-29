@@ -14,6 +14,8 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "aquafox-ja.xpi",
         "category": "app",
+        "comment": "みなさん英語わかります？読めたとしても直感的に理解できます？私は無理です。一応受験も経験しましたし単語も覚えました。でも単語が繋がった瞬間に暗号に変わりませんか？ そんな私のために作りました。",
+        "comment_en": "Can everyone actually read English? Even if you can, does it click intuitively? I can't. I studied for entrance exams, memorized the words — but the moment they string together into a sentence, it might as well be a cipher. Made this for people like me.",
     },
     {
         "slug": "aquafinder",
@@ -23,7 +25,17 @@ APPS = [
         "tagline_en": "A classic Finder-style file manager that recreates the Tiger-to-Snow Leopard experience on modern Macs.",
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "filename": "AquaFinder.dmg",
+        "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
+        "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
+        "comment_en": "What an old-timer who left the field for good ended up building, after digging into why a brand-new M2 Mac still felt like something was missing.",
+        "changelog": [
+            {
+                "date": "2026-08-29",
+                "note": "Dropbox等の同期ツールや低速なネットワーク共有で、短時間に大量のファイル変更イベントが発生すると、リスト表示の行が一時的に重複・消失して見える不具合を修正。変更イベントが300ms静かになるまでまとめてから再読み込みするように変更",
+                "note_en": "Fixed rows briefly duplicating or disappearing in List view when a sync tool (Dropbox, etc.) or a slow network share fired a burst of file-change events in quick succession. Now waits for a 300ms quiet period before reloading, instead of reloading on every single event",
+            },
+        ],
     },
     {
         "slug": "aqualink",
@@ -35,7 +47,14 @@ APPS = [
         "filename": "AquaLink.zip",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
+        "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
+        "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-08-29",
+                "note": "PPCPorts経由(Kerberos対応込み)でビルドしたlibsmb2で、認証がKerberos経由を試みて失敗し接続できない不具合を修正（NTLM認証を明示するよう変更）",
+                "note_en": "Fixed a connection failure on libsmb2 built via PPCPorts (with Kerberos support): authentication was attempting Kerberos first and failing, so NTLM is now explicitly requested instead.",
+            },
             {
                 "date": "2026-08-28",
                 "note": "SMB3暗号化を必須にするオプションを追加。実装過程で、libsmb2本体のビッグエンディアン環境向けバグ（暗号化ヘッダーのSessionIdがエンディアン変換されていなかった）を発見・修正し、上流に報告した",
@@ -62,13 +81,41 @@ APPS = [
         "slug": "ppc-claude-agent",
         "name": "PPC Claude Agent",
         "name_en": "PPC Claude Agent",
-        "tagline": "PowerPC Mac (Tiger)のターミナルからClaudeと会話できる、Perl製の自己完結型AIエージェント",
-        "tagline_en": "A self-contained Perl agent that lets you talk to Claude from the Terminal on a PowerPC Mac (Tiger).",
+        "tagline": "PowerPC Mac (Tiger)のターミナルからAIと会話できる、Perl製の自己完結型エージェント（Claude / Gemini対応）",
+        "tagline_en": "A self-contained Perl agent that lets you talk to an AI from the Terminal on a PowerPC Mac (Tiger) — supports Claude and Gemini.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "ppc-claude-agent.zip",
         "github_url": "https://github.com/watermark-hd/ppc_claude_cli",
         "category": "app",
+        "comment": "どんな古いマシンでもAIを使いたい。そんな思いから作りました。エピソードは概要欄で。",
+        "comment_en": "Wanted AI to run on even the oldest machine I own. That's the whole reason this exists. The story's in the overview tab.",
+        "comment_featured": True,
         "changelog": [
+            {
+                "date": "2026-08-28",
+                "note": "Anthropic (Claude) に加えて、クレジットカード不要の無料枠があるGemini (Google) にも対応。セットアップ時にどちらを使うか選べる",
+                "note_en": "Added Gemini (Google) support alongside Anthropic (Claude) — Gemini has a free tier with no credit card required. Choose which one to use during setup",
+            },
+            {
+                "date": "2026-08-28",
+                "note": "起動コマンドを claude から advisor に変更（特定のAIブランドに縛られない名前に）。会話中に /claude・/gemini でその場でAIを切り替え可能に（会話は引き継がれる）",
+                "note_en": "Renamed the command from claude to advisor (not tied to one AI brand). Typing /claude or /gemini mid-conversation now switches providers on the fly, carrying the conversation over",
+            },
+            {
+                "date": "2026-08-28",
+                "note": "Geminiへの応答が実機で約30秒かかっていた問題を修正、体感3秒程度に短縮（個体差あり）。Gemini 3系は指定しないと内部思考レベルが最大(HIGH)になる仕様で、軽い質問向けにLOWをデフォルトにした（CLAUDE_GEMINI_THINKING=highで元に戻せる）",
+                "note_en": "Fixed Gemini responses taking ~30 seconds on real hardware, down to roughly 3 seconds (varies by device) — Gemini 3 models default to maximum internal reasoning (\"HIGH\") unless told otherwise. Now defaults to \"LOW\" for snappier answers on casual questions (override with CLAUDE_GEMINI_THINKING=high)",
+            },
+            {
+                "date": "2026-08-28",
+                "note": "配布用インストーラー(Install.command)がAnthropicのみ対応のままだったのを、Gemini選択・advisorコマンドに対応させ、setup.shと同じ内容に揃えた",
+                "note_en": "Brought the distributed double-click installer (Install.command) up to date — it still only knew about Anthropic; now offers the same Anthropic/Gemini choice and advisor command as setup.sh",
+            },
+            {
+                "date": "2026-08-28",
+                "note": "Geminiのデフォルトモデルを gemini-3.6-flash から gemini-3.5-flash-lite に変更。実機で試した結果、gemini-3.6-flashの無料枠は1日20回しか無いことが判明したため（flash-liteはもっと大きな無料枠がある）",
+                "note_en": "Changed the default Gemini model from gemini-3.6-flash to gemini-3.5-flash-lite — found on real hardware that gemini-3.6-flash's free tier allows only 20 requests per day, while flash-lite has a much larger free daily allowance",
+            },
             {
                 "date": "2026-08-22",
                 "note": "IME経由の日本語入力に0x16のゴミバイトが混入し文字化けする不具合を修正",
@@ -116,6 +163,8 @@ APPS = [
         "filename": "exfat-tiger-ppc.zip",
         "github_url": "https://github.com/watermark-hd/exfat-tiger-ppc",
         "category": "app",
+        "comment": "古いデータが入ったUSBメモリを人から借りたんです、それをPowerMacに挿したら「読めません。フォーマットしますか？」するわけないだろ! その怒りの化身です。",
+        "comment_en": "Borrowed a USB drive full of old data from someone. Plugged it into my PowerMac and got “Can't read this. Format it?” — like hell I will! This app is that anger, given form.",
     },
     {
         "slug": "kodama",
@@ -127,6 +176,8 @@ APPS = [
         "filename": "Kodama.dmg",
         "github_url": "https://github.com/watermark-hd/kodama",
         "category": "app",
+        "comment": "Macって思ったより壊れないんですよ。確かに仕事で使ってましたからメンテナンスはよくしてました。でも倉庫の片隅で眠っているMacたち。減損処理？いやもったいない。無理やり使い道を作った渾身の一作。",
+        "comment_en": "Macs don't break as easily as you'd think. Sure, I used to maintain them properly back when they were work machines. But there are still Macs sleeping in the corner of a storage room. Write them off? No way, too good to waste. This is the one I forced a use back into.",
     },
     {
         "slug": "mac-snow-leopard-linux",

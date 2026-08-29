@@ -22,9 +22,39 @@
     <p>
       A personal project that keeps a 20-year-old PowerPC Mac useful as a real AI coding assistant.
       The official Claude Code CLI needs Node.js 18+, which can't run on Tiger's old PowerPC hardware,
-      so this is a self-contained agent written in Perl that talks to the Anthropic API directly over curl &mdash;
-      no Node.js, no compiling on your side required.
+      so this is a self-contained agent written in Perl that talks directly to an AI API over curl &mdash;
+      Claude (Anthropic) or Gemini (Google, free tier, no credit card needed) &mdash; no Node.js,
+      no compiling on your side required.
     </p>
+
+    <h2>Why I Made This</h2>
+    <div class="origin-story">
+    <p>
+      "Build apps that still work properly on old Macs, and have a bit more fun doing it — they don't
+      break easily, and honestly, they still look cool." That's the reason behind pretty much everything
+      else on this site. This one's a little different.
+    </p>
+    <p>
+      I bought an iBook as a student, stretching further than I really could afford. My father was a
+      branch manager at a major company, spending most of his time on golf, driving a brand-new BMW
+      instead of a Toyota or even a Lexus &mdash; and later traded it in for an even more extravagant
+      Nissan GT-R. And yet he never spent a single yen on me. I ended up dropping out of a science
+      university and working as a photo studio assistant, juggling that with whatever else I could find.
+      Shooting notes, lighting characteristics, all of it &mdash; I wrote it all on that iBook.
+    </p>
+    <p>
+      So I decided to turn that old iBook into a good advisor. Something you'd consult like a soft-spoken
+      professor. Something that could quietly add a line or two to those same worn-out notes I used to
+      keep on it. It can't handle anything heavy &mdash; Photoshop's obviously out of the question &mdash;
+      but that's fine. That's actually the point.
+    </p>
+    <p>
+      The reason this runs on Claude (Anthropic) specifically is simple: it's just really good at being a
+      coding agent. Hand it the concept, even without writing a line of code yourself, and it gets built
+      properly. It'll listen to old stories too, and actually talk things through with you. That old iBook
+      has a job title now: advisor.
+    </p>
+    </div>
 
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download ppc-claude-agent.zip</a>
@@ -63,19 +93,22 @@
     <ol>
       <li>Unzip <code>ppc-claude-agent.zip</code> and copy the whole folder onto your PowerPC Mac (USB stick, file sharing, etc.).</li>
       <li>Double-click <code>Install.command</code>. A Terminal window opens.</li>
-      <li>Follow the prompts. You'll need an Anthropic API key &mdash; the installer explains how to get one.</li>
-      <li>When it says "Setup complete!", open a new Terminal window and type <code>claude</code> to start.</li>
+      <li>It first asks which AI to use: Claude (Anthropic, most capable, needs a paid API key) or Gemini (Google, free tier, no credit card needed). Follow the prompts &mdash; the installer explains how to get whichever key you need.</li>
+      <li>When it says "Setup complete!", open a new Terminal window and type <code>advisor</code> to start.</li>
     </ol>
-    <p>No compiling, no MacPorts, no Xcode required.</p>
+    <p>No compiling, no MacPorts, no Xcode required. The command is called <code>advisor</code> rather than something tied to one AI's name &mdash; if you add both keys during setup, you can type <code>/claude</code> or <code>/gemini</code> inside a conversation to switch any time, carrying the conversation over.</p>
 
     <h2>About the API Key (billing)</h2>
     <p>
-      This project (the agent and installer) is free to use, but actually talking to Claude requires your own
-      Anthropic API key, billed pay-as-you-go at <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>
-      &mdash; a different site and a different billing system from a claude.ai subscription. No API key is embedded
-      in the code anywhere; <code>claude-agent.pl</code> only reads it from an environment variable, so sharing
-      this project never exposes anyone's key or billing to anyone else. The installer walks you through creating
-      a key and adding a small amount of credit.
+      This project (the agent and installer) is free to use, but actually talking to an AI requires your own
+      API key for whichever provider you pick. Claude's key is billed pay-as-you-go at
+      <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>
+      &mdash; a different site and a different billing system from a claude.ai subscription. Gemini's key is free
+      to create at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com</a>,
+      with a free tier that needs no credit card at all. No API key is embedded in the code anywhere;
+      <code>claude-agent.pl</code> only reads it from an environment variable, so sharing this project never
+      exposes anyone's key or billing to anyone else. The installer walks you through creating whichever key you
+      chose.
     </p>
 
     <h2>Supported Environments</h2>
@@ -93,10 +126,10 @@
 
     <div id="panel-tech" class="tab-panel">
     <p>
-      PPC Claude Agent is basically a single Perl file that talks straight to the Anthropic API over curl.
-      The official Claude Code CLI needs Node.js 18+, and V8 dropped PowerPC support years ago, so this is
-      a completely separate route built from scratch that doesn't touch Node.js at all. Here's what actually
-      got in the way, and how each one got solved.
+      PPC Claude Agent is basically a single Perl file that talks straight to an AI API over curl &mdash;
+      Anthropic or Gemini. The official Claude Code CLI needs Node.js 18+, and V8 dropped PowerPC support
+      years ago, so this is a completely separate route built from scratch that doesn't touch Node.js at all.
+      Here's what actually got in the way, and how each one got solved.
     </p>
 
     <h3>The real wall was TLS 1.2</h3>
@@ -123,9 +156,37 @@
     <p>
       claude-agent.pl runs on nothing but Tiger's stock Perl 5.8.6 &mdash; no external CPAN modules at
       all. JSON encoding/decoding is a small hand-written recursive-descent parser, just enough to handle
-      the Claude API's message format. HTTP is handled entirely by shelling out to the curl binary that
-      got built, so the only two things that actually need compiling are OpenSSL and curl.
+      the Claude and Gemini APIs' message formats. HTTP is handled entirely by shelling out to the curl binary
+      that got built, so the only two things that actually need compiling are OpenSSL and curl.
     </p>
+
+    <h3>Adding Gemini without touching most of the file</h3>
+    <p>
+      Conversation history is kept internally in Anthropic's Messages-API shape no matter which provider is
+      active; when talking to Gemini, that gets translated to and from Gemini's <code>contents</code>/<code>parts</code>/<code>functionCall</code>
+      shape only at the moment of the API call, and translated straight back on the way in. <code>call_api</code>
+      itself ended up as a completely generic "POST this JSON, get JSON back" function once the URL and headers
+      moved to being passed in instead of hardcoded. The upshot: the terminal input handling and the tool
+      execution code (read_file/write_file/list_dir/run_shell), easily the bulk of this file, needed zero
+      changes to support a second provider.
+    </p>
+    <div class="tech-note">
+      <strong>Gemini 3 quietly requires echoing back a thoughtSignature on tool calls.</strong> When Gemini
+      returns a functionCall part, it comes with an opaque thoughtSignature attached. Send the next turn back
+      without that exact signature riding along on that same part, and the call 400s &mdash; this was optional
+      on Gemini 2.5 but became a hard requirement on 3, with no obvious announcement. Found it by watching a
+      real multi-step tool-calling conversation (list_dir &rarr; run_shell &rarr; run_shell &rarr; list_dir)
+      fail partway through on real iBook hardware. Now carried along on the internal tool_use block and
+      reattached whenever it's re-serialized back to Gemini.
+    </div>
+    <div class="tech-note">
+      <strong>The API response itself could corrupt Japanese text.</strong> Same root cause as the STDIN bug
+      further down: Perl 5.8.6's PerlIO <code>:encoding(UTF-8)</code> layer can split a multibyte character
+      across a buffer boundary and throw <code>utf8 "\xXX" does not map to Unicode</code> &mdash; just showing
+      up on the response-reading side this time, once a <code>run_shell</code> result happened to contain a
+      folder named &ldquo;ダウンロード&rdquo;. Fixed the same way: read the response as raw bytes, decode the
+      whole thing at once afterward.
+    </div>
 
     <h3>A pile of terminal-input bugs</h3>
     <p>Actually using this thing on real hardware turned up one terminal quirk after another.</p>
@@ -165,9 +226,10 @@
 
     <h3>What's next / a note on distributing this</h3>
     <p>
-      The agent itself is free to share, but actually using it requires each person to get their own
-      Anthropic API key, billed for their own usage. No API key is ever embedded in the code, so sharing
-      this never exposes anyone's billing to anyone else.
+      The agent itself is free to share, but actually using it requires each person to get their own API
+      key for whichever provider they pick. With Gemini's free tier, that's a genuinely zero-cost start
+      &mdash; no credit card, no billing setup. No API key is ever embedded in the code, so sharing this
+      never exposes anyone's billing to anyone else.
     </p>
 
     <p class="credit">
@@ -184,8 +246,24 @@
 
     <div id="panel-overview" class="tab-panel">
     <p>
-      20年前のPowerPC Macを、実用的なAIコーディングアシスタントとして活かすための自作プロジェクトです。公式のClaude Code CLIはNode.js 18+が前提で、Tiger時代の古いPowerPC環境では動かせません。そこで、 curl経由でAnthropic APIを直接叩く自己完結型の軽量エージェントをPerlで実装しています。Node.jsも、利用者側でのコンパイルも不要です。
+      20年前のPowerPC Macを、実用的なAIコーディングアシスタントとして活かすための自作プロジェクトです。公式のClaude Code CLIはNode.js 18+が前提で、Tiger時代の古いPowerPC環境では動かせません。そこで、 curl経由でAI APIを直接叩く自己完結型の軽量エージェントをPerlで実装しています。使うAPIはClaude(Anthropic)かGemini(Google、クレジットカード不要の無料枠あり)から選べます。Node.jsも、利用者側でのコンパイルも不要です。
     </p>
+
+    <h2>なぜ作ったか</h2>
+    <div class="origin-story">
+    <p>
+      「昔のMacでもちゃんと動くアプリを作ってもう少し楽しもうぜ！だって壊れにくいしかっこいいだろ？」— このサイトのアプリは大体そんな気持ちで作ってるんですが、これだけは少し違います。
+    </p>
+    <p>
+      学生の頃、無理して買ったiBookがあります。父は大手企業の支店長で、ゴルフ三昧の合間にトヨタでもレクサスでもなくBMWの新車に乗っていて、そのあとはもっと贅沢なNISSAN GT-Rに乗り換えました。それなのに、私には一円も使ってくれませんでした。私は理系の大学を中退して、写真スタジオのアシスタントの仕事を掛け持ちしていました。撮影のメモとか、照明の特性のメモとか、そういうのを全部あのiBookに書いていたんです。
+    </p>
+    <p>
+      だから、あの古いiBookを、良き相談役にしようと思いました。物腰柔らかな教授に相談するみたいに。あの頃書いていた古びたノートに、そっと追記してもらう感じで。Photoshopみたいな重い処理はできないマシンだから、それでいいんです。むしろ、それがいいんです。
+    </p>
+    <p>
+      PPC Claude AgentがClaude（Anthropic）を使っているのは、単純にコーディングエージェントとして優秀だったからです。コンセプトさえちゃんと伝えれば、自分でコードを書けなくてもしっかり形にしてくれる。そして昔話や相談にものってくれる。あの頃のiBookに相談役の役職を与えました。
+    </p>
+    </div>
 
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ppc-claude-agent.zip をダウンロード</a>
@@ -224,14 +302,14 @@
     <ol>
       <li><code>ppc-claude-agent.zip</code> を解凍し、フォルダごと対象のPowerPC Macにコピー（USBメモリやファイル共有などで）</li>
       <li><code>Install.command</code> をダブルクリック。ターミナルが開きます</li>
-      <li>案内に沿って進めます（Anthropic APIキーが必要です。取得方法もインストーラーが説明します）</li>
-      <li>「セットアップ完了！」と表示されたら、新しいターミナルウィンドウを開いて <code>claude</code> と入力してください</li>
+      <li>最初にどちらのAIを使うか聞かれます: Claude(Anthropic、一番賢いが有料のAPIキーが必要)かGemini(Google、無料枠あり・クレジットカード不要)。案内に沿って進めてください。キーの取得方法もインストーラーが説明します</li>
+      <li>「セットアップ完了！」と表示されたら、新しいターミナルウィンドウを開いて <code>advisor</code> と入力してください</li>
     </ol>
-    <p>コンパイルもMacPortsもXcodeも不要です。</p>
+    <p>コンパイルもMacPortsもXcodeも不要です。コマンド名は特定のAIの名前ではなく<code>advisor</code>です。セットアップ時に両方のキーを追加すれば、会話中に<code>/claude</code>や<code>/gemini</code>といつでも打って切り替えられます（会話はそのまま引き継がれます）。</p>
 
     <h2>APIキーについて（課金）</h2>
     <p>
-      このプロジェクト（エージェント本体とインストーラー）自体は自由に使えますが、実際にClaudeと会話するには、利用者ひとりひとりが自分のAnthropic APIキーを発行する必要があります。課金は <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a> での従量課金制で、claude.aiのサブスクリプションとは別のサイト・別の課金体系です。コードにAPIキーは一切含まれておらず、<code>claude-agent.pl</code>は環境変数からキーを読むだけなので、配布者のキーや請求先が他人に渡ることはありません。インストーラーがキーの発行とクレジットのチャージまで案内します。
+      このプロジェクト（エージェント本体とインストーラー）自体は自由に使えますが、実際にAIと会話するには、選んだプロバイダのAPIキーを利用者ひとりひとりが発行する必要があります。Claudeのキーは <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a> での従量課金制で、claude.aiのサブスクリプションとは別のサイト・別の課金体系です。Geminiのキーは <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com</a> で無料発行でき、クレジットカードの登録も不要です。コードにAPIキーは一切含まれておらず、<code>claude-agent.pl</code>は環境変数からキーを読むだけなので、配布者のキーや請求先が他人に渡ることはありません。インストーラーが選んだ方のキーの発行まで案内します。
     </p>
 
     <h2>対応環境</h2>
@@ -248,7 +326,7 @@
 
     <div id="panel-tech" class="tab-panel">
     <p>
-      PPC Claude Agentの中身は、curl経由でAnthropic APIを直接叩くだけの、単一ファイルのPerlスクリプトです。公式のClaude Code CLIはNode.js 18+が前提で、PowerPCを切り捨てたV8の上では動かないので、 Node.jsを使わない別ルートを一から作った形です。ここでは実際にぶつかった壁と、その乗り越え方を紹介します。
+      PPC Claude Agentの中身は、curl経由でAI API(AnthropicかGemini)を直接叩くだけの、単一ファイルのPerlスクリプトです。公式のClaude Code CLIはNode.js 18+が前提で、PowerPCを切り捨てたV8の上では動かないので、 Node.jsを使わない別ルートを一から作った形です。ここでは実際にぶつかった壁と、その乗り越え方を紹介します。
     </p>
 
     <h3>本当の壁はTLS 1.2だった</h3>
@@ -263,8 +341,19 @@
 
     <h3>外部依存ゼロのPerlエージェント</h3>
     <p>
-      claude-agent.plはTiger標準のPerl 5.8.6だけで動く単一ファイルで、外部CPANモジュールへの依存はゼロです。JSON encode/decodeも、Claude APIのメッセージ構造に必要な分だけの再帰下降パーサーを自前で書いています。HTTP通信はPerl側に持たせず、ビルドしたcurlをサブプロセスとして呼び出す形にしていて、これでビルドが必要な部分をOpenSSLとcurlの2つだけに閉じ込めています。
+      claude-agent.plはTiger標準のPerl 5.8.6だけで動く単一ファイルで、外部CPANモジュールへの依存はゼロです。JSON encode/decodeも、ClaudeとGemini両APIのメッセージ構造に必要な分だけの再帰下降パーサーを自前で書いています。HTTP通信はPerl側に持たせず、ビルドしたcurlをサブプロセスとして呼び出す形にしていて、これでビルドが必要な部分をOpenSSLとcurlの2つだけに閉じ込めています。
     </p>
+
+    <h3>ファイルの大部分を触らずにGeminiを追加する</h3>
+    <p>
+      会話履歴は、どちらのプロバイダを使っていてもAnthropicのMessages API形式で内部保持していて、Geminiと話す時だけ、API呼び出しの瞬間にGeminiの<code>contents</code>/<code>parts</code>/<code>functionCall</code>形式に変換し、応答が返ってきたらすぐ元の形式に戻します。URLとヘッダーを外から渡す形に変えたことで、<code>call_api</code>自体は「このJSONをPOSTしてJSONを受け取るだけ」の完全に汎用的な関数になりました。結果、このファイルの大部分を占めるターミナル入力処理とツール実行(read_file/write_file/list_dir/run_shell)のコードは、2つ目のプロバイダに対応するために一切変更せずに済みました。
+    </p>
+    <div class="tech-note">
+      <strong>Gemini 3は、ツール呼び出しのthoughtSignatureを送り返さないと400エラーになる。</strong> Geminiがfunction Callを返す時、そこには不透明なthoughtSignatureという署名が付いてきます。次のターンで同じパーツに同じ署名を付け直さずに送り返すと400エラーになります — Gemini 2.5までは任意でしたが、3系では特に告知もなく必須の検証に変わっていました。実際のiBookで、複数回のツール呼び出し(list_dir → run_shell → run_shell → list_dir)が途中で失敗するのを見て発覚しました。今は内部のtool_useブロックにこの署名を乗せておいて、Geminiの形式に再変換する時に付け直すようにしています。
+    </div>
+    <div class="tech-note">
+      <strong>APIレスポンス自体が日本語を化けさせることがあった。</strong> 下の方のSTDINのバグと全く同じ原因で、Perl 5.8.6のPerlIO <code>:encoding(UTF-8)</code>層は、バッファの境目でマルチバイト文字が分割されると<code>utf8 "\xXX" does not map to Unicode</code>という警告と文字化けを起こします。今回はレスポンス読み込み側で、<code>run_shell</code>の結果に「ダウンロード」というフォルダ名が含まれていた時に発覚しました。直し方も同じで、生バイトで読んでから、まとめてデコードするようにしています。
+    </div>
 
     <h3>端末入力まわりで踏んだバグの数々</h3>
     <p>実機で実際に使ってもらいながら、ターミナル入力周りのバグを何度も踏みました。</p>
@@ -286,7 +375,7 @@
 
     <h3>今後 / 配布にあたって</h3>
     <p>
-      このエージェント自体は自由に配布できますが、実際に動かすには利用者ごとにAnthropicのAPIキーが必要で、課金もそれぞれの利用分だけです。コードにAPIキーは埋め込まれていないので、配布者の請求先が他人に渡ることはありません。
+      このエージェント自体は自由に配布できますが、実際に動かすには利用者ごとに、選んだプロバイダのAPIキーが必要です。Geminiの無料枠を使えば、本当に一切お金をかけずに始められます(クレジットカード登録も不要)。コードにAPIキーは埋め込まれていないので、配布者の請求先が他人に渡ることはありません。
     </p>
 
     <p class="credit">

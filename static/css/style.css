@@ -285,6 +285,22 @@ h3 {
   font-size: 14px;
 }
 
+.origin-story {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--aqua);
+  border-radius: 4px 10px 10px 4px;
+  padding: 20px 24px;
+  margin: 20px 0;
+  line-height: 1.9;
+}
+.origin-story p {
+  margin: 0 0 14px 0;
+}
+.origin-story p:last-child {
+  margin-bottom: 0;
+}
+
 footer {
   margin-top: 56px;
   font-size: 12px;
@@ -356,6 +372,25 @@ footer {
 .app-card-status.source-status {
   background: var(--aqua-light);
   color: var(--aqua-dark);
+}
+
+.app-card-comment {
+  margin: 10px 0 0 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+
+.app-card-comment--featured {
+  border-left-color: var(--aqua);
+  background: var(--aqua-light);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 16px;
 }
 
 .source-button {

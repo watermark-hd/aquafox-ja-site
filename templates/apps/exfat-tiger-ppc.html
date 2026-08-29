@@ -15,6 +15,13 @@
   </div>
 
   {% if lang == 'en' %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">Overview</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">Technical Info</label>
+
+    <div id="panel-overview" class="tab-panel">
     <p>
       A menu bar app and a set of command line tools that let Mac OS X 10.4 Tiger (yes, PowerPC) read and write
       exFAT drives. exFAT support only arrived in Mac OS X 10.6.5, and current MacFUSE/macFUSE dropped PowerPC
@@ -74,7 +81,96 @@
       licensed GPLv2; the app source and icon are MIT. See the GitHub repository above for full source, license
       files, and technical notes on the MacFUSE-era quirks this project had to work around.
     </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      This is basically a thin glue layer around two other people's work: <a href="https://github.com/relan/exfat" target="_blank" rel="noopener noreferrer">relan/exfat</a>
+      (the actual exFAT filesystem driver) running on top of MacFUSE Core 1.7.0, Google's original FUSE
+      implementation for Tiger from 2008. The pieces to make this work were all already out there; nobody
+      seems to have actually put them together and tested it on real Tiger PowerPC hardware before.
+    </p>
+
+    <h3>Why a 2008-era MacFUSE</h3>
+    <p>
+      There isn't a choice here, really &mdash; modern MacFUSE/macFUSE dropped PowerPC support after Leopard,
+      so MacFUSE Core 10.4-1.7.0 is the only FUSE implementation that runs on Tiger PPC at all. It's also not
+      easy to find anymore: the "official" download today is a newer stub installer that just phones home to
+      a Google server that's been dead for years, so the actual working installer had to come from the
+      Wayback Machine instead.
+    </p>
+
+    <h3>Building without autotools on Tiger</h3>
+    <p>
+      Tiger's Xcode 2.5 doesn't ship autoconf or automake, so relan/exfat's autotools-generated
+      configure script has to be produced somewhere else first. The patch below gets applied on a modern
+      Mac, then autoreconf -fiv regenerates configure and the Makefile.in files, and the whole
+      tree gets copied over to the Tiger machine to actually build. One gotcha from doing it that way: the
+      copied files land with timestamps ahead of Tiger's own clock, which is enough to confuse make, so
+      everything needs a touch pass first to fix that before configure &amp;&amp; make.
+    </p>
+
+    <h3>Two small patches for this specific old MacFUSE</h3>
+    <p>
+      relan/exfat enables -o big_writes by default on any non-Linux *BSD-flavored build, but
+      MacFUSE 1.7.0 (2008) doesn't know that option at all, and just fails the mount outright with
+      fuse: unknown option 'big_writes'. That one's a straight removal. The second change adds
+      -o nobrowse to the mount options &mdash; the "Bugs and lessons" section below has the actual
+      story of why that one was needed.
+    </p>
+
+    <h3>Bugs and lessons along the way</h3>
+    <div class="tech-note">
+      <strong>Looping diskutil info over every disk can hang the whole machine.</strong> If any
+      external drive attached to the Mac happens to be spun down, each diskutil info call on it
+      blocks waiting for the drive to wake up &mdash; and if that call is inside a loop over every partition,
+      the whole app (and sometimes the whole machine) just hangs waiting. Parsing diskutil list
+      once, instead of calling diskutil info per partition, avoids the problem entirely.
+    </div>
+    <div class="tech-note">
+      <strong>exFAT drives get auto-mounted as broken NTFS before this app ever sees them.</strong>
+      exFAT partitions show up as Windows_NTFS at the partition-map level, so Tiger's own disk
+      arbitration mounts them automatically with its built-in, read-only, and in this case simply wrong NTFS
+      driver the moment they're plugged in. That mount is empty and useless &mdash; real NTFS and exFAT aren't
+      the same format internally. The app runs diskutil unmount on the raw device first, to get rid
+      of that bogus mount, before mounting the drive for real through FUSE.
+    </div>
+    <div class="tech-note">
+      <strong>Finder's own FUSE volume icon is unreliable, and the fix for it gets silently ignored.</strong>
+      MacFUSE mounts normally get their own "MacFUSE Volume N" icon on the Desktop through Finder's usual
+      DiskArbitration integration, but with this particular old MacFUSE it's flaky &mdash; sometimes it
+      doesn't show up, and either way it can survive a perfectly clean unmount as a dead, empty-looking icon
+      that needs a full logout to actually clear. Passing -o nobrowse stops MacFUSE from
+      registering with DiskArbitration/Finder at all, sidestepping the whole problem &mdash; except
+      relan/exfat's own option passthrough silently drops nobrowse unless it's explicitly added to
+      an allowlist in the source, which is the second half of the patch mentioned above. The app makes its
+      own plain Desktop symlink instead of relying on Finder's native FUSE integration, which turned out to
+      be 100% reliable where the built-in mechanism wasn't.
+    </div>
+    <div class="tech-note">
+      <strong>GUI apps launched over SSH can't reach the WindowServer.</strong> Most of this was actually
+      built by remote-controlling a real Power Mac G4 over SSH rather than sitting in front of it &mdash;
+      edit locally, scp the changed file over, rebuild and killall the running instance on the G4, all
+      from a terminal on a modern Mac. That works fine for the command-line tools and for building the app,
+      but a GUI app relaunched that way never actually appears on screen; on old Mac OS X, a process started
+      from an SSH session has no connection to the WindowServer running the actual display. Not a bug, just
+      a limit of the environment &mdash; the last step of testing any UI change always has to happen
+      standing in front of the G4 itself.
+    </div>
+
+    <p class="credit">
+      Full source code is on <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+    </div>
+  </div>
   {% else %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">概要</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">技術情報</label>
+
+    <div id="panel-overview" class="tab-panel">
     <p>
       Mac OS X 10.4 Tiger（PowerPC）でexFATドライブの読み書き・マウントができるようにするメニューバーアプリと、
       その下回りのコマンドラインツール一式です。exFAT対応はMac OS X 10.6.5から標準搭載されており、現行の
@@ -136,6 +232,86 @@
       ソースとアイコンはMITライセンスです。詳しいソースコードやライセンス、MacFUSE時代特有の技術的な工夫の
       解説は上記のGitHubリポジトリをご覧ください。
     </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      中身は、他の人が作った2つのものをつなぐ薄い接着剤みたいなものです。exFATファイルシステムの実体は
+      <a href="https://github.com/relan/exfat" target="_blank" rel="noopener noreferrer">relan/exfat</a>で、
+      それを2008年のGoogle製・Tiger向けMacFUSE実装であるMacFUSE Core 1.7.0の上で動かしてます。必要な
+      パーツ自体はどれも既に世の中にあったんですが、私が調べた限り、実際のTiger PowerPC実機で組み合わせて
+      検証した人はいなかったみたいです。
+    </p>
+
+    <h3>なぜ2008年の古いMacFUSEなのか</h3>
+    <p>
+      これは正直、選択の余地がありません。現行のMacFUSE/macFUSEはLeopard以降でPowerPC対応を打ち切っているので、
+      Tiger PPCで動くFUSE実装はMacFUSE Core 10.4-1.7.0しか無いんです。しかも今はもう普通には手に入りません。
+      現在配布されている「公式」版は、Googleがとっくに停止したサーバーに問い合わせるだけの新しいスタブ
+      インストーラーになっていて、実際に動くインストーラーはWayback Machineから拾ってくるしかありませんでした。
+    </p>
+
+    <h3>Tigerにautotoolsが無い問題</h3>
+    <p>
+      TigerのXcode 2.5にはautoconfもautomakeも入ってないので、relan/exfatのautotools製configure
+      スクリプトはどこか他の場所で先に作っておく必要があります。下記のパッチを現代のMacに当ててから
+      autoreconf -fivでconfigureとMakefile.inを生成して、そのツリーごとTiger機に
+      コピーしてビルドする流れです。ここで一つ落とし穴があって、コピーされたファイルはTiger自身の時計より
+      未来のタイムスタンプを持った状態で届くので、makeが混乱しないよう、configure &amp;&amp; make の前に
+      一旦touchでタイムスタンプを揃えておく必要があります。
+    </p>
+
+    <h3>この古いMacFUSE向けの2つのパッチ</h3>
+    <p>
+      relan/exfatはLinux以外の*BSD系ビルドだとデフォルトで-o big_writesを有効にするんですが、
+      MacFUSE 1.7.0（2008年）はそのオプション自体を知らなくて、fuse: unknown option 'big_writes'
+      でマウントごと失敗します。これは単純に削除で対応。もう一つは、マウントオプションに
+      -o nobrowseを追加するパッチです。こっちが必要になった経緯は、下の「ハマった点」に書いてます。
+    </p>
+
+    <h3>ハマった点</h3>
+    <div class="tech-note">
+      <strong>diskutil infoを全ディスクに対してループすると、Mac全体がハングすることがある。</strong>
+      接続中の外付けドライブのどれか一つでもスピンダウンしてると、それに対するdiskutil info
+      は、そのドライブが目覚めるまでブロックするんです。それを全パーティション分ループで呼んでたので、
+      アプリどころかMac全体が応答しなくなることがありました。パーティションごとにdiskutil info
+      を呼ぶんじゃなく、diskutil listを一回だけ呼んで解析する方式に変えたら、この問題自体が
+      起きなくなりました。
+    </div>
+    <div class="tech-note">
+      <strong>このアプリが触る前に、exFATドライブが壊れたNTFSとして自動マウントされてしまう。</strong>
+      exFATのパーティションは、パーティションマップのレベルではWindows_NTFSとして見えるので、
+      挿した瞬間にTiger標準のディスクアービトレーションが、内蔵の読み取り専用（しかもこの場合は単純に
+      間違っている）NTFSドライバで勝手にマウントしちゃうんです。そのマウントは中身が空で意味が無くて
+      （実際のNTFSとexFATは内部的には別物なので）、このアプリはFUSE経由で本当のマウントをする前に、
+      まず生のデバイスに対してdiskutil unmountを実行して、その間違ったマウントを消しています。
+    </div>
+    <div class="tech-note">
+      <strong>Finder純正のFUSEボリュームアイコンが不安定で、しかもその対策オプションが黙って無視される。</strong>
+      通常、MacFUSEのマウントはFinderのDiskArbitration連携経由でデスクトップに「MacFUSE Volume N」という
+      アイコンが出るんですが、この古いMacFUSEだとこれが不安定で、出ないこともあれば、きれいにアンマウント
+      した後でも中身が空の死んだアイコンとして残り続けて、消すにはログアウトし直すしかない、ということも
+      ありました。-o nobrowseを渡せばMacFUSEがDiskArbitration/Finderへの登録自体をしなくなって、
+      この問題を丸ごと避けられるんですが、relan/exfat側のオプション受け渡しの仕組みが、ソース内の
+      許可リストに明示的に追加しない限りnobrowseを黙って捨ててしまうんです。これが上のパッチの
+      もう半分の内容です。Finder純正のFUSE連携に頼らず、アプリ自身が普通のデスクトップのシンボリックリンクを
+      作るようにしたんですが、こっちの方が標準機構より100%確実でした。
+    </div>
+    <div class="tech-note">
+      <strong>SSH経由で起動したGUIアプリは画面に出せない。</strong> この開発の大部分は、実機のPower Mac G4の
+      前に座るんじゃなくて、SSH経由でリモート操作して進めました。手元でコードを直して、変更したファイルを
+      scpで転送、G4側で動いてるプロセスをkillallしてビルドし直す、というのを全部現代のMacの
+      ターミナルからやる感じです。コマンドラインツールのビルドまではこれで問題ないんですが、GUIアプリを
+      その流れで再起動しても、画面には一切出てきません。古いMac OS Xでは、SSHセッションから起動した
+      プロセスは、実際のディスプレイを持ってるWindowServerに繋がってないんです。バグじゃなくて、この
+      環境の制約です。UIの変更を確認する最後の一歩は、結局いつもG4の前に実際に立つ必要がありました。
+    </div>
+
+    <p class="credit">
+      ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+    </p>
+    </div>
+  </div>
   {% endif %}
 
 {% endblock %}
