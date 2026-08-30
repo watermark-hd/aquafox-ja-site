@@ -1,0 +1,406 @@
+{% extends "base.html" %}
+
+{% block title %}Python 3.12{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>Python 3.12 <span style="font-weight:400;font-size:0.6em;color:var(--ink-soft);">(apython312)</span></h1>
+  <div>
+    <span class="platform-badge">{{ app.platform }}</span>
+    <span class="app-card-status source-status">{% if lang == 'en' %}Source Available{% else %}ソース公開中{% endif %}</span>
+  </div>
+
+  {% if lang == 'en' %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">Overview</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">Technical Info</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      CPython 3.12.11 with pip, built for Mac OS X 10.4 Tiger on PowerPC. Relocatable &mdash; drop it
+      wherever you like. This is an unofficial, personal build, not affiliated with python.org. As far as
+      could be found, no prior build combines Python 3.12 with Tiger specifically (3.10/3.11 exist for
+      Leopard via MacPorts/Tigerbrew, but not this combination).
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download apython312.dmg</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}{% if app.version %} (v{{ app.version }}){% endif %}</div>{% endif %}
+      <div class="meta">Prefer the command line? A <a href="{{ url_for('static', filename='downloads/apython312-3.12.11-macosx10.4-powerpc.tar.bz2') }}">.tar.bz2</a> is also available &mdash; extract with <code>tar xjf apython312-3.12.11-macosx10.4-powerpc.tar.bz2 -C &lt;destination&gt;</code>.</div>
+      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; if so, grab it from a modern machine and transfer it over instead.</div>
+    </div>
+
+    {% if app.changelog %}
+    <h2>Changelog</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>Requirements</h2>
+    <ul>
+      <li>Mac OS X 10.4.x (Tiger)</li>
+      <li>PowerPC G4 (AltiVec) or G5 &mdash; <strong>will not run on a G3</strong></li>
+      <li>About 200 MB free disk space</li>
+    </ul>
+
+    <h2>Installation</h2>
+    <ol>
+      <li>Download and mount <code>apython312.dmg</code>.</li>
+      <li>Double-click <code>install.command</code> and choose an install location.</li>
+    </ol>
+    <p>Or from the .tar.bz2: <code>tar xjf apython312-3.12.11-macosx10.4-powerpc.tar.bz2 -C &lt;destination&gt;</code></p>
+
+    <h2>What Works</h2>
+    <p>
+      <code>pip</code>, HTTPS/TLS (<code>ssl</code>), <code>sqlite3</code>, <code>ctypes</code> (verified
+      big-endian-correct), <code>lzma</code>, <code>bz2</code>, <code>zlib</code>, <code>readline</code>,
+      Flask, and Django (with SQLite).
+    </p>
+
+    <h2>What Doesn't Work</h2>
+    <ul>
+      <li><code>_tkinter</code> &mdash; no GUI toolkit is bundled.</li>
+      <li>
+        Anything requiring Rust (<code>cryptography>=3.4</code>, <code>orjson</code>, <code>ruff</code>,
+        etc.) &mdash; pin <code>cryptography&lt;3.4</code> if you need it; Django's core doesn't require
+        <code>cryptography</code> at all.
+      </li>
+    </ul>
+
+    <h2>About packages with C extensions</h2>
+    <p>
+      Pure-Python packages install without any trouble. Packages with C extensions need a local build
+      toolchain (Tigerbrew + GCC 14) to compile, which this machine doesn't have installed by default.
+      Packages with a pure-Python fallback (like <code>markupsafe</code>) will still install; ones without
+      one won't. Assume <code>numpy</code>, <code>scipy</code>, <code>Pillow</code>, and <code>lxml</code>
+      don't work out of the box.
+    </p>
+
+    <h2>A Security Note</h2>
+    <p>
+      Tiger itself no longer receives security updates. The bundled OpenSSL (3.5.7) is current, but the OS
+      underneath it is not &mdash; taken as a whole, this is not a hardened environment. Don't expose it to
+      the internet or use it for anything sensitive. Local development, learning, and LAN use only.
+    </p>
+
+    <h2>License / Disclaimer</h2>
+    <p class="credit">
+      The scripts and patches here are MIT licensed, provided with no warranty. The bundled shared libraries
+      (OpenSSL, SQLite, libffi, readline, gdbm, xz, zlib) come from Tigerbrew and follow their own
+      licenses (readline and gdbm are GPL-3.0).
+    </p>
+
+    <h2>Checksums (SHA-256)</h2>
+    <table>
+      <tr><th>apython312-3.12.11-macosx10.4-powerpc.dmg</th></tr>
+      <tr><td><code>ae2ec58f62015e1af4fe6d67bae181f9ff95c4d638f9a41a3c8a872de7e25fd9</code></td></tr>
+      <tr><th>apython312-3.12.11-macosx10.4-powerpc.tar.bz2</th></tr>
+      <tr><td><code>9e805ab7e6d9ee65f75071bfc8526dbb3673f9c3373c94605ed2c3ad3ee572e7</code></td></tr>
+    </table>
+
+    <p class="credit">
+      Source, build scripts, and the full field report: <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+      Also discussed on <a href="https://forums.macrumors.com/threads/python-3-12-11-on-tiger-10-4-powerpc-build-prebuilt-package.2488187/" target="_blank" rel="noopener noreferrer">MacRumors</a>.
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      This build (internally called apython312) is CPython 3.12.11, patched in four small places and built with a Tigerbrew-sourced GCC 14
+      toolchain, against Tiger's own headers restored from an Xcode 2.5 install. None of that sounds
+      dramatic written out like that; getting there was most of the work. This machine's starting state
+      turned out to be more broken than expected, and that's really what this page is about.
+    </p>
+
+    <h3>Native, not cross-compiled</h3>
+    <p>
+      The resulting interpreter is a real PowerPC binary either way &mdash; "native" vs. "cross" only
+      describes where the compiler itself runs. CPython's build system assumes a native build, and
+      Darwin/PPC isn't a maintained cross-compilation target, so cross-compiling would have meant fighting
+      <code>configure</code> the entire way. Everything here runs directly on the iBook, driven remotely
+      over SSH with the actual compiling happening on the G4 itself.
+    </p>
+
+    <h3>The four patches CPython needs for Tiger</h3>
+    <p>
+      All four are the same shape: CPython 3.12 assumes any <code>__APPLE__</code> target has an API that
+      actually only arrived in Mac OS X 10.5 or 10.6. <code>pthread_threadid_np()</code> (10.6+) falls back
+      to <code>pthread_mach_thread_np()</code>. <code>&lt;copyfile.h&gt;</code>/<code>fcopyfile()</code>
+      (10.5+) gets <code>#if 0</code>'d out in the four places it's used. Tiger defaults
+      <code>__DARWIN_UNIX03</code> off, which means <code>ttyname_r</code> has the old legacy
+      <code>char *</code> signature instead of the modern one, so <code>posixmodule.c</code> uses plain
+      <code>ttyname()</code> there instead. And <code>_scproxy</code> needs SystemConfiguration/CoreServices/
+      CarbonCore headers that a from-scratch Tiger install doesn't have (restored from the Xcode 2.5 SDK) &mdash;
+      it can't just be disabled, since <code>urllib.request</code> imports it unconditionally on Darwin.
+    </p>
+
+    <h3>The toolchain almost didn't happen at all</h3>
+    <p>
+      This particular iBook turned out to have had a partial system reinstall at some point years ago:
+      <code>/usr/include</code> had only 2 files in it, and <code>/usr/lib</code> was missing
+      <code>crt1.o</code>, <code>libSystemStubs.a</code>, and other pieces every plain link needs &mdash;
+      every bare <code>gcc</code> invocation failed with <code>ld: can't locate file for: -lcrt1.o</code>,
+      which took Tigerbrew's own source builds down with it. On top of that, Tigerbrew's prebuilt bottles
+      turned out to be linked with a modern cctools/ld64, and Tiger's own ancient
+      <code>install_name_tool</code> (cctools-576) couldn't even parse their Mach-O headers
+      (<code>malformed object (unknown load command 11)</code>) &mdash; a chicken-and-egg problem, since
+      fixing that needs a newer cctools, whose own bottle has the identical problem.
+    </p>
+    <div class="tech-note">
+      <strong>Xcode 2.5's own installer couldn't install itself.</strong> The CLI <code>installer</code>
+      command choked on <code>DeveloperTools.pkg</code>'s old-format install scripts ("The upgrade
+      failed"). Worked around it by extracting the payloads directly with <code>pax</code> instead of
+      running the installer at all &mdash; that alone restored the <code>MacOSX10.4u.sdk</code>,
+      <code>/usr/include</code> (2 &rarr; 2,516 files), and the missing link-time object files, which is
+      what let a plain <code>gcc</code> link succeed again and got Tigerbrew's own builds moving.
+    </div>
+    <div class="tech-note">
+      <strong><code>MACOSX_DEPLOYMENT_TARGET</code> has to be set explicitly.</strong> Leave it unset and
+      GCC 4.0 defaults to targeting Mac OS X 10.1, which rejects
+      <code>-undefined dynamic_lookup</code> &mdash; exactly the flag every Python C extension (a
+      <code>bundle</code>-type Mach-O) needs to link. Set <code>MACOSX_DEPLOYMENT_TARGET=10.4</code> and it
+      links fine.
+    </div>
+    <div class="tech-note">
+      <strong>GCC 14 needed <code>--force-bottle</code>, or it tried to build itself with itself.</strong>
+      Once cctools/ld64 were current enough for bottles to actually pour, <code>brew install gcc</code>
+      still needed <code>--force-bottle</code> explicitly &mdash; without it, Tigerbrew tried a source
+      build and stopped immediately, reporting that GCC 14 can't be built by GCC 4.0.1. With the prebuilt
+      <code>tiger_altivec</code> bottle instead, GCC 14.2.0 came up clean: verified with
+      <code>-std=c11 -Werror</code> against <code>_Static_assert</code>, <code>_Generic</code>,
+      <code>&lt;stdatomic.h&gt;</code>, and C++17 (<code>make_unique</code>, etc.), plus a real
+      <code>bundle</code>-type link.
+    </div>
+
+    <h3>Proving big-endian actually works</h3>
+    <p>
+      PowerPC is big-endian, and a lot of C-extension code (struct packing, buffer protocols, anything
+      touching raw bytes) quietly assumes little-endian without ever saying so. The build gets verified
+      with a real <code>ctypes</code> round-trip: a C <code>qsort()</code> call comparing elements via a
+      genuine Python callback, sorting <code>[5,3,1,4,2]</code> and checking the result comes back exactly
+      <code>[1,2,3,4,5]</code> &mdash; confirming libffi's closures (the mechanism that lets C code call
+      back into Python) work correctly on this byte order, not just that the interpreter starts.
+    </p>
+
+    <h3>What's next</h3>
+    <p>
+      <code>numpy</code>/<code>scipy</code>/<code>Pillow</code>/<code>lxml</code> weren't attempted &mdash;
+      heavy C extensions that would need their own porting work. The full obstacle-by-obstacle field report,
+      including a couple of dead ends that didn't make it into the summary above, is in
+      <a href="https://github.com/watermark-hd/apython3/blob/main/notes/obstacles.md" target="_blank" rel="noopener noreferrer">notes/obstacles.md</a>
+      on GitHub.
+    </p>
+
+    <p class="credit">
+      Full source code is on <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+    </div>
+  </div>
+  {% else %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">概要</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">技術情報</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      PowerPC Tiger向けにビルドしたCPython 3.12.11 + pipです。再配置可能（好きな場所に置けます）。
+      python.org公式ビルドではない個人ビルドです。調べた限り、Python 3.12とTigerの組み合わせに前例は
+      見当たりませんでした（3.10/3.11はMacPorts/Tigerbrewコミュニティ経由でLeopard向けにありますが、
+      Tiger向けではありません）。
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">apython312.dmg をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}{% if app.version %}（v{{ app.version }}）{% endif %}</div>{% endif %}
+      <div class="meta">CLI派向けに<a href="{{ url_for('static', filename='downloads/apython312-3.12.11-macosx10.4-powerpc.tar.bz2') }}">.tar.bz2</a>も用意しています &mdash; <code>tar xjf apython312-3.12.11-macosx10.4-powerpc.tar.bz2 -C &lt;展開先&gt;</code>で展開できます。</div>
+      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。その場合は現代のMacで取得してから転送してください。</div>
+    </div>
+
+    {% if app.changelog %}
+    <h2>更新履歴</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>動作要件</h2>
+    <ul>
+      <li>Mac OS X 10.4.x（Tiger）</li>
+      <li>PowerPC G4（AltiVec）またはG5 &mdash; <strong>G3では動きません</strong></li>
+      <li>空き容量 約200 MB</li>
+    </ul>
+
+    <h2>導入</h2>
+    <ol>
+      <li><code>apython312.dmg</code>をマウントします。</li>
+      <li><code>install.command</code>をダブルクリックし、インストール先を選択します。</li>
+    </ol>
+    <p>または.tar.bz2から: <code>tar xjf apython312-3.12.11-macosx10.4-powerpc.tar.bz2 -C &lt;展開先&gt;</code></p>
+
+    <h2>動くもの</h2>
+    <p>
+      <code>pip</code> / HTTPS（<code>ssl</code>） / <code>sqlite3</code> / <code>ctypes</code>
+      （ビッグエンディアンでの正常動作を確認済み） / <code>lzma</code> / <code>bz2</code> /
+      <code>zlib</code> / <code>readline</code>、Flask、Django（+ SQLite）。
+    </p>
+
+    <h2>動かないもの</h2>
+    <ul>
+      <li><code>_tkinter</code>（GUIライブラリは同梱していません）</li>
+      <li>
+        Rustを要するもの（<code>cryptography&gt;=3.4</code>、<code>orjson</code>、<code>ruff</code>など）
+        &mdash; 必要な場合は<code>cryptography&lt;3.4</code>にピン留めしてください。Djangoのコア機能に
+        <code>cryptography</code>は不要です。
+      </li>
+    </ul>
+
+    <h2>C拡張を含むパッケージについて</h2>
+    <p>
+      純Pythonのパッケージは問題なく入ります。C拡張を含むものは、このマシンにビルド環境
+      （Tigerbrew + GCC 14）が無いとコンパイルに失敗します。純Pythonフォールバックがあるもの
+      （<code>markupsafe</code>等）は入りますが、無いものは入りません。<code>numpy</code> /
+      <code>scipy</code> / <code>Pillow</code> / <code>lxml</code>は標準では動かない前提でお願いします。
+    </p>
+
+    <h2>セキュリティ上の注意</h2>
+    <p>
+      Tiger自体はセキュリティ更新が提供されないOSです。同梱のOpenSSLは3.5.7と新しめですが、OSを含めた
+      全体としては脆弱です。インターネットに公開するサーバや、重要な情報を扱う用途には使わないでください。
+      ローカル開発・学習・LAN内での利用に留めてください。
+    </p>
+
+    <h2>ライセンス / 免責</h2>
+    <p class="credit">
+      スクリプトとパッチはMITライセンス、無保証です。同梱の共有ライブラリ（OpenSSL / SQLite / libffi /
+      readline / gdbm / xz / zlib）はTigerbrew由来で、それぞれのライセンスに従います（readlineとgdbmは
+      GPL-3.0）。
+    </p>
+
+    <h2>チェックサム（SHA-256）</h2>
+    <table>
+      <tr><th>apython312-3.12.11-macosx10.4-powerpc.dmg</th></tr>
+      <tr><td><code>ae2ec58f62015e1af4fe6d67bae181f9ff95c4d638f9a41a3c8a872de7e25fd9</code></td></tr>
+      <tr><th>apython312-3.12.11-macosx10.4-powerpc.tar.bz2</th></tr>
+      <tr><td><code>9e805ab7e6d9ee65f75071bfc8526dbb3673f9c3373c94605ed2c3ad3ee572e7</code></td></tr>
+    </table>
+
+    <p class="credit">
+      ソース・ビルド手順・詳細な記録は<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+      <a href="https://forums.macrumors.com/threads/python-3-12-11-on-tiger-10-4-powerpc-build-prebuilt-package.2488187/" target="_blank" rel="noopener noreferrer">MacRumors</a>でも話題にしています。
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      このビルド（内部的にはapython312という名前です）は、4箇所にパッチを当てたCPython 3.12.11を、Tigerbrew由来のGCC 14ツールチェーンで、
+      Xcode 2.5から復元したTiger自身のヘッダに対してビルドしたものです。こう書くとあっさりしてますが、
+      実際は「そこに辿り着くまで」がほとんどの作業でした。この実機の初期状態が想定以上に壊れていた、
+      というのがこのページの本題です。
+    </p>
+
+    <h3>クロスコンパイルではなくネイティブビルド</h3>
+    <p>
+      出来上がるインタプリタはどちらにしても本物のPowerPCバイナリです — 「ネイティブ」か「クロス」かは
+      単にコンパイラ自体がどこで動くかの違いでしかありません。CPythonのビルドシステムはネイティブビルド
+      前提で、Darwin/PPCは現役でメンテされてるクロスコンパイルターゲットでもないので、クロスビルドを
+      選ぶと<code>configure</code>とずっと戦う羽目になります。ここでは全部iBook本体上で動かしていて、
+      SSH越しにリモート操作しつつ、実際のコンパイル作業自体はG4本体がやっています。
+    </p>
+
+    <h3>CPythonにTiger向けに必要な4つのパッチ</h3>
+    <p>
+      4つとも構図は同じで、CPython 3.12は<code>__APPLE__</code>ターゲットなら当然あるはずだと決め打ちで
+      使ってるAPIが、実際にはMac OS X 10.5か10.6になってから追加されたもの、というパターンです。
+      <code>pthread_threadid_np()</code>（10.6以降）は<code>pthread_mach_thread_np()</code>にフォール
+      バック。<code>&lt;copyfile.h&gt;</code>/<code>fcopyfile()</code>（10.5以降）は、使われてる4箇所
+      を<code>#if 0</code>で無効化。Tigerはデフォルトで<code>__DARWIN_UNIX03</code>が無効なため、
+      <code>ttyname_r</code>が現代の形式ではなく古い<code>char *</code>を返す仕様になっていて、
+      <code>posixmodule.c</code>側はそこだけ素の<code>ttyname()</code>を使うようにしています。
+      <code>_scproxy</code>は、まっさらなTiger環境には無いSystemConfiguration/CoreServices/
+      CarbonCoreのヘッダを要求してくる（Xcode 2.5のSDKから復元）んですが、単純に無効化することも
+      できません。Darwinでは<code>urllib.request</code>が無条件でこれをimportするので。
+    </p>
+
+    <h3>そもそもツールチェーンが揃うところで詰みかけた</h3>
+    <p>
+      今回のiBookは、何年か前に部分的なシステム再インストールが行われた形跡があって、
+      <code>/usr/include</code>の中身がたった2ファイルしか無く、<code>/usr/lib</code>にも
+      <code>crt1.o</code>や<code>libSystemStubs.a</code>など、普通のリンクに要るファイルが軒並み
+      欠けていました。素の<code>gcc</code>を叩くだけで<code>ld: can't locate file for: -lcrt1.o</code>
+      になり、Tigerbrew自身のソースビルドまで巻き添えで全滅してました。おまけに、Tigerbrewの配布済み
+      ビルド（bottle）は今どきのcctools/ld64でリンクされていて、Tiger標準の古い
+      <code>install_name_tool</code>（cctools-576）ではそのMach-Oヘッダすら解釈できない
+      （<code>malformed object (unknown load command 11)</code>）という鶏卵問題も抱えていました。
+      新しいcctoolsを入れるには、そのcctools自身のbottleにも同じ問題がある、という状況です。
+    </p>
+    <div class="tech-note">
+      <strong>Xcode 2.5自身のインストーラーが、自分自身をインストールできなかった。</strong>
+      CLIの<code>installer</code>コマンドが、<code>DeveloperTools.pkg</code>の古い形式のインストール
+      スクリプトで詰まりました（"The upgrade failed"）。インストーラーを使うのを諦めて、代わりに
+      <code>pax</code>でペイロードを直接展開する方式に切り替えたところ、それだけで
+      <code>MacOSX10.4u.sdk</code>と<code>/usr/include</code>（2→2,516ファイル）、リンク時に必要な
+      オブジェクトファイル一式が復元され、素の<code>gcc</code>でのリンクが再び通るようになって、
+      Tigerbrew自身のビルドも動き出しました。
+    </div>
+    <div class="tech-note">
+      <strong><code>MACOSX_DEPLOYMENT_TARGET</code>は明示的に指定する必要がある。</strong>
+      未指定のままだとGCC 4.0はデフォルトでMac OS X 10.1をターゲットにしてしまい、Python C拡張
+      （<code>bundle</code>形式のMach-O）のリンクに必須の<code>-undefined dynamic_lookup</code>
+      オプションを拒否します。<code>MACOSX_DEPLOYMENT_TARGET=10.4</code>を指定すれば問題なくリンク
+      できます。
+    </div>
+    <div class="tech-note">
+      <strong>GCC 14は<code>--force-bottle</code>を付けないと、GCC自身でGCCをビルドしようとして死ぬ。</strong>
+      cctools/ld64が新しくなってbottleを正しくpourできるようになった後も、<code>brew install gcc</code>
+      にはまだ<code>--force-bottle</code>を明示的に付ける必要がありました。付けないとTigerbrewが
+      ソースビルドを試みて即座に停止し、「GCC 14はGCC 4.0.1ではビルドできない」というエラーになります。
+      代わりに配布済みの<code>tiger_altivec</code> bottleを使ったところ、GCC 14.2.0はきれいに入り、
+      <code>-std=c11 -Werror</code>で<code>_Static_assert</code>・<code>_Generic</code>・
+      <code>&lt;stdatomic.h&gt;</code>・C++17（<code>make_unique</code>等）が通ることと、本物の
+      <code>bundle</code>形式のリンクが通ることを確認できました。
+    </div>
+
+    <h3>ビッグエンディアンが本当に動くことの検証</h3>
+    <p>
+      PowerPCはビッグエンディアンで、C拡張のコード（構造体のパッキング、バッファプロトコル、生バイトを
+      直接触るもの）の中には、それを明言せずに暗黙にリトルエンディアン前提で書かれてるものが少なく
+      ありません。ビルドの検証には、実際に<code>ctypes</code>を往復させるテストを使っています。C側の
+      <code>qsort()</code>から、本物のPythonコールバックで要素を比較させながら
+      <code>[5,3,1,4,2]</code>をソートさせて、結果がちゃんと<code>[1,2,3,4,5]</code>になることを
+      確認する、というものです。これでlibffiのクロージャ（C側からPython側へコールバックする仕組み）が、
+      このバイトオーダーで正しく動くことまで確認できます。単にインタプリタが起動するだけでは分からない
+      部分です。
+    </p>
+
+    <h3>今後</h3>
+    <p>
+      <code>numpy</code>/<code>scipy</code>/<code>Pillow</code>/<code>lxml</code>はまだ手を付けて
+      いません — それぞれ独自の移植作業が要る、重いC拡張です。上のまとめには載せきれなかった、いくつかの
+      行き止まりも含めた壁ひとつひとつの記録は、GitHubの
+      <a href="https://github.com/watermark-hd/apython3/blob/main/notes/obstacles.md" target="_blank" rel="noopener noreferrer">notes/obstacles.md</a>
+      にあります。
+    </p>
+
+    <p class="credit">
+      ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+    </p>
+    </div>
+  </div>
+  {% endif %}
+
+{% endblock %}

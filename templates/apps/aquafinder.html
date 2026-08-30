@@ -28,7 +28,7 @@
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download AquaFinder.dmg</a>
       <div class="meta">Downloads so far: {{ download_count }}</div>
-      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}</div>{% endif %}
+      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}{% if app.version %} (v{{ app.version }}){% endif %}</div>{% endif %}
     </div>
 
     {% if app.changelog %}
@@ -166,7 +166,7 @@
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">AquaFinder.dmg をダウンロード</a>
       <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
-      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}</div>{% endif %}
+      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}{% if app.version %}（v{{ app.version }}）{% endif %}</div>{% endif %}
     </div>
 
     {% if app.changelog %}

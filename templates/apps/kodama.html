@@ -33,10 +33,19 @@
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download Kodama.dmg</a>
       <div class="meta">Downloads so far: {{ download_count }}</div>
-      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}</div>{% endif %}
+      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}{% if app.version %} (v{{ app.version }}){% endif %}</div>{% endif %}
       <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></div>
-      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; use a modern curl via Tigerbrew/MacPorts instead (see Requirements below).</div>
+      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; if so, grab it from a modern machine and transfer it over instead.</div>
     </div>
+
+    {% if app.changelog %}
+    <h2>Changelog</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
 
     <h2>Features</h2>
     <ul>
@@ -54,9 +63,10 @@
     <ul>
       <li>Mac OS X 10.4 Tiger, PowerPC G3/G4/G5</li>
       <li>
-        A modern <code>curl</code> binary installed via <a href="https://github.com/mistydemeo/tigerbrew" target="_blank" rel="noopener noreferrer">Tigerbrew</a>
-        or MacPorts. Tiger's stock system curl ships with an ancient OpenSSL that fails against almost every
-        modern TLS 1.2/1.3 site &mdash; Kodama shells out to a real curl binary via <code>NSTask</code> to work around this.
+        Nothing else, as of v0.2.1 &mdash; a modern, TLS 1.2/1.3-capable <code>curl</code> now ships inside the
+        app itself, so Tiger's ancient system curl is never used. (Older versions needed a separate curl
+        installed via <a href="https://github.com/mistydemeo/tigerbrew" target="_blank" rel="noopener noreferrer">Tigerbrew</a>
+        or MacPorts &mdash; that's no longer necessary, though Kodama will still fall back to one if present.)
       </li>
     </ul>
 
@@ -64,7 +74,7 @@
     <ol>
       <li>Download <code>Kodama.dmg</code> and open it.</li>
       <li>Drag <code>Kodama.app</code> to <code>/Applications</code> or wherever you like on the target PowerPC Mac.</li>
-      <li>Make sure a modern curl (see Requirements above) is installed before trying to load an HTTPS page.</li>
+      <li>That's it &mdash; open it and start browsing. No separate curl install needed.</li>
     </ol>
 
     <h2>Known Limitations</h2>
@@ -119,6 +129,20 @@
       reports back through a delegate &mdash; the old-school way. On real hardware it pulled off actual
       HTTPS fetches using a portable curl from Tigerbrew (7.58.0 + OpenSSL 1.0.2l), which is what proved
       the core idea of the whole project: dodging the TLS 1.2/1.3 handshake problem was actually possible.
+    </p>
+
+    <h3>Bundling curl instead of requiring one</h3>
+    <p>
+      v0.2's requirement for a Tigerbrew/MacPorts curl worked, but it meant a plain Tiger install with
+      neither of those was dead in the water &mdash; confirmed by an actual user hitting exactly that on a
+      real Power Mac G4. v0.2.1 bundles a static PPC build of curl 8.9.1 (against LibreSSL 3.8.4) plus a
+      current <code>cacert.pem</code> straight inside <code>Kodama.app/Contents/Resources</code>.
+      <code>CurlTaskRunner</code>'s path detection now checks for that bundled copy first, before falling
+      back to the old search order (<code>/opt/local</code> &rarr; <code>/usr/local/bin</code> &rarr; a
+      portable curl on the user's <code>PATH</code>) for anyone who still has one installed. The
+      <code>--cacert</code> flag only gets passed when the bundled curl is the one actually running &mdash;
+      fall back to a system-installed curl and it keeps trusting whatever CA store that one already trusts,
+      rather than overriding it.
     </p>
 
     <h3>Building the "hidden third pane"</h3>
@@ -184,10 +208,19 @@
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Kodama.dmg をダウンロード</a>
       <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
-      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}</div>{% endif %}
+      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}{% if app.version %}（v{{ app.version }}）{% endif %}</div>{% endif %}
       <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a></div>
-      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。TigerbrewやMacPorts経由の新しいcurlをご利用ください(下記の動作要件を参照)。</div>
+      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。その場合は現代のMacで取得してから転送してください。</div>
     </div>
+
+    {% if app.changelog %}
+    <h2>更新履歴</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
 
     <h2>機能</h2>
     <ul>
@@ -205,10 +238,11 @@
     <ul>
       <li>Mac OS X 10.4 Tiger、PowerPC G3/G4/G5</li>
       <li>
+        v0.2.1からは、それ以外に何も要りません。TLS 1.2/1.3対応の新しいcurlをアプリ自体に同梱したため、
+        Tiger標準の古いシステムcurlは一切使いません。（以前のバージョンは
         <a href="https://github.com/mistydemeo/tigerbrew" target="_blank" rel="noopener noreferrer">Tigerbrew</a>
-        または MacPorts 経由で導入した新しい<code>curl</code>が必要です。Tiger標準のシステムcurlは
-        古いOpenSSLのため、現代のTLS1.2/1.3サイトへの接続にほぼ失敗します。コダマは<code>NSTask</code>で
-        実際のcurlバイナリを呼び出すことでこれを回避しています。
+        やMacPorts経由で別途curlを導入する必要がありましたが、今はその必要はありません。導入済みの場合は
+        引き続きそちらにフォールバックします。）
       </li>
     </ul>
 
@@ -216,7 +250,7 @@
     <ol>
       <li><code>Kodama.dmg</code> をダウンロードして開きます。</li>
       <li><code>Kodama.app</code> を、動かしたいPowerPC Macの<code>/Applications</code>など好きな場所にドラッグします。</li>
-      <li>HTTPSページを開く前に、上記の新しいcurlが導入済みであることを確認してください。</li>
+      <li>これだけです。そのまま開いてブラウズを始められます。別途curlの導入は不要です。</li>
     </ol>
 
     <h2>既知の制限</h2>
@@ -254,6 +288,19 @@
     <h3>blocksもGCDも無い時代の非同期通信</h3>
     <p>
       TigerにはGCDもblocksも無いので、curlを非同期で呼ぶだけでも一苦労でした。 NSTaskDidTerminateNotificationとNSFileHandleReadCompletionNotificationを両方待ち合わせる形で CurlTaskRunnerというクラスを実装し、結果はdelegateで通知する昔ながらの作りにしています。実機では Tigerbrew経由のポータブルcurl(7.58.0+OpenSSL 1.0.2l)でHTTPS取得に成功し、TLS1.2/1.3のハンドシェイク回避というこのアプリの核心部分を実証できました。
+    </p>
+
+    <h3>curlを「必須」から「同梱」にした</h3>
+    <p>
+      v0.2までのTigerbrew/MacPorts必須という要件は機能はしてたんですが、どちらも入ってない素のTiger環境だと
+      それだけで詰んでしまう問題がありました。実際にPower Mac G4にv0.2を入れた利用者がまさにこれに遭遇して
+      発覚しました。v0.2.1では、静的リンクしたPPC版curl 8.9.1(LibreSSL 3.8.4)と最新の
+      <code>cacert.pem</code>を、そのまま<code>Kodama.app/Contents/Resources</code>に同梱するようにしました。
+      <code>CurlTaskRunner</code>のパス検出は、まずこの同梱版を最優先で探しに行き、無ければ従来通りの
+      探索順(<code>/opt/local</code> → <code>/usr/local/bin</code> → <code>PATH</code>上のポータブルcurl)に
+      フォールバックします。<code>--cacert</code>オプションは、実際に動いているのが同梱版のcurlの時だけ
+      渡すようにしていて、システムに入ってるcurlにフォールバックした場合は、そちらが元々信頼してるCAストアを
+      上書きせずそのまま尊重するようにしています。
     </p>
 
     <h3>「隠れ3ペイン」の実装</h3>

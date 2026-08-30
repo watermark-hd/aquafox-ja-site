@@ -4,6 +4,8 @@
 # github_urlがあれば「準備中」バッジの代わりにソース公開中のバッジとリンクを表示する。
 # 最終更新日は配布ファイルのmtimeから自動算出するため、ここには書かない。
 # changelogは手書きの更新履歴（新しい順）。無くても動くので、更新時に書ければ追記する。
+# versionは手書きのバージョン番号（例: "0.2.1"）。無くても動くので、正式なバージョン
+# 番号を持たないアプリ（aquafox-jaなど）は省略してよい。最終更新日の隣に表示される。
 APPS = [
     {
         "slug": "aquafox-ja",
@@ -25,6 +27,7 @@ APPS = [
         "tagline_en": "A classic Finder-style file manager that recreates the Tiger-to-Snow Leopard experience on modern Macs.",
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "filename": "AquaFinder.dmg",
+        "version": "0.2.4",
         "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
         "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
@@ -45,11 +48,17 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
+        "version": "0.5.1",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-08-29",
+                "note": "直前の修正でMakefileに加えた変更が、Leopard/Snow Leopardでのビルドを壊していたのを修正（システム側のヘッダーが実際に無い場合のみSDKにフォールバックするよう変更）",
+                "note_en": "Fixed a regression from the previous fix: a Makefile change was breaking builds on Leopard/Snow Leopard. Now only falls back to the SDK when the system's own headers are actually missing.",
+            },
             {
                 "date": "2026-08-29",
                 "note": "PPCPorts経由(Kerberos対応込み)でビルドしたlibsmb2で、認証がKerberos経由を試みて失敗し接続できない不具合を修正（NTLM認証を明示するよう変更）",
@@ -85,6 +94,7 @@ APPS = [
         "tagline_en": "A self-contained Perl agent that lets you talk to an AI from the Terminal on a PowerPC Mac (Tiger) — supports Claude and Gemini.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "ppc-claude-agent.zip",
+        "version": "1.2.1",
         "github_url": "https://github.com/watermark-hd/ppc_claude_cli",
         "category": "app",
         "comment": "どんな古いマシンでもAIを使いたい。そんな思いから作りました。エピソードは概要欄で。",
@@ -161,6 +171,7 @@ APPS = [
         "tagline_en": "A menu bar app that lets PowerPC Mac OS X 10.4 (Tiger) read, write, and mount exFAT drives.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "exfat-tiger-ppc.zip",
+        "version": "1.0",
         "github_url": "https://github.com/watermark-hd/exfat-tiger-ppc",
         "category": "app",
         "comment": "古いデータが入ったUSBメモリを人から借りたんです、それをPowerMacに挿したら「読めません。フォーマットしますか？」するわけないだろ! その怒りの化身です。",
@@ -174,10 +185,32 @@ APPS = [
         "tagline_en": "An ultra-lightweight 3-pane web reader for PowerPC Macs (Tiger), built without WebKit.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "Kodama.dmg",
+        "version": "0.2.1",
         "github_url": "https://github.com/watermark-hd/kodama",
         "category": "app",
         "comment": "Macって思ったより壊れないんですよ。確かに仕事で使ってましたからメンテナンスはよくしてました。でも倉庫の片隅で眠っているMacたち。減損処理？いやもったいない。無理やり使い道を作った渾身の一作。",
         "comment_en": "Macs don't break as easily as you'd think. Sure, I used to maintain them properly back when they were work machines. But there are still Macs sleeping in the corner of a storage room. Write them off? No way, too good to waste. This is the one I forced a use back into.",
+        "changelog": [
+            {
+                "date": "2026-08-29",
+                "note": "v0.2.1: モダンHTTPS用のcurlをアプリに同梱したため、MacPorts / Tigerbrewによる外部curlの導入は不要になりました。特別な理由がなければv0.2.1をご利用ください。",
+                "note_en": "v0.2.1: Now bundles a curl capable of modern HTTPS directly in the app, so installing an external curl via MacPorts/Tigerbrew is no longer needed. Use v0.2.1 unless you have a specific reason not to.",
+            },
+        ],
+    },
+    {
+        "slug": "apython312",
+        "name": "Python 3.12",
+        "name_en": "Python 3.12",
+        "tagline": "PowerPC Mac (Tiger) 向けにビルドしたCPython 3.12.11 + pip。再配置可能な個人ビルド",
+        "tagline_en": "A relocatable, unofficial build of CPython 3.12.11 + pip for PowerPC Mac OS X 10.4 (Tiger).",
+        "platform": "PowerPC Mac (Tiger) 向け",
+        "filename": "apython312.dmg",
+        "github_url": "https://github.com/watermark-hd/apython3",
+        "category": "app",
+        "version": "3.12.11",
+        "comment": "3.12だけ、上にも下にもあるのに無かったんです。バージョンが違うと地味に色々変わるので、手元のPowerBook G4で使うにはこれが要る、と思って作りました。コンパイルとエラー潰しで丸一日溶けました。",
+        "comment_en": "3.12 was the one version that just didn't exist — everything above and below it did. Python versions quietly change more than people think, and I wanted this exact one on my PowerBook G4, so I built it myself. Burned a full day compiling and chasing down errors.",
     },
     {
         "slug": "mac-snow-leopard-linux",
