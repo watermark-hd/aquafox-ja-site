@@ -29,6 +29,51 @@
       which Tiger's Finder simply doesn't understand, so pulling files on or off the machine becomes its own project.
     </p>
 
+    <h2>A Few Quirks to Expect</h2>
+    <p>Everything below is what we picked up by actually living with these machines. It varies by person and by
+      model, but most of it holds.</p>
+    <ul>
+      <li><strong>The applications themselves handle surprisingly large files.</strong> Lightroom's batch export
+        doesn't choke on tens of thousands of images &mdash; as long as you haven't piled on heavy develop
+        settings. Straight originals are steadier still, and resize-and-compress exports go through fine.
+        Batch-syncing rotation and white balance across a couple hundred shots is slow, but it finishes. What
+        stalls is almost never the app; it's the Finder.</li>
+      <li><strong>That Finder, and heat, are the real test.</strong> Move a few gigabytes of exported photos or
+        video at once, or copy a folder holding several hundred images, and the transfer stops partway. On our
+        setup, sending 55,000 photos in one pass freezes every time right at the halfway point, around 25,000.
+        Anyone who has used these machines for years will know the feeling. Don't expect to multitask on an old
+        Mac. It's not a hard rule and there are plenty of exceptions, but as a guide: running one app for a long
+        stretch is usually fine; doing several things in the Finder at once is not.</li>
+      <li><strong>Heat depends heavily on the model.</strong> The PowerMac G5 has big fans in it and holds up
+        better than you'd expect. The hard case is the G3/G4 towers. You can fit a modified Windows CPU cooler
+        and get by, but the trouble is the other chips, not the CPU. Plenty of people add a SATA card and extra
+        drives &mdash; the case has room for it. But the enclosure can't shed the heat, and even with the CPU
+        cool, something else triggers a freeze. When it doesn't freeze outright, you get a steady stream of
+        spinning beachballs. We get wanting to keep that clean exterior intact, but unless you'll cut vents in
+        the bottom or back and fit a large fan, the mod isn't really worth doing. You don't need a bigger power
+        supply, but do take the heat seriously.</li>
+      <li><strong>Power on the PCI slots and the bus is shaky.</strong> A USB 2.0 expansion card is a standard
+        addition, but stick to devices that bring their own power. One external hard drive is fine. Add an SD
+        card reader or a hub on top of that and it falls over. It may be obvious, but even plain USB sticks often
+        won't mount once you plug in more than one.</li>
+      <li><strong>In short: keep it to one task and it does pretty well.</strong> Plug in a lot of things, or
+        start several jobs at once, and it comes apart. Classic old-hardware behavior. Be gentle, be patient,
+        leave headroom. Right after boot the Finder feels snappy, so it's tempting to drive it like a current
+        M-series Mac &mdash; don't push it.</li>
+    </ul>
+    <p>Keep the emergency moves in mind, too.</p>
+    <ul>
+      <li>Save often with &#8984;+S as you work.</li>
+      <li>When it starts to hang, click another app or the Finder in the Dock, then use Force Quit from the menu
+        to close just the stuck app.</li>
+      <li>If the whole screen locks up and Force Quit won't respond, hold &#8984;+Ctrl+Power to force a restart.</li>
+      <li>If it won't boot afterward, hold &#8984;+Option+P+R at power-on (PRAM/NVRAM reset) &mdash; pressing the
+        reset button and then clearing the PRAM often does the trick too.</li>
+      <li>If it can't find the startup disk, hold Option at power-on and choose the disk yourself.</li>
+    </ul>
+    <p>There's plenty more where that came from. Wrestling with the odd problem is part of the fun &mdash; take it
+      that way, and enjoy the old-Mac life.</p>
+
     <h2>What This Site Can Do</h2>
     <ul>
       <li>
@@ -87,6 +132,50 @@
       現行Macはいずれも SMB3 で話しますが、TigerのFinderはこれを理解できないため、ファイルの出し入れが
       それだけで一苦労になります。
     </p>
+
+    <h2>注意点をいくつか</h2>
+    <p>ここからは、実際に使い込んで分かった「クセ」の話です。人によって、機種によって差はありますが、だいたい共通します。</p>
+    <ul>
+      <li><strong>アプリ本体は、意外と大きいファイルでもこなします。</strong>
+        Lightroomの一括書き出しは、数万枚あっても止まりません(追い込んだ現像をしていなければ、の話です)。
+        元データそのままならさらに安定しますし、リサイズと圧縮をかけても通ります。200枚くらいをまとめて
+        角度補正・色温度の同期をかけても、時間はかかりますが最後まで走ります。詰まるのはアプリではなく、
+        たいていFinderのほうです。</li>
+      <li><strong>そのFinderと、発熱が本番です。</strong>
+        書き出した画像や動画を数GB単位で送ったり、数百枚入りのフォルダをコピーしたりすると、途中で止まります。
+        うちの環境では、55,000枚を一気に送ると毎回ちょうど半分、25,000枚あたりで固まります。昔から使っている
+        人には当たり前の挙動だと思います。古い機種で「マルチタスク」を期待してはいけません。確実ではないし
+        例外もたくさんありますが、目安としては——アプリを長時間動かし続けるのはだいたいOK、Finderで同時に
+        あれこれやるのはダメ、です。</li>
+      <li><strong>発熱は機種差が大きい。</strong>
+        PowerMac G5は大きなファンが入っているので、意外と平気です。厳しいのはいわゆるポリタンク
+        (PowerMac G3/G4)。Windows用のCPUクーラーを改造して載せればある程度しのげますが、問題はCPU以外の
+        チップです。SATAカードを足してHDDを増やしている人は多いと思います——スペースは用意されていますから。
+        ですが廃熱が追いつかず、CPUだけ冷えても他が原因で固まります。固まらないまでも、レインボーカーソルが
+        出まくります。あの綺麗な見た目を崩したくない気持ちは分かりますが、下や背面に穴をあけて大きなファンを
+        入れるくらいやらないと、改造しても意味がないと思ったほうがいいです。電源は無理に大容量へ替えなくても
+        大丈夫ですが、廃熱だけは気をつけてください。</li>
+      <li><strong>PCIスロットやバス周りの電源は不安定です。</strong>
+        USB2.0の拡張カードは定番の追加ですが、つなぐ機器は自前で電源を持っているものにしたほうがいいです。
+        外付けHDD1台なら平気。そこにSDカードリーダーやハブを足すと、もうダメです。当たり前かもしれませんが、
+        USBメモリすら複数挿すと読めないことが多々あります。</li>
+      <li><strong>まとめると、作業を一つに絞れば結構いけます。</strong>
+        いろいろつないだり、同時に何かを始めたりすると破綻します。昔の機械あるあるです。優しく、丁寧に、
+        余裕を持って使ってあげてください。起動直後はFinderがキビキビ動くので「お、いけるじゃん」と今の
+        Mシリーズと同じ感覚で使ってしまいがちですが、無理は禁物です。</li>
+    </ul>
+    <p>緊急時の対応も覚えておきましょう。</p>
+    <ul>
+      <li>何か作業したら、こまめに &#8984;+S で保存。</li>
+      <li>固まりだしたら、別のアプリかDockのFinderをクリックしてから、メニューの「強制終了」で固まった
+        アプリだけ落とす。</li>
+      <li>画面ごと固まって強制終了も効かないときは、&#8984;+Ctrl+電源ボタンで強制再起動。</li>
+      <li>そのあと起動できないときは、電源を入れると同時に &#8984;+Option+P+R(PRAM/NVRAMリセット)。
+        リセットボタンを押してからPRAMクリア、という順でも効くことが多いです。</li>
+      <li>起動ディスクが見つからず起動しない場合は、電源を入れると同時にOptionキーを押して起動ディスクを選ぶ。</li>
+    </ul>
+    <p>このあたりは他にもいろいろあります。トラブルとの格闘も楽しみのうち——そう割り切って、Old Macライフを
+      楽しんでください。</p>
 
     <h2>このサイトでできること</h2>
     <ul>
