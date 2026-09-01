@@ -48,12 +48,22 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
-        "version": "0.5.1",
+        "version": "0.5.3",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-01",
+                "note": "接続失敗時のエラーメッセージが2行目(詳細情報)を表示できていなかった不具合を修正（ステータス表示欄が1行専用だったため。ダイアログでも表示するよう変更）",
+                "note_en": "Fixed connection error messages not showing their second (detail) line — the status field was single-line only. Now also shown in a dialog.",
+            },
+            {
+                "date": "2026-08-31",
+                "note": "PPCPortsなどタグ付きリリースのlibsmb2でSMB2_SEC_NTLMSSPが未定義でビルドが失敗する不具合を修正（libsmb2本体側で公開ヘッダへの反映がまだのため、互換定義を追加）",
+                "note_en": "Fixed a build failure (SMB2_SEC_NTLMSSP undeclared) against tagged libsmb2 releases such as PPCPorts' — added a compat definition since upstream hasn't moved it to a public header in any release yet.",
+            },
             {
                 "date": "2026-08-29",
                 "note": "直前の修正でMakefileに加えた変更が、Leopard/Snow Leopardでのビルドを壊していたのを修正（システム側のヘッダーが実際に無い場合のみSDKにフォールバックするよう変更）",
